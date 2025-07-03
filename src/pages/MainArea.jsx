@@ -7,15 +7,14 @@ import Pagination from "../components/Pagination";
 const MainArea = () => {
   return (
     <section
-      className={`MainArea relative border flex flex-col items-center p-4 h-[90vh] w-[80vw]`}
+      className={`MainArea relative border flex flex-col items-center p-4 mx-8 h-auto w-full max-w-[90vw] overflow-overlay`}
     >
       <div className={`flex flex-col gap-4`}>
         <SearchForm />
         <ResultSummary />
       </div>
-      <div>
+      <div className="mt-4">
         <DataTable />
-        <Pagination />
       </div>
     </section>
   );

@@ -3,4 +3,15 @@
   --theme-Secondary: #64748B;
   --text:#F1F5F9;
   --bg: #0F172A;
+}
+
+body {
+  background-color: var(--bg);
+  width: auto;
+  height: 100%;
+}
+
+.dataTable {
+  overflow-x: scroll;
+  scroll-behavior: smooth;
 }/*# sourceMappingURL=style.css.map */
