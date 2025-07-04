@@ -1,9 +1,8 @@
 import React from "react";
 import SearchForm from "./SearchForm";
 import ResultSummary from "./ResultSummary";
-
 import DataTable from "./DataTable";
-import Pagination from "../components/Pagination";
+
 const MainArea = () => {
   return (
     <section
