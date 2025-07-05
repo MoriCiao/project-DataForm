@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { DataContext } from "../context/DataContext";
+import { RaiseBtn, DecreaseBtn } from "../components/SortBtn";
 
 const CheckBox = ({ value, name, dispatch_type, condition_type }) => {
   const { state, dispatch } = useContext(DataContext);
@@ -27,7 +28,7 @@ const CheckBox = ({ value, name, dispatch_type, condition_type }) => {
 
 const ResultSummary = () => {
   return (
-    <section className="resultSummary ">
+    <section className="resultSummary flex">
       <details>
         <summary className="cursor-pointer select-none">快速篩選</summary>
         <div className="flex flex-wrap gap-4">
@@ -82,6 +83,10 @@ const ResultSummary = () => {
               condition_type="cate_Condition"
               dispatch_type="TOGGLE_FILTER_CONDITION_CATEGORY"
             />
+          </div>
+          <div className="border p-2 flex gap-2">
+            <RaiseBtn />
+            <DecreaseBtn />
           </div>
         </div>
       </details>

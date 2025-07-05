@@ -1,50 +1,32 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../context/DataContext";
+import {
+  AddInputText,
+  AddInputNumber,
+  AddInputDate,
+  AddInputSelect,
+  AddInputTags,
+} from "./Addinput";
 
 const AddPage = () => {
   const { state, dispatch } = useContext(DataContext);
 
-  const [newItem, setNewItem] = useState({
-    id: "",
-    name: "",
-    category: "",
-    price: "",
-    stock: "",
-    brand: "",
-    tags: "",
-  });
-
-  const AddLabel = ({ name, value, onChange }) => {
-    return (
-      <div className="w-auto flex border ">
-        <label className="block pt-1 w-[5rem] h-[2rem] text-center bg-[--bg] text-[--text] ">
-          {name}
-        </label>
-        <input
-          name={name}
-          className="w-[20rem] indent-[0.5rem] text-black rounded-sm h-[2rem]"
-          placeholder={`請輸入商品${name}資訊 `}
-          type="text"
-          value={value}
-          onChange={onChange}
-        />
-      </div>
-    );
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
   };
-
+  // useEffect(() => {
+  //   console.log(state.newItem);
+  // }, [state.newItem]);
   return (
     <section
-      className={`Add-page fixed z-[10] top-[40%] left-[50%] bg-black/50 w-[80vw] h-auto -translate-x-[50%] -translate-y-[50%] px-4 py-2 text-white`}
+      className={`Add-page fixed z-[10] top-[40%] left-[50%] bg-black/90 w-[80vw] h-auto -translate-x-[50%] -translate-y-[50%] px-4 py-2 text-white`}
     >
       <div className=" flex items-center justify-between">
         <p className="">AddPage</p>
         <span
+          className="select-none cursor-pointer"
           onClick={() => {
-            dispatch({ type: "CLOSE_ADD_PAGE" });
+            dispatch({ type: "TOGGLE_ADD_PAGE" });
           }}
         >
           ❌
@@ -52,46 +34,115 @@ const AddPage = () => {
       </div>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={(e) => e.preventDefault()}
         className="Add-container flex flex-col gap-4 items-center"
       >
-        <AddLabel
+        {/* ADD ID */}
+        <AddInputText
+          label="ID"
           name="id"
-          value={newItem.id}
-          onChange={(e) => setNewItem({ ...newItem, id: e.target.value })}
+          value={state.newItem.id}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 ID 資訊 `}
         />
-        <AddLabel
+
+        {/* ADD Name */}
+        <AddInputText
+          label="Name"
           name="name"
-          value={newItem.name}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          value={state.newItem.name}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 Name 資訊 `}
         />
-        <AddLabel
-          name="category"
-          value={newItem.category}
-          onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
-        />
-        <AddLabel
-          name="price"
-          value={newItem.price}
-          onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
-        />
-        <AddLabel
-          name="stock"
-          value={newItem.stock}
-          onChange={(e) => setNewItem({ ...newItem, stock: e.target.value })}
-        />
-        <AddLabel
+
+        {/* ADD Brand */}
+        <AddInputText
+          label="Brand"
           name="brand"
-          value={newItem.brand}
-          onChange={(e) => setNewItem({ ...newItem, brand: e.target.value })}
+          value={state.newItem.brand}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 Brand 資訊 `}
         />
-        <AddLabel
+
+        {/* ADD Category */}
+        <AddInputText
+          label="Category"
+          name="category"
+          value={state.newItem.category}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 Category 資訊 `}
+        />
+
+        {/* ADD Price */}
+        <AddInputNumber
+          label="Price"
+          name="price"
+          value={state.newItem.price}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 Price 資訊 `}
+        />
+
+        {/* ADD Date */}
+        <AddInputDate
+          label="Date"
+          name="createdAt"
+          value={state.newItem.createdAt || ""}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 Date 資訊 `}
+        />
+
+        {/* ADD Status */}
+        <AddInputSelect
+          label="Status"
+          name="status"
+          value={state.newItem.status || ""}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 Status 資訊 `}
+        />
+
+        {/* ADD Stock */}
+        <AddInputNumber
+          label="Stock"
+          name="stock"
+          value={state.newItem.stock}
+          onChange={(e) =>
+            dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+          }
+          placeholder={`請輸入商品 Stock 資訊 `}
+        />
+
+        {/* ADD tags */}
+        <AddInputText
+          label="Tags"
           name="tags"
-          value={newItem.tags}
-          onChange={(e) => setNewItem({ ...newItem, tags: e.target.value })}
+          value={state.newItem.tags}
+          onChange={(e) =>
+            dispatch({
+              type: "ADD_NEW_ITEM",
+              payload: e.target,
+            })
+          }
+          placeholder={`逗號( , )區隔, 請輸入商品 Tags 資訊 `}
         />
+
         <button
-          onClick={() => console.log(newItem)}
+          onClick={() => {
+            dispatch({ type: "ADD_DATA" });
+          }}
           type="submit"
           className=" border px-2 rounded-full"
         >

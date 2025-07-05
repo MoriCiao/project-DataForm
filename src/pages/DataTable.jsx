@@ -9,12 +9,13 @@ const ITEMS_PER_PAGE = 20;
 
 const DataTable = () => {
   const { state, dispatch } = useContext(DataContext);
+  console.log("state.filter", state.filter);
+  const allProducts = state.filter ? state.filtered : state.data;
 
   // console.log("目前選取的資料有：", state.selected);
   // console.log("目前刪除的資料有：", state.del_data);
   // const x = state.data[0].createdAt;
   // console.log(x.length);
-  const allProducts = state.filtered.length !== 0 ? state.filtered : state.data;
   // console.log("allProducts is ,", allProducts);
   // 分頁
   const [currentPage, setCurrentPage] = useState(1);

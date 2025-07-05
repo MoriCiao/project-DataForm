@@ -1,0 +1,6 @@
+const x = {
+    a : false,
+    b: true
+}
+
+console.log(!x.a)
