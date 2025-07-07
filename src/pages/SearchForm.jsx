@@ -34,7 +34,10 @@ const SearchForm = () => {
         onChange={(e) => {
           dispatch({
             type: "DATE_SORT",
-            payload: { start: e.target.value },
+            payload: {
+              start: e.target.value,
+              end: state.dateRange.end || "",
+            },
           });
         }}
       />
@@ -44,7 +47,10 @@ const SearchForm = () => {
         onChange={(e) => {
           dispatch({
             type: "DATE_SORT",
-            payload: { end: e.target.value },
+            payload: {
+              end: e.target.value,
+              start: state.dateRange.start || "",
+            },
           });
         }}
       />

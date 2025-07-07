@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useState } from "react";
 import { DataContext } from "../context/DataContext";
 import Pagination from "../components/Pagination";
-
+import { PropsSortBtn } from "../components/SortBtn";
 const th_style = "px-4 border bg-[--theme-Secondary]";
 const td_style = "px-4 py-1 border border-white/50 bg-[--bg] whitespace-nowrap";
 
@@ -9,7 +9,8 @@ const ITEMS_PER_PAGE = 20;
 
 const DataTable = () => {
   const { state, dispatch } = useContext(DataContext);
-  console.log("state.filter", state.filter);
+  // console.log("state.filter", state.filter);
+
   const allProducts = state.filter ? state.filtered : state.data;
 
   // console.log("目前選取的資料有：", state.selected);
@@ -39,24 +40,88 @@ const DataTable = () => {
         <table className={`border w-fit mix-w-[800px]`}>
           <thead className={`sticky top-0`}>
             <tr className="">
-              <th className={`${th_style}`}>No.</th>
+              <th className={`${th_style} flex justify-center`}>
+                No. <PropsSortBtn propsName={"No"} />
+              </th>
               <th className={`${th_style} sticky left-[0px]`}>
                 <input
                   type="checkbox"
+                  className="scale-125"
                   onClick={() =>
                     dispatch({ type: "SELECT_ALL", payload: !state.selectAll })
                   }
                 />
               </th>
-              <th className={`${th_style} sticky left-[2rem] `}>ID</th>
-              <th className={`${th_style} sticky left-[7rem]`}>Name</th>
-              <th className={`${th_style}`}>Brand</th>
-              <th className={`${th_style}`}>Category</th>
-              <th className={`${th_style}`}>Price</th>
-              <th className={`${th_style}`}>Date</th>
-              <th className={`${th_style}`}>Status</th>
-              <th className={`${th_style}`}>Stock</th>
-              <th className={`${th_style} w-[20rem]`}>tags</th>
+
+              <th
+                className={`${th_style} ${
+                  state.isVisible.ID ? "" : "hidden"
+                } sticky left-[2rem] flex`}
+              >
+                ID
+                <PropsSortBtn propsName={"ID"} />
+              </th>
+
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Name ? "" : "hidden"
+                } sticky left-[7rem]`}
+              >
+                Name
+                <PropsSortBtn propsName={"Name"} />
+              </th>
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Brand ? "" : "hidden"
+                }`}
+              >
+                Brand
+                <PropsSortBtn propsName={"Brand"} />
+              </th>
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Category ? "" : "hidden"
+                }`}
+              >
+                Category
+                <PropsSortBtn propsName={"Category"} />
+              </th>
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Price ? "" : "hidden"
+                }`}
+              >
+                Price
+              </th>
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Date ? "" : "hidden"
+                }`}
+              >
+                Date
+              </th>
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Status ? "" : "hidden"
+                }`}
+              >
+                Status
+              </th>
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Stock ? "" : "hidden"
+                }`}
+              >
+                Stock
+                <PropsSortBtn propsName={"Stock"} />
+              </th>
+              <th
+                className={`${th_style} ${
+                  state.isVisible.Tags ? "" : "hidden"
+                } w-[20rem]`}
+              >
+                tags
+              </th>
             </tr>
           </thead>
           <tbody className={``}>
@@ -69,6 +134,7 @@ const DataTable = () => {
                       <td className={`${td_style} sticky left-[0px]`}>
                         <input
                           type="checkbox"
+                          className="scale-125"
                           // 確保單筆資料在操作時，此資料位置的checkbox狀態會取消
                           checked={state.selected.some((i) => i.id === p.id)}
                           onChange={(e) => {
@@ -79,19 +145,70 @@ const DataTable = () => {
                           }}
                         />
                       </td>
-                      <td className={`${td_style} sticky left-[2rem]`}>
+
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.ID ? "" : "hidden"
+                        } sticky left-[2rem] `}
+                      >
                         {p.id}
                       </td>
-                      <td className={`${td_style} sticky left-[7rem]`}>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Name ? "" : "hidden"
+                        } sticky left-[7rem]`}
+                      >
                         {p.name}
                       </td>
-                      <td className={`${td_style} `}>{p.brand}</td>
-                      <td className={`${td_style}`}>{p.category}</td>
-                      <td className={`${td_style}`}>${p.price}</td>
-                      <td className={`${td_style}`}>{p.createdAt}</td>
-                      <td className={`${td_style}`}>{p.status}</td>
-                      <td className={`${td_style}`}>{p.stock}</td>
-                      <td className={`${td_style}`}>{p.tags.join(" ")}</td>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Brand ? "" : "hidden"
+                        }`}
+                      >
+                        {p.brand}
+                      </td>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Category ? "" : "hidden"
+                        }`}
+                      >
+                        {p.category}
+                      </td>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Price ? "" : "hidden"
+                        }`}
+                      >
+                        ${p.price}
+                      </td>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Date ? "" : "hidden"
+                        }`}
+                      >
+                        {p.createdAt}
+                      </td>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Status ? "" : "hidden"
+                        }`}
+                      >
+                        {p.status}
+                      </td>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Stock ? "" : "hidden"
+                        }`}
+                      >
+                        {p.stock}
+                      </td>
+                      <td
+                        className={`${td_style} ${
+                          state.isVisible.Tags ? "" : "hidden"
+                        }`}
+                      >
+                        {p.tags.join(" ")}
+                      </td>
                     </tr>
                   </Fragment>
                 );

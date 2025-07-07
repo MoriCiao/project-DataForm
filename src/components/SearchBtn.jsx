@@ -8,7 +8,7 @@ export const UndoBtn = () => {
       onClick={() =>
         dispatch({
           type: "UNDO_DEL_SELECTED",
-          payload: state.del_data,
+          payload: { item: state.del_data },
         })
       }
       type="button"

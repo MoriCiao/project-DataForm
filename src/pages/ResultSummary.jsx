@@ -12,6 +12,7 @@ const CheckBox = ({ value, name, dispatch_type, condition_type }) => {
         value={value}
         type="checkbox"
         checked={state[condition_type][value]}
+        className="scale-125"
         onChange={(e) =>
           dispatch({
             type: dispatch_type,
@@ -29,9 +30,10 @@ const CheckBox = ({ value, name, dispatch_type, condition_type }) => {
 const ResultSummary = () => {
   return (
     <section className="resultSummary flex">
-      <details>
+      <details className="w-full">
         <summary className="cursor-pointer select-none">快速篩選</summary>
-        <div className="flex flex-wrap gap-4">
+
+        <div className="flex justify-between">
           <div className="status-area border p-2">
             <CheckBox
               value="On_Sale"
@@ -87,6 +89,66 @@ const ResultSummary = () => {
           <div className="border p-2 flex gap-2">
             <RaiseBtn />
             <DecreaseBtn />
+          </div>
+        </div>
+        <hr className="my-2 border-white/25" />
+        <div className="flex gap-2 items-center justify-center border py-2">
+          <span>Hidden Columns :</span>
+          <div className="flex justify-around gap-2 w-fit">
+            <CheckBox
+              value="ID"
+              name="ID"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Name"
+              name="Name"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Brand"
+              name="Brand"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Category"
+              name="Category"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Price"
+              name="Price"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Date"
+              name="Date"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Status"
+              name="Status"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Stock"
+              name="Stock"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
+            <CheckBox
+              value="Tags"
+              name="Tags"
+              condition_type="isVisible"
+              dispatch_type="COL_IS_VISIBLE"
+            />
           </div>
         </div>
       </details>
