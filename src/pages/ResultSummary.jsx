@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { easeInOut, motion } from "framer-motion";
 import { DataContext } from "../context/DataContext";
 import { RaiseBtn, DecreaseBtn } from "../components/SortBtn";
 
@@ -7,7 +8,9 @@ const CheckBox = ({ value, name, dispatch_type, condition_type }) => {
 
   return (
     <div className="check_id inline-block pr-2">
-      <input
+      <motion.input
+        animate={{ scale: state[condition_type][value] ? 1.5 : 1.25 }}
+        transition={{ duration: 0.3 }}
         id={value}
         value={value}
         type="checkbox"
@@ -20,7 +23,7 @@ const CheckBox = ({ value, name, dispatch_type, condition_type }) => {
           })
         }
       />
-      <label className="pl-1" htmlFor={value}>
+      <label className="pl-2" htmlFor={value}>
         {name}
       </label>
     </div>
@@ -33,8 +36,8 @@ const ResultSummary = () => {
       <details className="w-full">
         <summary className="cursor-pointer select-none">快速篩選</summary>
 
-        <div className="flex justify-between">
-          <div className="status-area border p-2">
+        <div className="flex justify-between gap-2">
+          <div className="status-area border p-2 flex flex-wrap gap-2 justify-betweem items-center">
             <CheckBox
               value="On_Sale"
               name="上架中"
@@ -54,7 +57,7 @@ const ResultSummary = () => {
               dispatch_type="TOGGLE_FILTER_CONDITION_STATUS"
             />
           </div>
-          <div className="category-area border p-2">
+          <div className="category-area border p-2 flex flex-wrap gap-2 justify-betweem items-center">
             <CheckBox
               value="house"
               name="居家生活"
@@ -86,15 +89,15 @@ const ResultSummary = () => {
               dispatch_type="TOGGLE_FILTER_CONDITION_CATEGORY"
             />
           </div>
-          <div className="border p-2 flex gap-2">
+          <div className="border p-2 flex gap-2 flex flex-wrap gap-2 justify-betweem items-center">
             <RaiseBtn />
             <DecreaseBtn />
           </div>
         </div>
         <hr className="my-2 border-white/25" />
         <div className="flex gap-2 items-center justify-center border py-2">
-          <span>Hidden Columns :</span>
-          <div className="flex justify-around gap-2 w-fit">
+          <span className="pl-2">Visible Columns :</span>
+          <div className="flex flex-wrap justify-around gap-2 w-fit items-center">
             <CheckBox
               value="ID"
               name="ID"

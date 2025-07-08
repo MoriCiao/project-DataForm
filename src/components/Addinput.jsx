@@ -79,7 +79,7 @@ export const AddInputDate = ({ label, name, value, onChange, placeholder }) => {
 };
 
 export const AddInputSelect = ({ label, name, onChange }) => {
-  const opt = ["上架中", "下架", "缺貨中"];
+  const opt = ["", "上架中", "下架", "缺貨中"];
 
   return (
     <div className="w-auto flex border">

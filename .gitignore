@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # 測試用JS檔案
-test.js
+src\test.js

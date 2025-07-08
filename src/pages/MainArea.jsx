@@ -8,9 +8,9 @@ const MainArea = () => {
   const { state, dispatch } = useContext(DataContext);
   return (
     <section
-      className={`MainArea relative border flex flex-col items-center p-4 mx-8 h-auto w-full max-w-[90vw] overflow-overlay`}
+      className={`MainArea relative border flex flex-col items-center p-4 mx-8 h-auto w-auto max-w-[90vw] overflow-overlay`}
     >
-      <p className="md:hidden xl:block absolute top-[-2rem] left-[-2rem] p-2 bg-white/25 rounded-md text-center text-[1.2rem]">
+      <p className="md:hidden xl:block absolute top-[-2rem] left-[-10rem] p-2 bg-white/25 rounded-md text-center text-[1.2rem]">
         --目前是否為篩選資料
         <span className="text-orange-500 font-bold px-2">
           {state.filter ? "True" : "False"}

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-
+import { easeInOut, motion } from "framer-motion";
 const Pagination = ({
   goToPrevPage,
   goToNextPage,
@@ -32,9 +32,11 @@ const Pagination = ({
       <div
         className={`absolute left-0 rounded-sm bg-white/50 text-white border `}
       >
-        <input
+        <motion.input
+          whileFocus={{ backgroundColor: "#F1F5F9", color: "#0F172A" }}
+          transition={{ duration: 0.3 }}
           type="number"
-          className={`w-[5rem] text-center bg-transparent indent-[0.5rem] `}
+          className={`w-[8rem] text-center bg-transparent indent-[0.5rem] `}
           placeholder="請輸入頁數..."
           step="1"
           min="1"
@@ -58,15 +60,23 @@ const Pagination = ({
       </div>
 
       {/* ------------------------------------------------------------------ */}
-      <button onClick={goToPrevPage} className="border px-4 rounded-full">
+      <motion.button
+        whileHover={{ backgroundColor: "#F1F5F9", color: "#0F172A" }}
+        onClick={goToPrevPage}
+        className="border px-4 rounded-full"
+      >
         Prev
-      </button>
+      </motion.button>
       <span>
         {currentPage} page / {totalPages} pages
       </span>
-      <button onClick={goToNextPage} className="border px-4 rounded-full">
+      <motion.button
+        whileHover={{ backgroundColor: "#F1F5F9", color: "#0F172A" }}
+        onClick={goToNextPage}
+        className="border px-4 rounded-full"
+      >
         Next
-      </button>
+      </motion.button>
     </div>
   );
 };

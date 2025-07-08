@@ -14,6 +14,11 @@ export function DataProvider({ children }) {
     loading: false,
     addPage: false, // 是否開啟新增Item頁面
     delPage: false, // 是否開啟垃圾桶頁面
+    revisePage: {
+      // 是否開啟修改頁面
+      isOpen: false,
+      item: {},
+    },
     selectAll: false,
     dateRange: {
       start: "",
@@ -58,7 +63,7 @@ export function DataProvider({ children }) {
       Category: true,
       Price: true,
       Date: true,
-      Statu: true,
+      Status: true,
       Stock: true,
       Tags: true,
     },
@@ -500,12 +505,30 @@ export function DataProvider({ children }) {
       // 新增資料
       case "ADD_DATA": {
         console.log("新資料已加入至 DataBase ....");
+
         const updateData = state.newItem;
-        console.log(updateData);
+        // 判定目前新增資料內容是否有空白的
+        const hasEmptyData = Object.values(state.newItem).some(
+          (v) => v.trim() === ""
+        );
+        if (hasEmptyData) {
+          alert("新增資料失敗....，您輸入資料內容有空值，請從新增資料。");
+        }
+        //如果輸入資料有空白的則 retrun
+        // newItem: {
+        //   id: "",
+        //   name: "",
+        //   category: "",
+        //   price: "",
+        //   createdAt: "",
+        //   stock: "",
+        //   brand: "",
+        //   tags: "",
+        // },
 
         return {
           ...state,
-          data: [...state.data, updateData],
+          data: hasEmptyData ? state.data : [...state.data, updateData],
           // 新增資料後，將新增頁面重製
           newItem: {
             id: "",
@@ -530,6 +553,20 @@ export function DataProvider({ children }) {
           // 對 對應的 isVisible的key 做boolean值得變換
           isVisible: { ...state.isVisible, [key]: checked },
         };
+      }
+      case "TOGGLE_REVISE_PAGE": {
+        // 開啟 修正PAGE
+        const data = action.payload;
+
+        console.log("REVISE_ITEM_PAGE");
+
+        return {
+          ...state,
+          revisePage: { isOpen: !state.revisePage.isOpen, item: data || {} },
+        };
+      }
+      case "CONFIRM_OF_REVISION": {
+        return { ...state };
       }
       default: {
         return state;
@@ -580,12 +617,15 @@ export function DataProvider({ children }) {
     }, 2000);
   };
 
+  // Btn animate
+  const BtnAnimateHover = { backgroundColor: "#F1F5F9", color: "#0F172A" };
+
   useEffect(() => {
     LoadingData();
   }, []);
 
   return (
-    <DataContext.Provider value={{ state, dispatch }}>
+    <DataContext.Provider value={{ state, dispatch, BtnAnimateHover }}>
       {children}
     </DataContext.Provider>
   );

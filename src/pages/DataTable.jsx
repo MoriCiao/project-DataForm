@@ -1,9 +1,10 @@
 import React, { Fragment, useContext, useState } from "react";
+import { easeInOut, motion } from "framer-motion";
 import { DataContext } from "../context/DataContext";
 import Pagination from "../components/Pagination";
 import { PropsSortBtn } from "../components/SortBtn";
 const th_style = "px-4 border bg-[--theme-Secondary]";
-const td_style = "px-4 py-1 border border-white/50 bg-[--bg] whitespace-nowrap";
+const td_style = "px-4 py-1 border border-white/50 whitespace-nowrap";
 
 const ITEMS_PER_PAGE = 20;
 
@@ -36,7 +37,7 @@ const DataTable = () => {
 
   return (
     <div>
-      <div className="dataTable overflow-x-auto h-[85vh] max-w-[1000px] ">
+      <div className="dataTable overflow-x-auto  max-h-[85vh] xl:max-w-[1000px] md:max-w-[700px] sm:max-w-[500px]">
         <table className={`border w-fit mix-w-[800px]`}>
           <thead className={`sticky top-0`}>
             <tr className="">
@@ -44,7 +45,11 @@ const DataTable = () => {
                 No. <PropsSortBtn propsName={"No"} />
               </th>
               <th className={`${th_style} sticky left-[0px]`}>
-                <input
+                <motion.input
+                  animate={{
+                    scale: state.selectAll ? 1.5 : 1.25,
+                  }}
+                  transition={{ duration: 0.3 }}
                   type="checkbox"
                   className="scale-125"
                   onClick={() =>
@@ -120,8 +125,9 @@ const DataTable = () => {
                   state.isVisible.Tags ? "" : "hidden"
                 } w-[20rem]`}
               >
-                tags
+                Tags
               </th>
+              <th className={`${th_style} w-[20rem]`}>Revise</th>
             </tr>
           </thead>
           <tbody className={``}>
@@ -129,10 +135,24 @@ const DataTable = () => {
               currentItems.map((p, index) => {
                 return (
                   <Fragment key={index}>
-                    <tr className="text-center h-[1.5rem]">
+                    <motion.tr
+                      initial={{ backgroundColor: "rgba(0, 0, 0,0)" }}
+                      animate={{ backgroundColor: "rgba(0, 0, 0,0)" }}
+                      whileHover={{
+                        backgroundColor: "rgb(100, 116, 139)",
+                      }}
+                      transition={{ duration: 0.3, ease: easeInOut }}
+                      className="text-center h-[1.5rem]"
+                    >
                       <td className={`${td_style}`}>{p.id.slice(3, 8)}</td>
                       <td className={`${td_style} sticky left-[0px]`}>
-                        <input
+                        <motion.input
+                          animate={{
+                            scale: state.selected.some((i) => i.id === p.id)
+                              ? 1.5
+                              : 1.25,
+                          }}
+                          transition={{ duration: 0.3 }}
                           type="checkbox"
                           className="scale-125"
                           // 確保單筆資料在操作時，此資料位置的checkbox狀態會取消
@@ -209,7 +229,17 @@ const DataTable = () => {
                       >
                         {p.tags.join(" ")}
                       </td>
-                    </tr>
+                      <td className={`${td_style}`}>
+                        <span
+                          className="cursor-pointer"
+                          onClick={() =>
+                            dispatch({ type: "TOGGLE_REVISE_PAGE", payload: p })
+                          }
+                        >
+                          📝
+                        </span>
+                      </td>
+                    </motion.tr>
                   </Fragment>
                 );
               })}

@@ -1,4 +1,5 @@
 import React, { Fragment, useContext } from "react";
+import { easeInOut, motion } from "framer-motion";
 import { DataContext } from "../context/DataContext";
 import { UndoBtn, CurrentDelBtn } from "./SearchBtn";
 const th_style = "px-4 border bg-[--theme-Secondary]";
@@ -10,7 +11,10 @@ const DelPage = () => {
   console.log(del_data);
 
   return (
-    <section
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       className={`Add-page fixed z-[10] top-[50%] left-[50%] bg-black/90 w-[60vw] h-auto -translate-x-[50%] -translate-y-[50%] px-4 py-2 text-white`}
     >
       <div className=" flex items-center justify-between mb-4">
@@ -73,7 +77,7 @@ const DelPage = () => {
         <CurrentDelBtn />
         <UndoBtn />
       </div>
-    </section>
+    </motion.section>
   );
 };
 
