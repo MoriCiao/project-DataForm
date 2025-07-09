@@ -54,8 +54,7 @@ const DelPage = () => {
                 return (
                   <Fragment key={del_d.id}>
                     <tr className="text-center h-[1.5rem]">
-                      <td className={`${td_style}`}>{del_d.id.slice(3, 8)}</td>
-
+                      <td className={`${td_style}`}>{del_d.id.slice(-5)}</td>
                       <td className={`${td_style}`}>{del_d.id}</td>
                       <td className={`${td_style} `}>{del_d.name}</td>
                       <td className={`${td_style} `}>{del_d.brand}</td>
@@ -64,7 +63,7 @@ const DelPage = () => {
                       <td className={`${td_style}`}>{del_d.createdAt}</td>
                       <td className={`${td_style}`}>{del_d.status}</td>
                       <td className={`${td_style}`}>{del_d.stock}</td>
-                      <td className={`${td_style}`}>{del_d.tags.join(" ")}</td>
+                      <td className={`${td_style}`}>{del_d.tags}</td>
                     </tr>
                   </Fragment>
                 );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 export const AddInputText = ({ label, name, value, onChange, placeholder }) => {
   return (
@@ -96,8 +96,12 @@ export const AddInputSelect = ({ label, name, onChange }) => {
         onChange={onChange}
         required
       >
-        {opt.map((op) => {
-          return <option value={op}>{op}</option>;
+        {opt.map((op, index) => {
+          return (
+            <Fragment key={index}>
+              <option value={op}>{op}</option>;
+            </Fragment>
+          );
         })}
       </select>
     </div>

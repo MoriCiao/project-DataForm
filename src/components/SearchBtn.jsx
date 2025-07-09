@@ -141,3 +141,32 @@ export const CurrentDelBtn = () => {
     </motion.button>
   );
 };
+
+export const ExoportBtn = () => {
+  const { state } = useContext(DataContext);
+  // 匯出函式
+  const exportToJson = (data, filename = "myData.json") => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <button
+      className={`border px-2 rounded-sm text-white`}
+      onClick={() => {
+        exportToJson(state.data, "myData.json");
+      }}
+    >
+      Export Data
+    </button>
+  );
+};

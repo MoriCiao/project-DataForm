@@ -1,4 +1,3 @@
-import { data } from "autoprefixer";
 import React, { createContext, useEffect, useReducer } from "react";
 
 export const DataContext = createContext();
@@ -17,7 +16,18 @@ export function DataProvider({ children }) {
     revisePage: {
       // 是否開啟修改頁面
       isOpen: false,
-      item: {},
+      reviseItem: {},
+    },
+    // 商品細項修改內容
+    newDetail: {
+      name: "",
+      brand: "",
+      category: "",
+      price: "",
+      createdAt: "",
+      status: "",
+      stock: "",
+      tags: "",
     },
     selectAll: false,
     dateRange: {
@@ -45,6 +55,7 @@ export function DataProvider({ children }) {
       sporting_goods: false,
       food_and_beverage: false,
     },
+    keyword: "",
     // 新增商品進資料的暫存區
     newItem: {
       id: "",
@@ -105,9 +116,13 @@ export function DataProvider({ children }) {
           food_and_beverage: false,
         };
         const keyword = action.payload.toLowerCase();
+        const keyBoolean = keyword.length !== 0;
         // 判定是否進入篩選狀態
-        const isFiltered = keyword.length !== 0;
-        // console.log(isFilter);
+        const isFiltered =
+          Object.values(state.conditions).some((item) => item === true) ||
+          Object.values(state.cate_Condition).some((item) => item === true) ||
+          keyBoolean;
+
         const currentData = isFiltered ? state.filtered : state.data;
         // 篩選出與目前資料裡包含 keyword 的資料
         const filtered = state.data.filter((item) => {
@@ -116,8 +131,7 @@ export function DataProvider({ children }) {
           const brand = item.brand?.toLowerCase() || "";
           const category = item.category?.toLowerCase() || "";
           const status = item.status?.toLowerCase() || "";
-          // tags is Array ，須展開
-          const tags = item.tags?.join(" ").toLowerCase() || "";
+          const tags = item.tags || "";
 
           return (
             id.includes(keyword) ||
@@ -130,20 +144,47 @@ export function DataProvider({ children }) {
         });
         return {
           ...state,
-          ...(isFiltered ? { filtered: currentData } : { data: currentData }),
+          ...(isFiltered ? { filtered: filtered } : { data: filtered }),
           filter: isFiltered,
-
-          // conditions: unCheckConditions,
-          // cate_Condition: unCheckCategory,
+          conditions: !keyBoolean ? unCheckConditions : state.conditions,
+          cate_Condition: !keyBoolean ? unCheckCategory : state.cate_Condition,
+          keyword: keyword,
         };
       }
       // 日期篩選
       case "DATE_SORT": {
+        const unCheckConditions = {
+          ...state.conditions,
+          On_Sale: false, // 上架中
+          Off_Sale: false, // 下架
+          Out_of_Stock: false, // 缺貨
+        };
+
+        const unCheckCategory = {
+          ...state.cate_Condition,
+          house: false,
+          stationery: false,
+          electronics: false,
+          sporting_goods: false,
+          food_and_beverage: false,
+        };
+
         // 取得目前開始及結束的日期
         const { start, end } = action.payload;
-        // 判定目前進入篩選狀態，只用篩選資料
-        const isFiltered = Boolean(start || end);
 
+        const PassStatus = Object.values(state.conditions).some(
+          (item) => item === true
+        );
+        const PassCategory = Object.values(state.cate_Condition).some(
+          (item) => item === true
+        );
+        // console.log("PassStatus", PassStatus);
+        // console.log("PassCategory", PassCategory);
+        const isFiltered = PassStatus || PassCategory || Boolean(start || end);
+        // 判定目前進入篩選狀態，只用篩選資料
+        const currentData = isFiltered
+          ? state.filtered || state.data
+          : [...state.data];
         const startDate = start ? new Date(start) : null;
         const endDate = end ? new Date(end) : null;
 
@@ -159,13 +200,15 @@ export function DataProvider({ children }) {
         return {
           ...state,
           filter: isFiltered,
-          filtered: updateData,
+          ...(isFiltered ? { filtered: updateData } : { data: updateData }),
           dateRange: { start, end },
+          conditions: unCheckConditions,
+          cate_Condition: unCheckCategory,
         };
       }
       // 依價格去排列
       case "PRICE_RAISE_SORT": {
-        console.log("RAISE...");
+        // console.log("RAISE...");
         const isFiltered = state.filter;
         // console.log(isFiltered);
         const currentData = isFiltered ? state.filtered : state.data;
@@ -178,7 +221,7 @@ export function DataProvider({ children }) {
         };
       }
       case "PRICE_DECREASE_SORT": {
-        console.log("DECREASE");
+        // console.log("DECREASE");
 
         const isFiltered = state.filter;
         // console.log(isFiltered);
@@ -195,7 +238,7 @@ export function DataProvider({ children }) {
       case "PER_PROPS_SORT": {
         const { name, checked } = action.payload;
         const ToggleChecked = !checked;
-        console.log("目前選取的 PropsName is ", name, checked);
+        // console.log("目前選取的 PropsName is ", name, checked);
         const propsNameList = [
           "No",
           "ID",
@@ -230,7 +273,7 @@ export function DataProvider({ children }) {
         let updateData;
 
         if (ToggleChecked) {
-          console.log(name, "大到小 篩選中...");
+          // console.log(name, "大到小 篩選中...");
           updateData = [...currentData].sort((a, b) => {
             if (name === "No") {
               // props_sort_condition : No.
@@ -313,7 +356,9 @@ export function DataProvider({ children }) {
           [key]: checked,
         };
 
-        const hasStatusFilter = Object.values(newConditions).some(Boolean);
+        const hasStatusFilter = Object.values(newConditions).some(
+          (item) => item === true
+        );
         // console.log(hasStatusFilter);
         //  cate_Condition 重製篩選的 category
         const hasCategoryFilter = false;
@@ -341,7 +386,7 @@ export function DataProvider({ children }) {
             (newConditions.On_Sale && item.status === "上架中") ||
             (newConditions.Off_Sale && item.status === "下架") ||
             (newConditions.Out_of_Stock && item.status === "缺貨中");
-
+          //  ---------------------------------------------------------
           return PassStatus && PassCategory;
         });
         return {
@@ -351,6 +396,11 @@ export function DataProvider({ children }) {
           filtered: filtered,
           conditions: newConditions,
           cate_Condition: unCheckCategory,
+          dateRange: {
+            start: "",
+            end: "",
+          },
+          keyword: "",
         };
       }
       // Category Condition 篩選case
@@ -412,11 +462,16 @@ export function DataProvider({ children }) {
           filtered: filtered,
           conditions: unCheckStatus,
           cate_Condition: newCate_Condition,
+          dateRange: {
+            start: "",
+            end: "",
+          },
+          keyword: "",
         };
       }
       // 開啟新增頁面
       case "TOGGLE_ADD_PAGE": {
-        console.log("ADD PAGE 開啟...");
+        // console.log("ADD PAGE 開啟...");
         return { ...state, addPage: !state.addPage, delPage: false };
       }
       // 開啟垃圾桶
@@ -437,14 +492,14 @@ export function DataProvider({ children }) {
         return { ...state, selected: updata };
       }
       case "SELECT_ALL": {
-        console.log(state.selectAll);
+        // console.log(state.selectAll);
 
         return { ...state, selectAll: !state.selectAll };
       }
       // 將選取的資料放進垃圾桶
       case "DEL_SELECTED": {
         const selectedData = action.payload.item; //iterable
-        console.log(selectedData);
+        // console.log(selectedData);
         const selectedIds = selectedData.map((item) => item.id);
         // 保留刪除資料
         const deletedData = state.data.filter((item) =>
@@ -508,23 +563,10 @@ export function DataProvider({ children }) {
 
         const updateData = state.newItem;
         // 判定目前新增資料內容是否有空白的
-        const hasEmptyData = Object.values(state.newItem).some(
-          (v) => v.trim() === ""
-        );
+        const hasEmptyData = Object.values(state.newItem).some((v) => v === "");
         if (hasEmptyData) {
           alert("新增資料失敗....，您輸入資料內容有空值，請從新增資料。");
         }
-        //如果輸入資料有空白的則 retrun
-        // newItem: {
-        //   id: "",
-        //   name: "",
-        //   category: "",
-        //   price: "",
-        //   createdAt: "",
-        //   stock: "",
-        //   brand: "",
-        //   tags: "",
-        // },
 
         return {
           ...state,
@@ -555,18 +597,83 @@ export function DataProvider({ children }) {
         };
       }
       case "TOGGLE_REVISE_PAGE": {
-        // 開啟 修正PAGE
+        // 開啟 修正PAGE，當前的商品資料帶入進來
         const data = action.payload;
 
         console.log("REVISE_ITEM_PAGE");
 
         return {
           ...state,
-          revisePage: { isOpen: !state.revisePage.isOpen, item: data || {} },
+          revisePage: {
+            isOpen: !state.revisePage.isOpen,
+            reviseItem: data || {},
+          },
+        };
+      }
+      case "NEW_DETAIL": {
+        console.log(action.payload);
+        // 之後修改時對應相應的 id 做修正
+        const original = state.revisePage?.reviseItem || {};
+        const payload = action.payload;
+
+        // 自動根據 payload 欄位，選擇要保留原本值或新值
+        const updatedFields = Object.fromEntries(
+          Object.entries(payload).map(([key, value]) => [
+            key,
+            value.trim?.() === "" ? original[key] : value,
+          ])
+        );
+
+        return {
+          ...state,
+          newDetail: {
+            ...state.newDetail,
+            id: original.id, // 保留原始 ID
+            ...updatedFields,
+          },
         };
       }
       case "CONFIRM_OF_REVISION": {
-        return { ...state };
+        // 目前已填寫的 newDetail 帶入
+        const newDetail = state.newDetail;
+        console.log(newDetail);
+        // 先找到對應的 index
+        const targetIndex = state.data.findIndex(
+          (item) => item.id === newDetail.id
+        );
+        // console.log(targetIndex);
+        // 獲取總資料裡對應的 index
+        const originalData = state.data[targetIndex];
+        // console.log(originalData);
+
+        // 更新資料， 如果newDetail裡有未填寫 空白等資料，則會用原本資料裡對應的值
+        const update = Object.fromEntries(
+          Object.entries(originalData).map(([key, value]) => [
+            key,
+            newDetail[key]?.toString().trim() !== "" ? newDetail[key] : value,
+          ])
+        );
+        // console.log(update);
+        // 覆蓋資料，先拷貝一份總資料，將其對應的 index 用修改好的資料作覆蓋
+        const newData = [...state.data];
+        newData[targetIndex] = update;
+
+        return {
+          ...state,
+          data: newData,
+          // 修改資料送出後，將頁面關閉及清空
+          newDetail: {
+            name: "",
+            brand: "",
+            category: "",
+            price: "",
+            createdAt: "",
+            status: "",
+            stock: "",
+            tags: "",
+          },
+          revisePage: { isOpen: false, reviseItem: {} },
+        };
       }
       default: {
         return state;

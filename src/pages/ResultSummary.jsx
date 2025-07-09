@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { easeInOut, motion } from "framer-motion";
 import { DataContext } from "../context/DataContext";
 import { RaiseBtn, DecreaseBtn } from "../components/SortBtn";

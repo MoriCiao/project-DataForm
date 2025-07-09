@@ -44,7 +44,7 @@ const DataTable = () => {
               <th className={`${th_style} flex justify-center`}>
                 No. <PropsSortBtn propsName={"No"} />
               </th>
-              <th className={`${th_style} sticky left-[0px]`}>
+              <th className={`${th_style} sticky `}>
                 <motion.input
                   animate={{
                     scale: state.selectAll ? 1.5 : 1.25,
@@ -61,7 +61,7 @@ const DataTable = () => {
               <th
                 className={`${th_style} ${
                   state.isVisible.ID ? "" : "hidden"
-                } sticky left-[2rem] flex`}
+                } sticky  flex`}
               >
                 ID
                 <PropsSortBtn propsName={"ID"} />
@@ -70,7 +70,7 @@ const DataTable = () => {
               <th
                 className={`${th_style} ${
                   state.isVisible.Name ? "" : "hidden"
-                } sticky left-[7rem]`}
+                } sticky `}
               >
                 Name
                 <PropsSortBtn propsName={"Name"} />
@@ -144,8 +144,8 @@ const DataTable = () => {
                       transition={{ duration: 0.3, ease: easeInOut }}
                       className="text-center h-[1.5rem]"
                     >
-                      <td className={`${td_style}`}>{p.id.slice(3, 8)}</td>
-                      <td className={`${td_style} sticky left-[0px]`}>
+                      <td className={`${td_style}`}>{p.id.slice(-5)}</td>
+                      <td className={`${td_style} sticky `}>
                         <motion.input
                           animate={{
                             scale: state.selected.some((i) => i.id === p.id)
@@ -169,14 +169,14 @@ const DataTable = () => {
                       <td
                         className={`${td_style} ${
                           state.isVisible.ID ? "" : "hidden"
-                        } sticky left-[2rem] `}
+                        } sticky  `}
                       >
                         {p.id}
                       </td>
                       <td
                         className={`${td_style} ${
                           state.isVisible.Name ? "" : "hidden"
-                        } sticky left-[7rem]`}
+                        } sticky `}
                       >
                         {p.name}
                       </td>
@@ -227,7 +227,7 @@ const DataTable = () => {
                           state.isVisible.Tags ? "" : "hidden"
                         }`}
                       >
-                        {p.tags.join(" ")}
+                        {p.tags}
                       </td>
                       <td className={`${td_style}`}>
                         <span
