@@ -22,6 +22,7 @@ export function DataProvider({ children }) {
     newDetail: {
       name: "",
       brand: "",
+      status: "",
       category: "",
       price: "",
       createdAt: "",
@@ -99,22 +100,22 @@ export function DataProvider({ children }) {
       }
       // Keywords 區域
       case "SEARCH_DATA": {
-        // -------------取消所有快速篩選------------------
-        const unCheckConditions = {
-          ...state.conditions,
-          On_Sale: false, // 上架中
-          Off_Sale: false, // 下架
-          Out_of_Stock: false, // 缺貨
-        };
+        // 時間篩選
+        const startDate = state.dateRange.start
+          ? new Date(state.dateRange.start)
+          : null;
+        const endDate = state.dateRange.end
+          ? new Date(state.dateRange.end)
+          : null;
 
-        const unCheckCategory = {
-          ...state.cate_Condition,
-          house: false,
-          stationery: false,
-          electronics: false,
-          sporting_goods: false,
-          food_and_beverage: false,
-        };
+        const PassStatus = Object.values(state.conditions).some(
+          (item) => item === true
+        );
+        // 目前是否為cate-Codition篩選情況
+        const PassCategory = Object.values(state.cate_Condition).some(
+          (item) => item === true
+        );
+
         const keyword = action.payload.toLowerCase();
         const keyBoolean = keyword.length !== 0;
         // 判定是否進入篩選狀態
@@ -123,9 +124,33 @@ export function DataProvider({ children }) {
           Object.values(state.cate_Condition).some((item) => item === true) ||
           keyBoolean;
 
-        const currentData = isFiltered ? state.filtered : state.data;
         // 篩選出與目前資料裡包含 keyword 的資料
         const filtered = state.data.filter((item) => {
+          // ----------------------------------------------------
+          const PassCodiitions =
+            !PassStatus ||
+            (state.conditions.On_Sale && item.status === "上架中") ||
+            (state.conditions.Off_Sale && item.status === "下架") ||
+            (state.conditions.Out_of_Stock && item.status === "缺貨中");
+          // ----------------------------------------------------
+          const PassCateCodition =
+            !PassCategory ||
+            (state.cate_Condition.house && item.category === "居家生活") ||
+            (state.cate_Condition.stationery && item.category === "文具用品") ||
+            (state.cate_Condition.electronics &&
+              item.category === "電子產品") ||
+            (state.cate_Condition.sporting_goods &&
+              item.category === "運動用品") ||
+            (state.cate_Condition.food_and_beverage &&
+              item.category === "食品飲料");
+          // ----------------------------------------------------
+          // createdAt Sort
+          const itemDate = new Date(item.createdAt);
+          const afterStart = state.dateRange.start
+            ? itemDate >= startDate
+            : true;
+          const beforeEnd = state.dateRange.end ? itemDate <= endDate : true;
+          // ------------------keyWordBoolean---------------------
           const id = item.id?.toLowerCase() || "";
           const name = item.name?.toLowerCase() || "";
           const brand = item.brand?.toLowerCase() || "";
@@ -133,58 +158,44 @@ export function DataProvider({ children }) {
           const status = item.status?.toLowerCase() || "";
           const tags = item.tags || "";
 
-          return (
+          const keyWordBoolean =
             id.includes(keyword) ||
             name.includes(keyword) ||
             brand.includes(keyword) ||
             category.includes(keyword) ||
             status.includes(keyword) ||
-            tags.includes(keyword)
+            tags.includes(keyword);
+          return (
+            keyWordBoolean &&
+            PassCodiitions &&
+            PassCateCodition &&
+            afterStart &&
+            beforeEnd
           );
         });
         return {
           ...state,
-          ...(isFiltered ? { filtered: filtered } : { data: filtered }),
           filter: isFiltered,
-          conditions: !keyBoolean ? unCheckConditions : state.conditions,
-          cate_Condition: !keyBoolean ? unCheckCategory : state.cate_Condition,
+          filtered: filtered,
           keyword: keyword,
         };
       }
       // 日期篩選
       case "DATE_SORT": {
-        const unCheckConditions = {
-          ...state.conditions,
-          On_Sale: false, // 上架中
-          Off_Sale: false, // 下架
-          Out_of_Stock: false, // 缺貨
-        };
-
-        const unCheckCategory = {
-          ...state.cate_Condition,
-          house: false,
-          stationery: false,
-          electronics: false,
-          sporting_goods: false,
-          food_and_beverage: false,
-        };
-
         // 取得目前開始及結束的日期
         const { start, end } = action.payload;
-
+        // 目前是否為coditions篩選情況
         const PassStatus = Object.values(state.conditions).some(
           (item) => item === true
         );
+        // 目前是否為cate-Codition篩選情況
         const PassCategory = Object.values(state.cate_Condition).some(
           (item) => item === true
         );
-        // console.log("PassStatus", PassStatus);
-        // console.log("PassCategory", PassCategory);
+
+        // 目前是否為篩選
         const isFiltered = PassStatus || PassCategory || Boolean(start || end);
-        // 判定目前進入篩選狀態，只用篩選資料
-        const currentData = isFiltered
-          ? state.filtered || state.data
-          : [...state.data];
+        // 將時間轉換為 Date物件比較
         const startDate = start ? new Date(start) : null;
         const endDate = end ? new Date(end) : null;
 
@@ -193,17 +204,53 @@ export function DataProvider({ children }) {
           // 符合在兩個區間內的資料將其留下來
           const afterStart = start ? itemDate >= startDate : true;
           const beforeEnd = end ? itemDate <= endDate : true;
+          // -----------------------------------------------------------------------------------------
+          const PassCodition =
+            !PassStatus ||
+            (state.conditions.On_Sale && item.status === "上架中") ||
+            (state.conditions.Off_Sale && item.status === "下架") ||
+            (state.conditions.Out_of_Stock && item.status === "缺貨中");
+          // -----------------------------------------------------------------------------------------
 
-          return afterStart && beforeEnd;
+          const PassCate_Category =
+            !PassCategory ||
+            (state.cate_Condition.house && item.category === "居家生活") ||
+            (state.cate_Condition.stationery && item.category === "文具用品") ||
+            (state.cate_Condition.electronics &&
+              item.category === "電子產品") ||
+            (state.cate_Condition.sporting_goods &&
+              item.category === "運動用品") ||
+            (state.cate_Condition.food_and_beverage &&
+              item.category === "食品飲料");
+
+          // ------------------keyWordBoolean---------------------
+          const id = item.id?.toLowerCase() || "";
+          const name = item.name?.toLowerCase() || "";
+          const brand = item.brand?.toLowerCase() || "";
+          const category = item.category?.toLowerCase() || "";
+          const status = item.status?.toLowerCase() || "";
+          const tags = item.tags || "";
+
+          const keyWordBoolean =
+            id.includes(state.keyword) ||
+            name.includes(state.keyword) ||
+            brand.includes(state.keyword) ||
+            category.includes(state.keyword) ||
+            status.includes(state.keyword) ||
+            tags.includes(state.keyword);
+
+          return (
+            keyWordBoolean &&
+            afterStart &&
+            beforeEnd & PassCodition & PassCate_Category
+          );
         });
 
         return {
           ...state,
           filter: isFiltered,
-          ...(isFiltered ? { filtered: updateData } : { data: updateData }),
+          filtered: updateData,
           dateRange: { start, end },
-          conditions: unCheckConditions,
-          cate_Condition: unCheckCategory,
         };
       }
       // 依價格去排列
@@ -239,14 +286,6 @@ export function DataProvider({ children }) {
         const { name, checked } = action.payload;
         const ToggleChecked = !checked;
         // console.log("目前選取的 PropsName is ", name, checked);
-        const propsNameList = [
-          "No",
-          "ID",
-          "Name",
-          "Brand",
-          "Category",
-          "Stock",
-        ];
 
         const PassStatus =
           state.conditions.On_Sale ||
@@ -262,10 +301,11 @@ export function DataProvider({ children }) {
 
         // 需要判定目前是否有在篩選
         // status 和 category 和
-        const isFiltered = PassStatus || PassCategory;
-        // 目前選定到的 payload : name name
-        const currentPropsSort = propsNameList.filter((item) => item === name);
-        // console.log(currentPropsSort); // 篩選完的list ["No"]
+        const isFiltered =
+          PassStatus ||
+          PassCategory ||
+          Boolean(state.dateRange.start || state.dateRange.end) ||
+          state.keyword !== 0;
 
         // 確定當前使用的資料
         const currentData = isFiltered ? state.filtered : state.data;
@@ -275,12 +315,7 @@ export function DataProvider({ children }) {
         if (ToggleChecked) {
           // console.log(name, "大到小 篩選中...");
           updateData = [...currentData].sort((a, b) => {
-            if (name === "No") {
-              // props_sort_condition : No.
-              const No_a = a.id.slice(3, 8);
-              const No_b = b.id.slice(3, 8);
-              return No_b - No_a;
-            } else if (name === "ID") {
+            if (name === "ID") {
               // props_sort_condition : ID
               return b.id.localeCompare(a.id);
             } else if (name === "Name") {
@@ -295,6 +330,8 @@ export function DataProvider({ children }) {
             } else if (name === "Stock") {
               //  props_sort_condition : Stock
               return b.stock - a.stock;
+            } else if (name === "Price") {
+              return b.price - a.price;
             }
             // 都沒相符條件則順序不變
             return 0;
@@ -302,12 +339,7 @@ export function DataProvider({ children }) {
         } else {
           // console.log(name, "小到大 篩選中...");
           updateData = [...currentData].sort((a, b) => {
-            if (name === "No") {
-              // props_sort_condition : No.
-              const No_a = a.id.slice(3, 8);
-              const No_b = b.id.slice(3, 8);
-              return No_a - No_b;
-            } else if (name === "ID") {
+            if (name === "ID") {
               // props_sort_condition : ID
               return a.name.localeCompare(b.name);
             } else if (name === "Name") {
@@ -322,6 +354,8 @@ export function DataProvider({ children }) {
             } else if (name === "Stock") {
               //  props_sort_condition : Stock
               return a.stock - b.stock;
+            } else if (name === "Price") {
+              return a.price - b.price;
             }
           });
         }
@@ -339,6 +373,12 @@ export function DataProvider({ children }) {
       // 上架中、下架、缺貨
       case "TOGGLE_FILTER_CONDITION_STATUS": {
         // 進入快速篩選 1
+        const { key, checked } = action.payload;
+        // console.log(action.payload);
+        const newConditions = {
+          ...state.conditions,
+          [key]: checked,
+        };
         // 把快速篩選 category 刪除
         const unCheckCategory = {
           ...state.cate_Condition,
@@ -348,13 +388,14 @@ export function DataProvider({ children }) {
           sporting_goods: false,
           food_and_beverage: false,
         };
+        // createdAt
+        const startDate = state.dateRange.start
+          ? new Date(state.dateRange.start)
+          : null;
 
-        const { key, checked } = action.payload;
-        // console.log(action.payload);
-        const newConditions = {
-          ...state.conditions,
-          [key]: checked,
-        };
+        const endDate = state.dateRange.end
+          ? new Date(state.dateRange.end)
+          : null;
 
         const hasStatusFilter = Object.values(newConditions).some(
           (item) => item === true
@@ -387,7 +428,36 @@ export function DataProvider({ children }) {
             (newConditions.Off_Sale && item.status === "下架") ||
             (newConditions.Out_of_Stock && item.status === "缺貨中");
           //  ---------------------------------------------------------
-          return PassStatus && PassCategory;
+          // createdAT Sort
+          const itemDate = new Date(item.createdAt);
+          const afterStart = state.dateRange.start
+            ? itemDate >= startDate
+            : true;
+          const beforeEnd = state.dateRange.end ? itemDate <= endDate : true;
+
+          // ------------------keyWordBoolean---------------------
+          const id = item.id?.toLowerCase() || "";
+          const name = item.name?.toLowerCase() || "";
+          const brand = item.brand?.toLowerCase() || "";
+          const category = item.category?.toLowerCase() || "";
+          const status = item.status?.toLowerCase() || "";
+          const tags = item.tags || "";
+
+          const keyWordBoolean =
+            id.includes(state.keyword) ||
+            name.includes(state.keyword) ||
+            brand.includes(state.keyword) ||
+            category.includes(state.keyword) ||
+            status.includes(state.keyword) ||
+            tags.includes(state.keyword);
+
+          return (
+            PassStatus &&
+            PassCategory &&
+            afterStart &&
+            beforeEnd &&
+            keyWordBoolean
+          );
         });
         return {
           ...state,
@@ -396,16 +466,14 @@ export function DataProvider({ children }) {
           filtered: filtered,
           conditions: newConditions,
           cate_Condition: unCheckCategory,
-          dateRange: {
-            start: "",
-            end: "",
-          },
-          keyword: "",
         };
       }
-      // Category Condition 篩選case
+      // Category Condition 篩選
       case "TOGGLE_FILTER_CONDITION_CATEGORY": {
         // 進入快速篩選 2
+        const { key, checked } = action.payload;
+        // console.log(action.payload);
+        const newCate_Condition = { ...state.cate_Condition, [key]: checked };
 
         // 把快速篩選 condition 刪除
         const unCheckStatus = {
@@ -415,9 +483,14 @@ export function DataProvider({ children }) {
           Out_of_Stock: false, // 缺貨
         };
 
-        const { key, checked } = action.payload;
-        // console.log(action.payload);
-        const newCate_Condition = { ...state.cate_Condition, [key]: checked };
+        // createdAt
+        const startDate = state.dateRange.start
+          ? new Date(state.dateRange.start)
+          : null;
+
+        const endDate = state.dateRange.end
+          ? new Date(state.dateRange.end)
+          : null;
 
         const hasCategoryFilter =
           Object.values(newCate_Condition).some(Boolean);
@@ -427,6 +500,7 @@ export function DataProvider({ children }) {
         const isFilter = hasCategoryFilter || hasStatusFilter;
 
         const filtered = state.data.filter((item) => {
+          // ---------------PassStatus--------------------------
           const PassStatus =
             (!unCheckStatus.On_Sale &&
               !unCheckStatus.Off_Sale &&
@@ -434,8 +508,7 @@ export function DataProvider({ children }) {
             (unCheckStatus.On_Sale && item.status === "上架中") ||
             (unCheckStatus.Off_Sale && item.status === "下架") ||
             (unCheckStatus.Out_of_Stock && item.status === "缺貨中");
-          // -----------------------------------------------------------
-
+          // ---------------PassCategory--------------------------
           const PassCategory =
             (!newCate_Condition.house &&
               !newCate_Condition.stationery &&
@@ -449,11 +522,36 @@ export function DataProvider({ children }) {
               item.category === "運動用品") ||
             (newCate_Condition.food_and_beverage &&
               item.category === "食品飲料");
+          // -------------------DateBoolean--------------------
+          const itemDate = new Date(item.createdAt);
+          const afterStart = state.dateRange.start
+            ? itemDate >= startDate
+            : true;
+          const beforeEnd = state.dateRange.end ? itemDate <= endDate : true;
+          // ------------------keyWordBoolean---------------------
+          const id = item.id?.toLowerCase() || "";
+          const name = item.name?.toLowerCase() || "";
+          const brand = item.brand?.toLowerCase() || "";
+          const category = item.category?.toLowerCase() || "";
+          const status = item.status?.toLowerCase() || "";
+          const tags = item.tags || "";
 
-          return PassStatus && PassCategory;
+          const keyWordBoolean =
+            id.includes(state.keyword) ||
+            name.includes(state.keyword) ||
+            brand.includes(state.keyword) ||
+            category.includes(state.keyword) ||
+            status.includes(state.keyword) ||
+            tags.includes(state.keyword);
+
+          return (
+            PassStatus &&
+            PassCategory &&
+            afterStart &&
+            beforeEnd &&
+            keyWordBoolean
+          );
         });
-        // console.log(newCate_Condition);
-        // console.log(unCheckStatus);
 
         return {
           ...state,
@@ -462,11 +560,6 @@ export function DataProvider({ children }) {
           filtered: filtered,
           conditions: unCheckStatus,
           cate_Condition: newCate_Condition,
-          dateRange: {
-            start: "",
-            end: "",
-          },
-          keyword: "",
         };
       }
       // 開啟新增頁面
@@ -575,6 +668,7 @@ export function DataProvider({ children }) {
           newItem: {
             id: "",
             name: "",
+            status: "",
             category: "",
             price: "",
             createdAt: "",
@@ -658,9 +752,32 @@ export function DataProvider({ children }) {
         const newData = [...state.data];
         newData[targetIndex] = update;
 
+        // -----------------------------------------
+        const reset_conditions = {
+          ...state.conditions,
+          On_Sale: false,
+          Off_Sale: false,
+          Out_of_Stock: false,
+        };
+        const reset_cate_Condition = {
+          ...state.cate_Condition,
+          house: false,
+          stationery: false,
+          electronics: false,
+          sporting_goods: false,
+          food_and_beverage: false,
+        };
+
+        alert("資料已更新....請重新查詢確認...");
         return {
           ...state,
+          filter: false,
           data: newData,
+          keyword: "",
+          dateRange: { start: "", end: "" },
+          conditions: reset_conditions,
+          cate_Condition: reset_cate_Condition,
+
           // 修改資料送出後，將頁面關閉及清空
           newDetail: {
             name: "",

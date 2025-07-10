@@ -96,7 +96,7 @@ const ResultSummary = () => {
         </div>
         <hr className="my-2 border-white/25" />
         <div className="flex gap-2 items-center justify-center border py-2">
-          <span className="pl-2">Visible Columns :</span>
+          <span className="pl-2">Visible :</span>
           <div className="flex flex-wrap justify-around gap-2 w-fit items-center">
             <CheckBox
               value="ID"

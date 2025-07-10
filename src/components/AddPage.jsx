@@ -11,9 +11,6 @@ import {
 const AddPage = () => {
   const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
   // useEffect(() => {
   //   console.log(state.newItem);
   // }, [state.newItem]);
@@ -74,7 +71,7 @@ const AddPage = () => {
         />
 
         {/* ADD Category */}
-        <AddInputText
+        <AddInputSelect
           label="Category"
           name="category"
           value={state.newItem.category}
@@ -146,6 +143,11 @@ const AddPage = () => {
           whileHover={{ ...BtnAnimateHover }}
           onClick={() => {
             dispatch({ type: "ADD_DATA" });
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              dispatch({ type: "ADD_DATA" });
+            }
           }}
           type="submit"
           className=" border px-2 rounded-full"

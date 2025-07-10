@@ -79,7 +79,12 @@ export const AddInputDate = ({ label, name, value, onChange, placeholder }) => {
 };
 
 export const AddInputSelect = ({ label, name, onChange }) => {
-  const opt = ["", "上架中", "下架", "缺貨中"];
+  let opt = [];
+  if (name === "status") {
+    opt = ["", "上架中", "下架", "缺貨中"];
+  } else if (name === "category") {
+    opt = ["", "居家生活", "文具用品", "電子產品", "運動用品", "食品飲料"];
+  }
 
   return (
     <div className="w-auto flex border">

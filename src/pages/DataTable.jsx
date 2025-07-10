@@ -10,8 +10,12 @@ const ITEMS_PER_PAGE = 20;
 
 const DataTable = () => {
   const { state, dispatch } = useContext(DataContext);
-  // console.log("state.filter", state.filter);
-
+  console.log(
+    "目前是否使用篩選資料",
+    state.filter ? "使用 篩選 資料中..." : "使用 總資料 中..."
+  );
+  // console.log("目前condition", state.conditions);
+  // console.log("目前cate_condition", state.cate_Condition);
   const allProducts = state.filter ? state.filtered : state.data;
 
   // console.log("目前選取的資料有：", state.selected);
@@ -41,9 +45,7 @@ const DataTable = () => {
         <table className={`border w-fit mix-w-[800px]`}>
           <thead className={`sticky top-0`}>
             <tr className="">
-              <th className={`${th_style} flex justify-center`}>
-                No. <PropsSortBtn propsName={"No"} />
-              </th>
+              <th className={`${th_style} flex justify-center`}>No.</th>
               <th className={`${th_style} sticky `}>
                 <motion.input
                   animate={{
@@ -97,6 +99,7 @@ const DataTable = () => {
                 }`}
               >
                 Price
+                <PropsSortBtn propsName={"Price"} />
               </th>
               <th
                 className={`${th_style} ${
@@ -144,7 +147,7 @@ const DataTable = () => {
                       transition={{ duration: 0.3, ease: easeInOut }}
                       className="text-center h-[1.5rem]"
                     >
-                      <td className={`${td_style}`}>{p.id.slice(-5)}</td>
+                      <td className={`${td_style}`}>{index + 1}</td>
                       <td className={`${td_style} sticky `}>
                         <motion.input
                           animate={{
