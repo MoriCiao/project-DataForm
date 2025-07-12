@@ -23,7 +23,6 @@ export function DataProvider({ children }) {
     newDetail: {
       name: "",
       brand: "",
-      status: "",
       category: "",
       price: "",
       createdAt: "",
