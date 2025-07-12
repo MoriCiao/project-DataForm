@@ -1,12 +1,41 @@
-# React + Vite
+# DataForm - JSON 表單工具
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+這是一個使用 React 打造的表單工具，使用者可以自由新增與修改欄位，管理資料內容，並將結果匯出成 JSON 格式。
 
-Currently, two official plugins are available:
+> 此專案為個人練習作品之一，主要練習 React、狀態管理、資料輸出與 localStorage 資料儲存等功能。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 📷 專案畫面
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+![screenshot](./public/screenshot-1.png)
+
+![screenshot](./public/screenshot-2.png)
+
+![screenshot](./public/screenshot-3.png)
+
+![screenshot](./public/screenshot-4.png)
+
+---
+
+## 功能特色
+
+- **動態新增欄位**
+- **即時編輯 key / value 值**
+- **可刪除任意一組資料**
+- **資料會保存在 localStorage 中**
+- **一鍵匯出 JSON**
+
+---
+
+## 技術使用
+
+| 技術         | 說明                               |
+| ------------ | ---------------------------------- |
+| React        | 使用 `useReducer` 處理表單資料邏輯 |
+| Context API  | 全域狀態管理（資料與操作共用）     |
+| localStorage | 儲存使用者填寫的資料內容           |
+| JSON 處理    | `JSON.stringify()` 輸出匯出格式    |
+| Tailwind CSS | UI 排版與互動優化                  |
+
+---

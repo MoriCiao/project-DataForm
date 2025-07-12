@@ -1,17 +1,12 @@
 :root {
-  --theme-Primary: #0EA5E9;
-  --theme-Secondary: #64748B;
-  --text:#F1F5F9;
-  --bg: #0F172A;
+  --theme-Primary: rgb(14, 165, 233);
+  --theme-Secondary: rgb(100, 116, 139);
+  --text:rgb(241, 245, 249);
+  --bg: rgb(15, 23, 42);
 }
 
 body {
   background-color: var(--bg);
   width: auto;
   height: 100%;
-}
-
-.dataTable {
-  overflow-x: scroll;
-  scroll-behavior: smooth;
 }/*# sourceMappingURL=style.css.map */

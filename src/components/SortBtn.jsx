@@ -1,29 +1,39 @@
 import React, { useState, useContext } from "react";
 import { DataContext } from "../context/DataContext";
-
+import { easeInOut, motion } from "framer-motion";
 export const RaiseBtn = () => {
   const { state, dispatch } = useContext(DataContext);
   return (
-    <button
+    <motion.button
+      whileHover={{
+        backgroundColor: "rgb(241, 245, 249)",
+        color: "rgb(0,0,0)",
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       type="button"
-      className={` rounded-sm text-white`}
+      className={`border px-4 sm:h-[2rem] md:w-[6rem] text-[1.15rem] rounded-md text-white`}
       onClick={() => dispatch({ type: "PRICE_RAISE_SORT" })}
     >
       Price🔼
-    </button>
+    </motion.button>
   );
 };
 
 export const DecreaseBtn = () => {
   const { state, dispatch } = useContext(DataContext);
   return (
-    <button
+    <motion.button
+      whileHover={{
+        backgroundColor: "rgb(241, 245, 249)",
+        color: "rgb(0,0,0)",
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       type="button"
-      className={` rounded-sm text-white`}
+      className={`border px-4 sm:h-[2rem] md:w-[6rem] text-[1.15rem] rounded-md text-white`}
       onClick={() => dispatch({ type: "PRICE_DECREASE_SORT" })}
     >
       Price🔽
-    </button>
+    </motion.button>
   );
 };
 

@@ -19,10 +19,10 @@ const SearchForm = () => {
   // console.log(state.conditions);
   // console.log(state.cate_Condition);
   return (
-    <section className="searchForm-area flex flex-wrap gap-4 text-black w-full">
-      <div className="flex gap-4 md:items-center md:justify-center">
+    <section className="searchForm-area flex flex-wrap items-center justify-center sm:gap-8 text-black w-full">
+      <div className="w-full md:flex md:gap-4 md:flex-row sm:items-center sm:justify-center  sm:grid sm:gap-4 ">
         <input
-          className="indent-[0.5rem] w-[10rem]"
+          className="indent-[0.5rem] w-[10rem] md:w-[12rem] md:h-[3rem] sm:w-[20rem] sm:h-[2rem]"
           type="text"
           placeholder="Keyword ..."
           value={state.keyword}
@@ -33,7 +33,7 @@ const SearchForm = () => {
 
         <input
           type="date"
-          className="indent-[0.5rem] w-[10rem]"
+          className="indent-[0.5rem] w-[10rem] md:w-[12rem] md:h-[3rem] sm:w-[20rem] sm:h-[2.5rem]"
           value={state.dateRange.start || ""}
           onChange={(e) => {
             dispatch({
@@ -47,7 +47,7 @@ const SearchForm = () => {
         />
         <input
           type="date"
-          className="indent-[0.5rem] w-[10rem]"
+          className="indent-[0.5rem] w-[10rem] md:w-[12rem] md:h-[3rem] sm:w-[20rem] sm:h-[2rem]"
           value={state.dateRange.end || ""}
           onChange={(e) => {
             dispatch({
@@ -60,7 +60,7 @@ const SearchForm = () => {
           }}
         />
       </div>
-      <div className="flex gap-4 md:items-center md:justify-center">
+      <div className="md:grid-cols-6 md:gap-4 sm:grid sm:grid-cols-3 sm:gap-8 sm:items-center sm:justify-between sm:w-auto">
         <AddBtn />
         <DelBtn />
         <SaveBtn />

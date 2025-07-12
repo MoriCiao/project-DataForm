@@ -9,7 +9,7 @@ const MainArea = () => {
 
   return (
     <section
-      className={`MainArea border flex flex-col items-center p-4 mx-8 h-auto w-auto max-w-[90vw] overflow-overlay`}
+      className={`MainArea border flex flex-col items-center px-8 pt-4 mb-4 mx-8 h-auto w-auto max-w-[90vw]  overflow-overlay`}
     >
       <div className={`flex flex-col gap-4`}>
         <SearchForm />

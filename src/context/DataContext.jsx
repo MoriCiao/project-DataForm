@@ -1,3 +1,4 @@
+import { scale, easeInOut } from "framer-motion";
 import React, { createContext, useEffect, useReducer } from "react";
 
 export const DataContext = createContext();
@@ -287,26 +288,22 @@ export function DataProvider({ children }) {
         const ToggleChecked = !checked;
         // console.log("目前選取的 PropsName is ", name, checked);
 
-        const PassStatus =
-          state.conditions.On_Sale ||
-          state.conditions.Off_Sale ||
-          state.conditions.Out_of_Stock;
+        const PassStatus = Object.values(state.conditions).some(
+          (v) => v === true
+        );
 
-        const PassCategory =
-          state.cate_Condition.house ||
-          state.cate_Condition.stationery ||
-          state.cate_Condition.electronics ||
-          state.cate_Condition.sporting_goods ||
-          state.cate_Condition.food_and_beverage;
+        const PassCategory = Object.values(state.cate_Condition).some(
+          (v) => v === true
+        );
 
         // 需要判定目前是否有在篩選
-        // status 和 category 和
+        // status 和 category 和  Date & keyword
         const isFiltered =
           PassStatus ||
           PassCategory ||
           Boolean(state.dateRange.start || state.dateRange.end) ||
-          state.keyword !== 0;
-
+          state.keyword.length !== 0;
+        // console.log(isFiltered);
         // 確定當前使用的資料
         const currentData = isFiltered ? state.filtered : state.data;
 
@@ -314,10 +311,12 @@ export function DataProvider({ children }) {
 
         if (ToggleChecked) {
           // console.log(name, "大到小 篩選中...");
-          updateData = [...currentData].sort((a, b) => {
+          updateData = currentData.sort((a, b) => {
+            const id_a = a.id.slice(-5);
+            const id_b = b.id.slice(-5);
             if (name === "ID") {
               // props_sort_condition : ID
-              return b.id.localeCompare(a.id);
+              return id_b - id_a;
             } else if (name === "Name") {
               //  props_sort_condition : Name
               return b.name.localeCompare(a.name);
@@ -338,10 +337,12 @@ export function DataProvider({ children }) {
           });
         } else {
           // console.log(name, "小到大 篩選中...");
-          updateData = [...currentData].sort((a, b) => {
+          updateData = currentData.sort((a, b) => {
+            const id_a = a.id.slice(-5);
+            const id_b = b.id.slice(-5);
             if (name === "ID") {
               // props_sort_condition : ID
-              return a.name.localeCompare(b.name);
+              return id_a - id_b;
             } else if (name === "Name") {
               //  props_sort_condition : Name
               return a.name.localeCompare(b.name);
@@ -582,12 +583,22 @@ export function DataProvider({ children }) {
           // 當單一商品取消checjed 時，把資料從 selected 刪除...
           updata = state.selected.filter((i) => i.id !== item.id);
         }
-        return { ...state, selected: updata };
+        return {
+          ...state,
+          selected: updata,
+          // 當所選取的資料與data 一樣時 selectAll 才是　true
+          selectAll: updata.length === state.data.length,
+        };
       }
+      // 選擇所有資料
       case "SELECT_ALL": {
-        // console.log(state.selectAll);
+        const checked = action.payload;
 
-        return { ...state, selectAll: !state.selectAll };
+        return {
+          ...state,
+          selected: checked ? [...state.data] : [],
+          selectAll: checked,
+        };
       }
       // 將選取的資料放進垃圾桶
       case "DEL_SELECTED": {
@@ -690,6 +701,7 @@ export function DataProvider({ children }) {
           isVisible: { ...state.isVisible, [key]: checked },
         };
       }
+      // 開啟修改頁面
       case "TOGGLE_REVISE_PAGE": {
         // 開啟 修正PAGE，當前的商品資料帶入進來
         const data = action.payload;
@@ -704,6 +716,7 @@ export function DataProvider({ children }) {
           },
         };
       }
+      // 修改資料
       case "NEW_DETAIL": {
         console.log(action.payload);
         // 之後修改時對應相應的 id 做修正
@@ -727,6 +740,7 @@ export function DataProvider({ children }) {
           },
         };
       }
+      // 將修改的資料內容返還給data
       case "CONFIRM_OF_REVISION": {
         // 目前已填寫的 newDetail 帶入
         const newDetail = state.newDetail;
@@ -814,7 +828,7 @@ export function DataProvider({ children }) {
           dispatch({ type: "SET_DATA", payload: jsonData });
         } else {
           console.log("抓取資料...");
-          const res = await fetch("/product_data_2000.json");
+          const res = await fetch("/project-DataForm/product_data_2000.json");
           const jsonData = await res.json();
 
           dispatch({ type: "SET_DATA", payload: jsonData });
@@ -841,15 +855,12 @@ export function DataProvider({ children }) {
     }, 2000);
   };
 
-  // Btn animate
-  const BtnAnimateHover = { backgroundColor: "#F1F5F9", color: "#0F172A" };
-
   useEffect(() => {
     LoadingData();
   }, []);
 
   return (
-    <DataContext.Provider value={{ state, dispatch, BtnAnimateHover }}>
+    <DataContext.Provider value={{ state, dispatch }}>
       {children}
     </DataContext.Provider>
   );

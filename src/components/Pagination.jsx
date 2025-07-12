@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { easeInOut, motion } from "framer-motion";
+import { DataContext } from "../context/DataContext";
 const Pagination = ({
   goToPrevPage,
   goToNextPage,
@@ -7,6 +8,8 @@ const Pagination = ({
   totalPages,
   setCurrentPage,
 }) => {
+  const { BtnAnimate } = useContext(DataContext);
+
   const [changePage, setChangePage] = useState("");
   const currentInput = changePage;
 
@@ -30,13 +33,13 @@ const Pagination = ({
   return (
     <div className="relative flex flex-row items-center justify-center gap-4 my-4">
       <div
-        className={`absolute left-0 rounded-sm bg-white/50 text-white border `}
+        className={`absolute md:left-0 sm:left-[-3rem] rounded-sm bg-white/50 text-white border `}
       >
         <motion.input
           whileFocus={{ backgroundColor: "#F1F5F9", color: "#0F172A" }}
           transition={{ duration: 0.3 }}
           type="number"
-          className={`w-[8rem] text-center bg-transparent indent-[0.5rem] `}
+          className={`md:w-[8rem] sm:w-[4rem] text-center bg-transparent indent-[0.5rem] `}
           placeholder="請輸入頁數..."
           step="1"
           min="1"
@@ -61,7 +64,11 @@ const Pagination = ({
 
       {/* ------------------------------------------------------------------ */}
       <motion.button
-        whileHover={{ backgroundColor: "#F1F5F9", color: "#0F172A" }}
+        whileHover={{
+          backgroundColor: "rgb(241, 245, 249)",
+          color: "rgb(0,0,0)",
+        }}
+        transition={{ duration: 0.3, ease: easeInOut }}
         onClick={goToPrevPage}
         className="border px-4 rounded-full"
       >
@@ -71,7 +78,11 @@ const Pagination = ({
         {currentPage} page / {totalPages} pages
       </span>
       <motion.button
-        whileHover={{ backgroundColor: "#F1F5F9", color: "#0F172A" }}
+        whileHover={{
+          backgroundColor: "rgb(241, 245, 249)",
+          color: "rgb(0,0,0)",
+        }}
+        transition={{ duration: 0.3, ease: easeInOut }}
         onClick={goToNextPage}
         className="border px-4 rounded-full"
       >

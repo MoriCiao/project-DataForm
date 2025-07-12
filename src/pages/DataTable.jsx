@@ -19,6 +19,7 @@ const DataTable = () => {
   const allProducts = state.filter ? state.filtered : state.data;
 
   // console.log("目前選取的資料有：", state.selected);
+  // console.log("全選目前", state.selectAll);
   // console.log("目前刪除的資料有：", state.del_data);
   // const x = state.data[0].createdAt;
   // console.log(x.length);
@@ -41,7 +42,7 @@ const DataTable = () => {
 
   return (
     <div>
-      <div className="dataTable overflow-x-auto  max-h-[85vh] xl:max-w-[1000px] md:max-w-[700px] sm:max-w-[500px]">
+      <div className="dataTable overflow-x-auto mb-4 max-h-[85vh] xl:max-w-[1000px] md:max-w-[700px] sm:max-w-[500px]">
         <table className={`border w-fit mix-w-[800px]`}>
           <thead className={`sticky top-0`}>
             <tr className="">
@@ -53,9 +54,13 @@ const DataTable = () => {
                   }}
                   transition={{ duration: 0.3 }}
                   type="checkbox"
+                  checked={state.selectAll}
                   className="scale-125"
-                  onClick={() =>
-                    dispatch({ type: "SELECT_ALL", payload: !state.selectAll })
+                  onClick={(e) =>
+                    dispatch({
+                      type: "SELECT_ALL",
+                      payload: e.target.checked,
+                    })
                   }
                 />
               </th>
@@ -163,7 +168,10 @@ const DataTable = () => {
                           onChange={(e) => {
                             dispatch({
                               type: "SELECT_SINGLE",
-                              payload: { item: p, checked: e.target.checked },
+                              payload: {
+                                item: p,
+                                checked: e.target.checked,
+                              },
                             });
                           }}
                         />

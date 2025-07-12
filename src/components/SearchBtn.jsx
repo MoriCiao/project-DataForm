@@ -1,12 +1,18 @@
 import React, { useState, useContext } from "react";
 import { DataContext } from "../context/DataContext";
-import { motion } from "framer-motion";
+import { easeInOut, motion } from "framer-motion";
 export const UndoBtn = () => {
-  const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
+  const { state, dispatch } = useContext(DataContext);
 
   return (
     <motion.button
-      whileHover={{ ...BtnAnimateHover }}
+      whileHover={{
+        backgroundColor: "rgb(101, 212, 147)",
+        color: "rgb(0, 0, 0)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       onClick={() =>
         dispatch({
           type: "UNDO_DEL_SELECTED",
@@ -21,11 +27,17 @@ export const UndoBtn = () => {
   );
 };
 export const AddBtn = () => {
-  const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
+  const { state, dispatch } = useContext(DataContext);
 
   return (
     <motion.button
-      whileHover={{ ...BtnAnimateHover }}
+      whileHover={{
+        backgroundColor: "rgb(0, 42, 255)",
+        color: "rgb(0, 0, 0)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       onClick={() => dispatch({ type: "TOGGLE_ADD_PAGE" })}
       type="button"
       className={`border px-2 rounded-sm text-white`}
@@ -35,11 +47,17 @@ export const AddBtn = () => {
   );
 };
 export const DelBtn = () => {
-  const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
+  const { state, dispatch } = useContext(DataContext);
 
   return (
     <motion.button
-      whileHover={{ ...BtnAnimateHover }}
+      whileHover={{
+        backgroundColor: "rgb(255, 70, 70)",
+        color: "rgb(253, 255, 160)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       onClick={() =>
         dispatch({ type: "DEL_SELECTED", payload: { item: state.selected } })
       }
@@ -51,7 +69,7 @@ export const DelBtn = () => {
   );
 };
 export const SaveBtn = () => {
-  const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
+  const { state, dispatch } = useContext(DataContext);
 
   const handleSave = () => {
     console.log("Data 以儲存至 LocalStorage....");
@@ -60,7 +78,13 @@ export const SaveBtn = () => {
   };
   return (
     <motion.button
-      whileHover={{ ...BtnAnimateHover }}
+      whileHover={{
+        backgroundColor: "rgb(243, 255, 70)",
+        color: "rgb(0, 0, 0)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       className={`border px-2 rounded-sm text-white`}
       onClick={handleSave}
     >
@@ -69,7 +93,7 @@ export const SaveBtn = () => {
   );
 };
 export const ReLoadingBtn = () => {
-  const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
+  const { state, dispatch } = useContext(DataContext);
 
   const handleReload = () => {
     dispatch({ type: "SET_LOADING", payload: true });
@@ -77,7 +101,7 @@ export const ReLoadingBtn = () => {
     // console.log(JSON.parse(localStorage.getItem("my_dataForm")));
     setTimeout(async () => {
       try {
-        const res = await fetch("/product_data_2000.json");
+        const res = await fetch("/project-DataForm/product_data_2000.json");
         const jsonData = await res.json();
         console.log(`目前抓取 ${jsonData.length} 筆資料..`);
         dispatch({ type: "SET_DATA", payload: jsonData });
@@ -104,7 +128,13 @@ export const ReLoadingBtn = () => {
   };
   return (
     <motion.button
-      whileHover={{ ...BtnAnimateHover }}
+      whileHover={{
+        backgroundColor: "rgb(124, 255, 117)",
+        color: "rgb(0, 0, 0)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       className={`border px-2 rounded-sm text-white`}
       onClick={handleReload}
     >
@@ -114,24 +144,42 @@ export const ReLoadingBtn = () => {
 };
 
 export const ToDelPage = () => {
-  const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
+  const { state, dispatch } = useContext(DataContext);
   return (
     <motion.button
-      whileHover={{ ...BtnAnimateHover }}
+      whileHover={{
+        backgroundColor: "rgb(255, 0, 0)",
+        color: "rgb(253, 255, 160)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       onClick={() => dispatch({ type: "TOGGLE_DEL_PAGE" })}
       type="button"
       className={` border px-2 rounded-sm text-white`}
     >
-      🗑️
+      <motion.span
+        initial={{ fontSize: "1rem" }}
+        whileHover={{ fontSize: ["1rem", "1.15rem"] }}
+        transition={{ duration: 0.3, ease: easeInOut }}
+      >
+        🗑️
+      </motion.span>
     </motion.button>
   );
 };
 
 export const CurrentDelBtn = () => {
-  const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
+  const { state, dispatch } = useContext(DataContext);
   return (
     <motion.button
-      whileHover={{ ...BtnAnimateHover }}
+      whileHover={{
+        backgroundColor: "rgb(255, 0, 0)",
+        color: "rgb(251, 255, 0)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       onClick={() => {
         dispatch({ type: "CURRENT_DEL_DATA" });
       }}
@@ -160,13 +208,20 @@ export const ExoportBtn = () => {
   };
 
   return (
-    <button
+    <motion.button
+      whileHover={{
+        backgroundColor: "rgb(134, 251, 255)",
+        color: "rgb(0, 0, 0)",
+        scale: 1.15,
+        fontWeight: 900,
+      }}
+      transition={{ duration: 0.3, ease: easeInOut }}
       className={`border px-2 rounded-sm text-white`}
       onClick={() => {
         exportToJson(state.data, "myData.json");
       }}
     >
       Export Data
-    </button>
+    </motion.button>
   );
 };
