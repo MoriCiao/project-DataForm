@@ -1,7 +1,9 @@
 import React, { Fragment, useContext } from "react";
 import { easeInOut, motion } from "framer-motion";
 import { DataContext } from "../context/DataContext";
-import { UndoBtn, CurrentDelBtn } from "./SearchBtn";
+
+import Button from "./Button/Button";
+
 const th_style = "px-4 border bg-[--theme-Secondary]";
 const td_style = "px-4 py-1 border border-white/50 bg-[--bg] whitespace-nowrap";
 
@@ -73,8 +75,22 @@ const DelPage = () => {
         </div>
       )}
       <div className="flex items-center justify-center gap-8 mt-2">
-        <CurrentDelBtn />
-        <UndoBtn />
+        <Button
+          type="button"
+          label="Undo"
+          onClick={() => () =>
+            dispatch({
+              type: "UNDO_DEL_SELECTED",
+              payload: { item: state.del_data },
+            })}
+        />
+        <Button
+          type="button"
+          label="Delete !"
+          onClick={() => {
+            dispatch({ type: "CURRENT_DEL_DATA" });
+          }}
+        />
       </div>
     </motion.section>
   );

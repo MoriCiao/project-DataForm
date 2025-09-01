@@ -11,9 +11,6 @@ import {
 const AddPage = () => {
   const { state, dispatch, BtnAnimateHover } = useContext(DataContext);
 
-  // useEffect(() => {
-  //   console.log(state.newItem);
-  // }, [state.newItem]);
   return (
     <motion.section
       initial={{ opacity: 0 }}

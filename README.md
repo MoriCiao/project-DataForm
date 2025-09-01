@@ -8,13 +8,13 @@
 
 ## 📷 專案畫面
 
-![screenshot](./public/screenshot-1.png)
+![screenshot](./README/screenshot-1.png)
 
-![screenshot](./public/screenshot-2.png)
+![screenshot](./README/screenshot-2.png)
 
-![screenshot](./public/screenshot-3.png)
+![screenshot](./README/screenshot-3.png)
 
-![screenshot](./public/screenshot-4.png)
+![screenshot](./README/screenshot-4.png)
 
 ---
 

@@ -1,4 +1,5 @@
 import { scale, easeInOut } from "framer-motion";
+import { tr } from "framer-motion/client";
 import React, { createContext, useEffect, useReducer } from "react";
 
 export const DataContext = createContext();
@@ -255,9 +256,8 @@ export function DataProvider({ children }) {
       }
       // 依價格去排列
       case "PRICE_RAISE_SORT": {
-        // console.log("RAISE...");
         const isFiltered = state.filter;
-        // console.log(isFiltered);
+
         const currentData = isFiltered ? state.filtered : state.data;
         const raiseData = currentData.sort((a, b) => {
           return b.price - a.price;
@@ -268,10 +268,8 @@ export function DataProvider({ children }) {
         };
       }
       case "PRICE_DECREASE_SORT": {
-        // console.log("DECREASE");
-
         const isFiltered = state.filter;
-        // console.log(isFiltered);
+
         const currentData = isFiltered ? state.filtered : state.data;
         const decreaseData = currentData.sort((a, b) => {
           return a.price - b.price;
@@ -285,7 +283,6 @@ export function DataProvider({ children }) {
       case "PER_PROPS_SORT": {
         const { name, checked } = action.payload;
         const ToggleChecked = !checked;
-        // console.log("目前選取的 PropsName is ", name, checked);
 
         const PassStatus = Object.values(state.conditions).some(
           (v) => v === true
@@ -302,14 +299,12 @@ export function DataProvider({ children }) {
           PassCategory ||
           Boolean(state.dateRange.start || state.dateRange.end) ||
           state.keyword.length !== 0;
-        // console.log(isFiltered);
         // 確定當前使用的資料
         const currentData = isFiltered ? state.filtered : state.data;
 
         let updateData;
 
         if (ToggleChecked) {
-          // console.log(name, "大到小 篩選中...");
           updateData = currentData.sort((a, b) => {
             const id_a = a.id.slice(-5);
             const id_b = b.id.slice(-5);
@@ -335,7 +330,6 @@ export function DataProvider({ children }) {
             return 0;
           });
         } else {
-          // console.log(name, "小到大 篩選中...");
           updateData = currentData.sort((a, b) => {
             const id_a = a.id.slice(-5);
             const id_b = b.id.slice(-5);
@@ -359,8 +353,6 @@ export function DataProvider({ children }) {
             }
           });
         }
-        // console.log(state.props_sort_condition);
-        // console.log("isFiltered : ", isFiltered);
         return {
           ...state,
           ...(isFiltered ? { filtered: updateData } : { data: updateData }),
@@ -374,7 +366,6 @@ export function DataProvider({ children }) {
       case "TOGGLE_FILTER_CONDITION_STATUS": {
         // 進入快速篩選 1
         const { key, checked } = action.payload;
-        // console.log(action.payload);
         const newConditions = {
           ...state.conditions,
           [key]: checked,
@@ -400,7 +391,6 @@ export function DataProvider({ children }) {
         const hasStatusFilter = Object.values(newConditions).some(
           (item) => item === true
         );
-        // console.log(hasStatusFilter);
         //  cate_Condition 重製篩選的 category
         const hasCategoryFilter = false;
 
@@ -472,7 +462,6 @@ export function DataProvider({ children }) {
       case "TOGGLE_FILTER_CONDITION_CATEGORY": {
         // 進入快速篩選 2
         const { key, checked } = action.payload;
-        // console.log(action.payload);
         const newCate_Condition = { ...state.cate_Condition, [key]: checked };
 
         // 把快速篩選 condition 刪除
@@ -494,7 +483,6 @@ export function DataProvider({ children }) {
 
         const hasCategoryFilter =
           Object.values(newCate_Condition).some(Boolean);
-        // console.log(hasCategoryFilter);
         const hasStatusFilter = false;
 
         const isFilter = hasCategoryFilter || hasStatusFilter;
@@ -564,7 +552,6 @@ export function DataProvider({ children }) {
       }
       // 開啟新增頁面
       case "TOGGLE_ADD_PAGE": {
-        // console.log("ADD PAGE 開啟...");
         return { ...state, addPage: !state.addPage, delPage: false };
       }
       // 開啟垃圾桶
@@ -601,8 +588,8 @@ export function DataProvider({ children }) {
       }
       // 將選取的資料放進垃圾桶
       case "DEL_SELECTED": {
-        const selectedData = action.payload.item; //iterable
-        // console.log(selectedData);
+        const selectedData = action.payload.item;
+
         const selectedIds = selectedData.map((item) => item.id);
         // 保留刪除資料
         const deletedData = state.data.filter((item) =>
@@ -625,31 +612,22 @@ export function DataProvider({ children }) {
         const deletedData = action.payload.item;
 
         if (deletedData.length === 0) {
-          console.log("deletedData.length 長度為 0");
-          console.log("總資料長度為:", state.data.length);
           return { ...state };
         } else {
           console.log("目前在垃圾桶裡的資料有", deletedData);
           const updateData = state.data.concat(deletedData);
-          // console.log(updateData.length);
-
           return { ...state, data: updateData, del_data: [] };
         }
       }
       // 刪除目前在垃圾桶裡的資料
       case "CURRENT_DEL_DATA": {
-        console.log("Delete List 內資料已清除...");
-        console.log(`目前總資料為 : ${state.data.length}`);
         return { ...state, del_data: [] };
       }
       // 輸入新增資料的細項
       case "ADD_NEW_ITEM": {
         const itemDetail = action.payload;
         const { name, value } = itemDetail;
-
-        // console.log(name, value);
-
-        // 因tags 要轉變成 array
+        // tags 要轉變成 array
         // name === "tags" ? value.split(",").map((i) => i.trim()) : value
         return {
           ...state,
@@ -662,8 +640,6 @@ export function DataProvider({ children }) {
       }
       // 新增資料
       case "ADD_DATA": {
-        console.log("新資料已加入至 DataBase ....");
-
         const updateData = state.newItem;
         // 判定目前新增資料內容是否有空白的
         const hasEmptyData = Object.values(state.newItem).some((v) => v === "");
@@ -690,9 +666,39 @@ export function DataProvider({ children }) {
           addPage: false,
         };
       }
+      // 儲存
+      case "SAVE_DATA": {
+        const data = action.payload;
+        localStorage.setItem("my_dataForm", JSON.stringify(data));
+        console.log("儲存成功");
+      }
+      case "RELOADING": {
+        state.loading = true;
+
+        const reload = async () => {
+          try {
+            const res = await fetch("/project-DataForm/product_data_2000.json");
+            if (!res.ok) {
+              console.log(res.status);
+            }
+            const json = await res.json();
+            console.log(`目前重新抓取 ${json.length} 筆資料`);
+            localStorage.setItem("my_dataForm", JSON.stringify(json));
+          } catch (err) {
+            console.log(`Data Loading Fail ..., ${err} `);
+          } finally {
+            state.loading = false;
+          }
+        };
+        setTimeout(() => {
+          reload();
+        }, 2000);
+      }
+
       // 隱藏欄
       case "COL_IS_VISIBLE": {
         // 先取得目前操作的欄位
+        console.log(action.payload);
         const { key, checked } = action.payload;
         return {
           ...state,
@@ -704,9 +710,6 @@ export function DataProvider({ children }) {
       case "TOGGLE_REVISE_PAGE": {
         // 開啟 修正PAGE，當前的商品資料帶入進來
         const data = action.payload;
-
-        console.log("REVISE_ITEM_PAGE");
-
         return {
           ...state,
           revisePage: {
@@ -717,7 +720,6 @@ export function DataProvider({ children }) {
       }
       // 修改資料
       case "NEW_DETAIL": {
-        console.log(action.payload);
         // 之後修改時對應相應的 id 做修正
         const original = state.revisePage?.reviseItem || {};
         const payload = action.payload;
@@ -743,15 +745,13 @@ export function DataProvider({ children }) {
       case "CONFIRM_OF_REVISION": {
         // 目前已填寫的 newDetail 帶入
         const newDetail = state.newDetail;
-        console.log(newDetail);
+
         // 先找到對應的 index
         const targetIndex = state.data.findIndex(
           (item) => item.id === newDetail.id
         );
-        // console.log(targetIndex);
         // 獲取總資料裡對應的 index
         const originalData = state.data[targetIndex];
-        // console.log(originalData);
 
         // 更新資料， 如果newDetail裡有未填寫 空白等資料，則會用原本資料裡對應的值
         const update = Object.fromEntries(
@@ -760,7 +760,6 @@ export function DataProvider({ children }) {
             newDetail[key]?.toString().trim() !== "" ? newDetail[key] : value,
           ])
         );
-        // console.log(update);
         // 覆蓋資料，先拷貝一份總資料，將其對應的 index 用修改好的資料作覆蓋
         const newData = [...state.data];
         newData[targetIndex] = update;
@@ -817,28 +816,20 @@ export function DataProvider({ children }) {
   const LoadingData = () => {
     dispatch({ type: "SET_LOADING", payload: true });
     // 嘗試模仿加載資料
-    // console.log(JSON.parse(localStorage.getItem("my_dataForm")));
     setTimeout(async () => {
       try {
         const localData = localStorage.getItem("my_dataForm");
-        // console.log(typeof JSON.parse(localData)); // str
         if (localData) {
           const jsonData = JSON.parse(localData);
           dispatch({ type: "SET_DATA", payload: jsonData });
         } else {
-          console.log("抓取資料...");
+          console.log("獲取資料中...");
           const res = await fetch("/project-DataForm/product_data_2000.json");
           const jsonData = await res.json();
 
           dispatch({ type: "SET_DATA", payload: jsonData });
           localStorage.setItem("my_dataForm", JSON.stringify(jsonData));
         }
-        // 查詢目前有多少種類的 category
-        // const x = jsonData.reduce((acc, cur) => {
-        //   acc[cur.category] = (acc[cur.category] || 0) + 1;
-        //   return acc;
-        // }, {});
-        // console.log(x);
         /*
           居家生活: 407;
           文具用品: 397;
@@ -847,7 +838,7 @@ export function DataProvider({ children }) {
           食品飲料: 407;
           */
       } catch (error) {
-        console.log(`Data Loading Fail ..., ${error} `);
+        console.error(`Data Loading Fail ..., ${error} `);
       } finally {
         dispatch({ type: "SET_LOADING", payload: false });
       }

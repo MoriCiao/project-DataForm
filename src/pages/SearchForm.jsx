@@ -3,21 +3,52 @@ import { DataContext } from "../context/DataContext";
 import AddPage from "../components/AddPage";
 import DelPage from "../components/DelPage";
 import RevisePage from "../components/RevisePage";
+import Button from "../components/Button/Button";
 
-import {
-  AddBtn,
-  DelBtn,
-  SaveBtn,
-  ReLoadingBtn,
-  ToDelPage,
-  ExoportBtn,
-} from "../components/SearchBtn";
 // 主要搜尋 id, name , category
 const SearchForm = () => {
   const { state, dispatch } = useContext(DataContext);
-  // console.log(state.dateRange);
-  // console.log(state.conditions);
-  // console.log(state.cate_Condition);
+
+  const handleReload = () => {
+    dispatch({ type: "SET_LOADING", payload: true });
+    // 嘗試模仿加載資料
+    setTimeout(async () => {
+      try {
+        const res = await fetch("/project-DataForm/product_data_2000.json");
+        const jsonData = await res.json();
+        console.log(`目前抓取 ${jsonData.length} 筆資料..`);
+        dispatch({ type: "SET_DATA", payload: jsonData });
+        localStorage.setItem("my_dataForm", JSON.stringify(jsonData));
+
+        /*
+          居家生活: 407;
+          文具用品: 397;
+          運動用品: 403;
+          電子產品: 386;
+          食品飲料: 407;
+          */
+      } catch (error) {
+        console.log(`Data Loading Fail ..., ${error} `);
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
+      }
+    }, 2000);
+  };
+
+  const exportToJson = (data, filename = "myData.json") => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <section className="searchForm-area flex flex-wrap items-center justify-center sm:gap-8 text-black w-full">
       <div className="w-full md:flex md:gap-4 md:flex-row sm:items-center sm:justify-center  sm:grid sm:gap-4 ">
@@ -61,12 +92,37 @@ const SearchForm = () => {
         />
       </div>
       <div className="md:grid-cols-6 md:gap-4 sm:grid sm:grid-cols-3 sm:gap-8 sm:items-center sm:justify-between sm:w-auto">
-        <AddBtn />
-        <DelBtn />
-        <SaveBtn />
-        <ToDelPage />
-        <ReLoadingBtn />
-        <ExoportBtn />
+        <Button
+          label="ADD"
+          type="button"
+          onClick={() => dispatch({ type: "TOGGLE_ADD_PAGE" })}
+        />
+        <Button
+          label="DEL"
+          type="button"
+          onClick={() =>
+            dispatch({
+              type: "DEL_SELECTED",
+              payload: { item: state.selected },
+            })
+          }
+        />
+        <Button
+          label="SAVE"
+          type="button"
+          onClick={() => dispatch({ type: "SAVE_DATA", payload: state.data })}
+        />
+        <Button
+          label="🗑️"
+          type="button"
+          onClick={() => dispatch({ type: "TOGGLE_DEL_PAGE" })}
+        />
+        <Button label="Reloading" type="button" onClick={handleReload} />
+        <Button
+          label="Export"
+          type="button"
+          onClick={() => exportToJson(state.data, "myData.json")}
+        />
       </div>
 
       {state.addPage && <AddPage />}

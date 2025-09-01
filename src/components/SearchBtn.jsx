@@ -72,8 +72,6 @@ export const SaveBtn = () => {
   const { state, dispatch } = useContext(DataContext);
 
   const handleSave = () => {
-    console.log("Data 以儲存至 LocalStorage....");
-    console.log(state.data);
     localStorage.setItem("my_dataForm", JSON.stringify(state.data));
   };
   return (
@@ -98,7 +96,6 @@ export const ReLoadingBtn = () => {
   const handleReload = () => {
     dispatch({ type: "SET_LOADING", payload: true });
     // 嘗試模仿加載資料
-    // console.log(JSON.parse(localStorage.getItem("my_dataForm")));
     setTimeout(async () => {
       try {
         const res = await fetch("/project-DataForm/product_data_2000.json");
@@ -106,12 +103,7 @@ export const ReLoadingBtn = () => {
         console.log(`目前抓取 ${jsonData.length} 筆資料..`);
         dispatch({ type: "SET_DATA", payload: jsonData });
         localStorage.setItem("my_dataForm", JSON.stringify(jsonData));
-        // 查詢目前有多少種類的 category
-        // const x = jsonData.reduce((acc, cur) => {
-        //   acc[cur.category] = (acc[cur.category] || 0) + 1;
-        //   return acc;
-        // }, {});
-        // console.log(x);
+
         /*
           居家生活: 407;
           文具用品: 397;

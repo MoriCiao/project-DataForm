@@ -81,8 +81,6 @@ const ReviseSelect = ({ label, name, prevData }) => {
 const RevisePage = () => {
   const { state, dispatch } = useContext(DataContext);
   const reviseData = state.revisePage.reviseItem;
-  console.log("reviseData : ", reviseData);
-  console.log("state.newDetail : ", state.newDetail);
 
   return (
     <div className="fixed z-[10] top-[50%] left-[50%] bg-black/90 w-auto h-auto -translate-x-[50%] -translate-y-[50%] px-4 py-2 text-white flex flex-col justify-center items-center">

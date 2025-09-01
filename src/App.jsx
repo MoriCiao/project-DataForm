@@ -11,7 +11,7 @@ function App() {
     <DataProvider>
       <Loading />
       <div
-        className={`APP-area relative text-[--text] flex flex-col h-screen w-full items-center`}
+        className={`APP-area relative text-white flex flex-col h-screen w-full items-center`}
       >
         <BgImage />
         <Header />
