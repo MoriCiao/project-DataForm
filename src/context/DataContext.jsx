@@ -552,6 +552,7 @@ export function DataProvider({ children }) {
       }
       // 開啟新增頁面
       case "TOGGLE_ADD_PAGE": {
+        console.log(123);
         return { ...state, addPage: !state.addPage, delPage: false };
       }
       // 開啟垃圾桶
@@ -698,7 +699,6 @@ export function DataProvider({ children }) {
       // 隱藏欄
       case "COL_IS_VISIBLE": {
         // 先取得目前操作的欄位
-        console.log(action.payload);
         const { key, checked } = action.payload;
         return {
           ...state,
@@ -723,7 +723,6 @@ export function DataProvider({ children }) {
         // 之後修改時對應相應的 id 做修正
         const original = state.revisePage?.reviseItem || {};
         const payload = action.payload;
-
         // 自動根據 payload 欄位，選擇要保留原本值或新值
         const updatedFields = Object.fromEntries(
           Object.entries(payload).map(([key, value]) => [
@@ -845,9 +844,9 @@ export function DataProvider({ children }) {
     }, 2000);
   };
 
-  useEffect(() => {
-    LoadingData();
-  }, []);
+  // useEffect(() => {
+  //   LoadingData();
+  // }, []);
 
   return (
     <DataContext.Provider value={{ state, dispatch }}>

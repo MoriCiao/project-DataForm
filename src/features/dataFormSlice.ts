@@ -1,6 +1,9 @@
 import { createSlice , createAsyncThunk , PayloadAction } from "@reduxjs/toolkit";
-// "id":"P-10001","name":"家電商品1","category":"居家生活","price":2285,"stock":141,"status":"上架中","createdAt":"2024-07-17","brand":"Adidas","tags":["廚房","燈具"]}
-const url = "/product_data_2000.json"
+
+// 延遲載入
+export const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+const url = "/project-DataForm/product_data_2000.json"
 // API 資料仔入
 
 type Product = {
@@ -31,16 +34,22 @@ const initialState :DataFormState = {
 }
 
 
-const fetchData = createAsyncThunk<Products, void, { rejectValue: string }>(
+export const fetchData = createAsyncThunk<Products, void, { rejectValue: string }>(
     "dataForm/fetchDataForm",    
     async(_, {rejectWithValue}) => {
-        const res = await fetch(url)
-        if(!res.ok) {
-            const text = await res.text()
-            console.log(text)
-            return rejectWithValue("資料連結失敗 ," + text)
+        try{
+            await sleep(2000)
+
+            const res = await fetch(url)
+            if(!res.ok) {
+                const text = await res.text()
+                console.log(text)
+                return rejectWithValue("資料連結失敗 ," + text)
+            }
+            return res.json()
+        }catch(err){
+            return rejectWithValue("資料連結失敗")
         }
-        return res.json()
     }
 )
 

@@ -1,43 +1,51 @@
 import React, { Fragment, useContext } from "react";
-import { DataContext } from "../context/DataContext";
+import { DataContext } from "../../context/DataContext";
+import Input from "../Input/Input";
+import Button from "../Button/Button";
+import Select from "../Select/Select";
 
 const Reviseitem = ({ label, name, prevData, type }) => {
   const { state, dispatch } = useContext(DataContext);
   return (
-    <div className="grid grid-cols-6 gap-2 justify-betweem">
-      <span className="col-start-1 w-[10rem]">{label} :</span>
-      <div className="col-start-2 col-span-2 flex justify-center w-[10rem]">
+    <div className="flex justify-end items-center  w-full">
+      <span className="flex-1 w-[10rem] text-center">{label} :</span>
+      <div className="flex-1 flex justify-center w-[10rem]">
         <p>{prevData}</p>
         <span>{`=>`}</span>
       </div>
-      <input
-        className="col-start-4 col-span-4 w-full indent-[1rem] text-black text-center"
-        placeholder={`請輸入要修改的 ${label}`}
-        type={type}
-        value={state.newDetail?.[name] || ""}
-        onChange={(e) =>
-          dispatch({ type: "NEW_DETAIL", payload: { [name]: e.target.value } })
-        }
-      />
+      <div className=" flex-1 w-full ">
+        <Input
+          type={type}
+          value={state.newDetail?.[name] || ""}
+          className={`text-black text-start flex justify-center`}
+          placeholder={`請輸入要修改的 ${name}`}
+          onChange={(e) =>
+            dispatch({
+              type: "NEW_DETAIL",
+              payload: { [name]: e.target.value },
+            })
+          }
+        />
+      </div>
     </div>
   );
 };
 const ReviseNum = ({ label, name, prevData, type }) => {
   const { state, dispatch } = useContext(DataContext);
   return (
-    <div className="grid grid-cols-6 gap-2 justify-betweem">
-      <span className="col-start-1 w-[10rem]">{label} :</span>
+    <div className="flex justify-end items-center  w-full">
+      <span className="col-start-1 w-[10rem] text-center">{label} :</span>
       <div className="col-start-2 col-span-2 flex justify-center w-[10rem]">
         <p>{prevData}</p>
         <span>{`=>`}</span>
       </div>
-      <input
-        className="col-start-4 col-span-4 w-full indent-[1rem] text-black text-center"
-        placeholder={`請輸入要修改的 ${label}`}
+      <Input
         type={type}
+        value={state.newDetail?.[name] || ""}
         min={"0"}
         step={"1"}
-        value={state.newDetail?.[name] || ""}
+        className={`text-black text-start`}
+        placeholder={`請輸入要修改的 ${name}`}
         onChange={(e) =>
           dispatch({ type: "NEW_DETAIL", payload: { [name]: e.target.value } })
         }
@@ -47,33 +55,24 @@ const ReviseNum = ({ label, name, prevData, type }) => {
 };
 const ReviseSelect = ({ label, name, prevData }) => {
   const { state, dispatch } = useContext(DataContext);
-  const opt = ["", "上架中", "下架", "缺貨中"];
   return (
-    <div className="grid grid-cols-6 gap-2 justify-betweem">
-      <span className="col-start-1 w-[10rem]">{label} :</span>
+    <div className="flex justify-end items-center  w-full">
+      <span className="col-start-1 w-[10rem] text-center">{label} :</span>
       <div className="col-start-2 col-span-2 flex justify-center w-[10rem]">
         <p>{prevData}</p>
         <span>{`=>`}</span>
       </div>
-      <select
-        className="col-start-4 col-span-4 w-full indent-[1rem] text-black text-center"
+      <Select
+        name={"status"}
         value={state.newDetail?.[name] || ""}
+        className={"text-black text-center flex items-center"}
         onChange={(e) =>
           dispatch({
             type: "NEW_DETAIL",
             payload: { [name]: e.target.value || "" },
           })
         }
-        required
-      >
-        {opt.map((op, index) => {
-          return (
-            <Fragment key={index}>
-              <option value={op}>{op}</option>;
-            </Fragment>
-          );
-        })}
-      </select>
+      />
     </div>
   );
 };
@@ -83,7 +82,7 @@ const RevisePage = () => {
   const reviseData = state.revisePage.reviseItem;
 
   return (
-    <div className="fixed z-[10] top-[50%] left-[50%] bg-black/90 w-auto h-auto -translate-x-[50%] -translate-y-[50%] px-4 py-2 text-white flex flex-col justify-center items-center">
+    <div className="fixed z-[10] top-[50%] left-[50%] bg-black/60 w-auto h-auto -translate-x-[50%] -translate-y-[50%] p-4 px-8 backdrop-blur-sm  text-white flex flex-col gap-4 items-center">
       <div className="revise-top w-full flex items-center justify-between">
         <p className="">Revise Page</p>
         <span
@@ -96,7 +95,7 @@ const RevisePage = () => {
         </span>
       </div>
 
-      <div className="flex flex-col gap-2 py-2 justify-center items-center">
+      <div className="flex flex-col gap-2 py-2 h-full justify-start items-center">
         {/* ID */}
 
         <p className="border w-full text-center py-2 text-[1.5rem]">
@@ -110,6 +109,7 @@ const RevisePage = () => {
           prevData={reviseData.name}
           type={"text"}
         />
+
         <hr className="border border-white/50 w-full" />
         {/* 修改 Brand */}
         <Reviseitem
@@ -132,7 +132,7 @@ const RevisePage = () => {
           label={"Price"}
           name={"price"}
           prevData={reviseData.price}
-          type={"text"}
+          type={"number"}
         />
         <hr className="border border-white/50 w-full" />
         {/* Date */}
@@ -168,12 +168,11 @@ const RevisePage = () => {
         <hr className="border border-white/50 w-full" />
       </div>
 
-      <button
-        className="border rounded-full px-2"
+      <Button
+        label={"Confirm"}
+        type="button"
         onClick={() => dispatch({ type: "CONFIRM_OF_REVISION" })}
-      >
-        Confirm
-      </button>
+      />
     </div>
   );
 };
