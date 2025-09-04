@@ -1,15 +1,24 @@
 import React, { Fragment, useContext } from "react";
 import { easeInOut, motion } from "framer-motion";
 import { DataContext } from "../../context/DataContext";
-
 import Button from "../Button/Button";
+import {
+  toggleTrash,
+  undo,
+  confirmDeletData,
+} from "../../features/dataFormSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const th_style = "px-4 border border-white/50 bg-[--theme-Secondary]";
 const td_style = "px-4 py-1 border border-white/50 bg-[--bg] whitespace-nowrap";
 
 const DelPage = () => {
+  const { data, keyword, dateRange, revisePage, addPage, delPage, del_data } =
+    useSelector((state) => state.dataForm);
+  const dispath_redux = useDispatch();
+  console.log(del_data);
   const { state, dispatch } = useContext(DataContext);
-  const del_data = state.del_data;
+  // const del_data = state.del_data;
 
   return (
     <motion.section
@@ -22,9 +31,7 @@ const DelPage = () => {
         <p className="">Del_Page</p>
         <span
           className="select-none cursor-pointer"
-          onClick={() => {
-            dispatch({ type: "TOGGLE_DEL_PAGE" });
-          }}
+          onClick={() => dispath_redux(toggleTrash())}
         >
           ❌
         </span>
@@ -77,17 +84,13 @@ const DelPage = () => {
         <Button
           type="button"
           label="Undo"
-          onClick={() => () =>
-            dispatch({
-              type: "UNDO_DEL_SELECTED",
-              payload: { item: state.del_data },
-            })}
+          onClick={() => dispath_redux(undo(del_data))}
         />
         <Button
           type="button"
           label="Delete !"
           onClick={() => {
-            dispatch({ type: "CURRENT_DEL_DATA" });
+            dispath_redux(confirmDeletData());
           }}
         />
       </div>

@@ -4,11 +4,15 @@ import { DataContext } from "../../context/DataContext";
 import Input from "../Input/Input";
 import Select from "../Select/Select";
 import Button from "../Button/Button";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleAddPage, addItem, addData } from "../../features/dataFormSlice";
 
 const AddPage = () => {
   const { state, dispatch } = useContext(DataContext);
+  const { newItem } = useSelector((state) => state.dataForm);
+  const dispath_redux = useDispatch();
   const inputRef = useRef(null);
-
+  console.log(newItem);
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -25,7 +29,7 @@ const AddPage = () => {
         <span
           className="select-none cursor-pointer"
           onClick={() => {
-            dispatch({ type: "TOGGLE_ADD_PAGE" });
+            dispath_redux(toggleAddPage());
           }}
         >
           ❌
@@ -45,9 +49,11 @@ const AddPage = () => {
             type="text"
             className={"w-full border border-white text-black"}
             placeholder={`請輸入商品 ID 資訊 `}
-            value={state.newItem.id}
+            value={newItem.id}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -60,9 +66,11 @@ const AddPage = () => {
             type="text"
             className={"w-full border border-white text-black"}
             placeholder={`請輸入商品 Name 資訊 `}
-            value={state.newItem.name}
+            value={newItem.name}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -76,9 +84,11 @@ const AddPage = () => {
             type="text"
             className={"w-full border border-white text-black"}
             placeholder={`請輸入商品 Brand 資訊 `}
-            value={state.newItem.brand}
+            value={newItem.brand}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -88,11 +98,13 @@ const AddPage = () => {
           <Select
             label="Category"
             name="category"
-            value={state.newItem.category}
+            value={newItem.category}
             className={"w-full border border-white text-black text-center"}
             placeholder={`請輸入商品 Category 資訊 `}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -105,9 +117,11 @@ const AddPage = () => {
             type="number"
             className={"w-full border border-white text-black"}
             placeholder={`請輸入商品 Price 資訊 `}
-            value={state.newItem.price}
+            value={newItem.price}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -121,9 +135,11 @@ const AddPage = () => {
             type="date"
             className={"w-full border border-white text-black flex justify-end"}
             placeholder={`請輸入商品 Date 資訊 `}
-            value={state.newItem.createdAt || ""}
+            value={newItem.createdAt || ""}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -133,11 +149,13 @@ const AddPage = () => {
           <Select
             label="Status"
             name="status"
-            value={state.newItem.status || ""}
+            value={newItem.status || ""}
             className={"w-full border border-white text-black text-center"}
             placeholder={`請輸入商品 Status 資訊 `}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -150,9 +168,11 @@ const AddPage = () => {
             type="number"
             className={"w-full border border-white text-black"}
             placeholder={`請輸入商品 Stock 資訊 `}
-            value={state.newItem.stock}
+            value={newItem.stock}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -166,9 +186,11 @@ const AddPage = () => {
             type="text"
             className={"w-full border border-white text-black"}
             placeholder={`逗號( , )區隔, 請輸入商品 Tags 資訊`}
-            value={state.newItem.tags}
+            value={newItem.tags}
             onChange={(e) =>
-              dispatch({ type: "ADD_NEW_ITEM", payload: e.target })
+              dispath_redux(
+                addItem({ name: e.target.name, value: e.target.value })
+              )
             }
           />
         </div>
@@ -177,11 +199,11 @@ const AddPage = () => {
           label="ADD"
           type="submit"
           onClick={() => {
-            dispatch({ type: "ADD_DATA" });
+            dispath_redux(addData());
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              dispatch({ type: "ADD_DATA" });
+              dispath_redux(addData());
             }
           }}
         />

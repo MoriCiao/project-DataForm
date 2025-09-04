@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import { DataContext } from '../../context/DataContext';
-
+import { perSort } from '../../features/dataFormSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 type TableProps = {
   name: string;
   className? : string | null
@@ -8,14 +10,18 @@ type TableProps = {
 }
 
 export default function TableSortBtn({name}: TableProps) {
-  const { state, dispatch } = useContext(DataContext);
+  const { props_sort_condition } = useSelector((state: RootState) => state.dataForm);
+  
+  const dispath_redux = useDispatch();
+
+
   return (
-    <button className=' w-auto h-full' onClick={()=>dispatch({
-      type: "PER_PROPS_SORT",
-      payload: {
-        name: name,
-        checked: state.props_sort_condition[name]}
-      })}>
+    <button className=' w-auto h-full' onClick={()=>
+      dispath_redux(perSort({
+        name : name,
+        checked : props_sort_condition[name]
+      }))
+      }>
       ↕️
     </button>
   )

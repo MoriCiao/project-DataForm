@@ -4,10 +4,14 @@ import { DataContext } from "../context/DataContext";
 import Pagination from "../components/Pagination";
 import TableSortBtn from "../components/Button/TableSortBtn";
 import Button from "../components/Button/Button";
-import { fetchData } from "../features/dataFormSlice";
+import {
+  fetchData,
+  setData,
+  selectAllData,
+  selectSingleData,
+  toggleRevisePage,
+} from "../features/dataFormSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { div, p } from "framer-motion/client";
-// import { RootState, reduxDispatch } from "../redux/store";
 
 const th_style = "px-12 h-full border  bg-[--theme-Secondary]";
 const td_style = "px-4 py-1 border border-white/50 whitespace-nowrap";
@@ -15,16 +19,15 @@ const td_style = "px-4 py-1 border border-white/50 whitespace-nowrap";
 const ITEMS_PER_PAGE = 20;
 
 const DataTable = () => {
-  const { data, status, error } = useSelector((state) => state.dataForm);
+  const { data, filtered, status, error, selected, selectAll, isVisible } =
+    useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
 
-  const { state, dispatch } = useContext(DataContext);
-
-  const allProducts = state.filter ? state.filtered : state.data;
+  const allProducts = filtered.length !== 0 ? filtered : data;
 
   // 分頁
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(allProducts.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
 
   // 每頁分頁資料的 起始Index
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -37,10 +40,9 @@ const DataTable = () => {
   const goToNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
-
+  useEffect(() => {}, [allProducts]);
   useEffect(() => {
     dispath_redux(fetchData());
-    dispatch({ type: "SET_DATA", payload: data });
   }, [dispath_redux]);
 
   if (status === "loading") {
@@ -77,23 +79,20 @@ const DataTable = () => {
                 <th className={`${th_style} sticky `}>
                   <motion.input
                     animate={{
-                      scale: state.selectAll ? 1.5 : 1.25,
+                      scale: selectAll ? 1.5 : 1.25,
                     }}
                     transition={{ duration: 0.3 }}
                     type="checkbox"
-                    checked={state.selectAll}
+                    checked={selectAll}
                     className="scale-125"
                     onChange={(e) =>
-                      dispatch({
-                        type: "SELECT_ALL",
-                        payload: e.target.checked,
-                      })
+                      dispath_redux(selectAllData(e.target.checked))
                     }
                   />
                 </th>
                 <th
                   className={`${th_style} ${
-                    state.isVisible.ID ? "" : "hidden"
+                    isVisible.ID ? "" : "hidden"
                   } sticky `}
                 >
                   <p className="flex">
@@ -104,7 +103,7 @@ const DataTable = () => {
 
                 <th
                   className={`${th_style} ${
-                    state.isVisible.Name ? "" : "hidden"
+                    isVisible.Name ? "" : "hidden"
                   } sticky`}
                 >
                   <p className="flex">
@@ -113,9 +112,7 @@ const DataTable = () => {
                   </p>
                 </th>
                 <th
-                  className={`${th_style} ${
-                    state.isVisible.Brand ? "" : "hidden"
-                  }`}
+                  className={`${th_style} ${isVisible.Brand ? "" : "hidden"}`}
                 >
                   <p className="flex">
                     Brand
@@ -124,7 +121,7 @@ const DataTable = () => {
                 </th>
                 <th
                   className={`${th_style} ${
-                    state.isVisible.Category ? "" : "hidden"
+                    isVisible.Category ? "" : "hidden"
                   }`}
                 >
                   <p className="flex">
@@ -133,33 +130,23 @@ const DataTable = () => {
                   </p>
                 </th>
                 <th
-                  className={`${th_style} ${
-                    state.isVisible.Price ? "" : "hidden"
-                  }`}
+                  className={`${th_style} ${isVisible.Price ? "" : "hidden"}`}
                 >
                   <p className="flex">
                     Price
                     <TableSortBtn name="Price" />
                   </p>
                 </th>
-                <th
-                  className={`${th_style} ${
-                    state.isVisible.Date ? "" : "hidden"
-                  }`}
-                >
+                <th className={`${th_style} ${isVisible.Date ? "" : "hidden"}`}>
                   Date
                 </th>
                 <th
-                  className={`${th_style} ${
-                    state.isVisible.Status ? "" : "hidden"
-                  }`}
+                  className={`${th_style} ${isVisible.Status ? "" : "hidden"}`}
                 >
                   Status
                 </th>
                 <th
-                  className={`${th_style} ${
-                    state.isVisible.Stock ? "" : "hidden"
-                  }`}
+                  className={`${th_style} ${isVisible.Stock ? "" : "hidden"}`}
                 >
                   <p className="flex">
                     Stock
@@ -168,7 +155,7 @@ const DataTable = () => {
                 </th>
                 <th
                   className={`${th_style} ${
-                    state.isVisible.Tags ? "" : "hidden"
+                    isVisible.Tags ? "" : "hidden"
                   } w-[20rem]`}
                 >
                   Tags
@@ -194,7 +181,7 @@ const DataTable = () => {
                         <td className={`${td_style} sticky `}>
                           <motion.input
                             animate={{
-                              scale: state.selected.some((i) => i.id === p.id)
+                              scale: selected.some((i) => i.id === p.id)
                                 ? 1.5
                                 : 1.25,
                             }}
@@ -202,78 +189,77 @@ const DataTable = () => {
                             type="checkbox"
                             className="scale-125"
                             // 確保單筆資料在操作時，此資料位置的checkbox狀態會取消
-                            checked={state.selected.some((i) => i.id === p.id)}
+                            checked={selected.some((i) => i.id === p.id)}
                             onChange={(e) => {
-                              dispatch({
-                                type: "SELECT_SINGLE",
-                                payload: {
+                              dispath_redux(
+                                selectSingleData({
                                   item: p,
                                   checked: e.target.checked,
-                                },
-                              });
+                                })
+                              );
                             }}
                           />
                         </td>
 
                         <td
                           className={`${td_style} ${
-                            state.isVisible.ID ? "" : "hidden"
+                            isVisible.ID ? "" : "hidden"
                           } sticky  `}
                         >
                           {p.id}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Name ? "" : "hidden"
+                            isVisible.Name ? "" : "hidden"
                           } sticky `}
                         >
                           {p.name}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Brand ? "" : "hidden"
+                            isVisible.Brand ? "" : "hidden"
                           }`}
                         >
                           {p.brand}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Category ? "" : "hidden"
+                            isVisible.Category ? "" : "hidden"
                           }`}
                         >
                           {p.category}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Price ? "" : "hidden"
+                            isVisible.Price ? "" : "hidden"
                           }`}
                         >
                           ${p.price}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Date ? "" : "hidden"
+                            isVisible.Date ? "" : "hidden"
                           }`}
                         >
                           {p.createdAt}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Status ? "" : "hidden"
+                            isVisible.Status ? "" : "hidden"
                           }`}
                         >
                           {p.status}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Stock ? "" : "hidden"
+                            isVisible.Stock ? "" : "hidden"
                           }`}
                         >
                           {p.stock}
                         </td>
                         <td
                           className={`${td_style} ${
-                            state.isVisible.Tags ? "" : "hidden"
+                            isVisible.Tags ? "" : "hidden"
                           }`}
                         >
                           {p.tags}
@@ -283,12 +269,7 @@ const DataTable = () => {
                             type="button"
                             label="📝"
                             className={"border-0"}
-                            onClick={() =>
-                              dispatch({
-                                type: "TOGGLE_REVISE_PAGE",
-                                payload: p,
-                              })
-                            }
+                            onClick={() => dispath_redux(toggleRevisePage(p))}
                           />
                         </td>
                       </motion.tr>

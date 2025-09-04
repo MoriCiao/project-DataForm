@@ -9,13 +9,26 @@ const url = "/project-DataForm/product_data_2000.json"
 type Product = {
     id: string;
     name: string;
-    category: "居家生活" | "文具用品" | "電子產品" | "運動用品" | "食品飲料"
+    category: ""| "居家生活" | "文具用品" | "電子產品" | "運動用品" | "食品飲料"
     price: number;
     stock: number;
-    status: "上架中" | '下架' | "缺貨中"
-    createdAt: string
-    tag?: string[]
+    brand : string
+    status: ""| "上架中" | '下架' | "缺貨中"
+    createdAt: string | null
+    tags?: string[]
 }
+
+type ProductDraft = Partial<{
+    id: string;
+    name: string;
+    category: Product["category"] | ""
+    price: number;
+    stock: number;
+    brand: string
+    status: Product["status"] | ""
+    createdAt: string | null
+    tags: string[] 
+}>
 
 type Products = Product[]
 
@@ -25,21 +38,151 @@ type DataFormState = {
     data : Products;
     status : status;
     error : string | null
+    filtered : Products
+    selected : Products
+    del_data : Products
+    newDetil : Product
+    newItem : Product
+    keyword : string
+    dateRange: {
+        start : string;
+        end: string
+    }
+    selectAll: boolean
+    filter: boolean, // 判定目前是否正在過濾資料
+    loading: boolean,
+    addPage: boolean, // 是否開啟新增Item頁面
+    delPage: boolean, // 是否開啟垃圾桶頁面
+    revisePage: {
+    // 是否開啟修改頁面
+    isOpen: boolean,
+    reviseItem: ProductDraft,
+    },
+    // 依照資料表格名稱做排列
+    props_sort_condition: {
+        No: boolean,
+        ID: boolean,
+        Name: boolean,
+        Brand: boolean,
+        Category: boolean,
+        Stock: boolean,
+    },
+    conditions: {
+        On_Sale: boolean, // 上架中
+        Off_Sale: boolean, // 下架
+        Out_of_Stock: boolean, // 缺貨
+    },
+    cate_Condition: {
+        house: boolean,
+        stationery: boolean,
+        electronics: boolean,
+        sporting_goods: boolean,
+        food_and_beverage: boolean,
+    },
+    isVisible: {
+        ID: boolean,
+        Name: boolean,
+        Brand: boolean,
+        Category: boolean,
+        Price: boolean,
+        Date: boolean,
+        Status: boolean,
+        Stock: boolean,
+        Tags: boolean,
+    },
+
 }
 
 const initialState :DataFormState = {
         data : [],
         status : "idle", 
-        error: null
+        error: null,
+        filtered : [],
+        selected : [],
+        del_data : [],
+        newDetil : {
+            id: "",
+            name: "",
+            brand: "",
+            category: "",
+            price: 0,
+            createdAt: "",
+            status: "",
+            stock: 0,
+            tags: [],
+        },
+        newItem : {
+            id: "",
+            name: "",
+            category: "",
+            price: 0,
+            createdAt: "",
+            stock: 0,
+            status: "",
+            brand: "",
+            tags: [],
+        },
+        keyword : "",
+        dateRange: {
+            start: "",
+            end: "",
+        },
+        selectAll: false,
+        // 判定目前抓取的資料是否為篩選的資料
+        filter: false, // 判定目前是否正在過濾資料
+        loading: false,
+        addPage: false, // 是否開啟新增Item頁面
+        delPage: false, // 是否開啟垃圾桶頁面
+        revisePage: {
+        // 是否開啟修改頁面
+        isOpen: false,
+        reviseItem: {
+
+        },
+        },
+        // 依照資料表格名稱做排列
+        props_sort_condition: {
+            No: false,
+            ID: false,
+            Name: false,
+            Brand: false,
+            Category: false,
+            Stock: false,
+        },
+        conditions: {
+            On_Sale: false, // 上架中
+            Off_Sale: false, // 下架
+            Out_of_Stock: false, // 缺貨
+        },
+        cate_Condition: {
+            house: false,
+            stationery: false,
+            electronics: false,
+            sporting_goods: false,
+            food_and_beverage: false,
+        },
+        isVisible: {
+            ID: true,
+            Name: true,
+            Brand: true,
+            Category: true,
+            Price: true,
+            Date: true,
+            Status: true,
+            Stock: true,
+            Tags: true,
+        },
+
+
 }
 
 
 export const fetchData = createAsyncThunk<Products, void, { rejectValue: string }>(
     "dataForm/fetchDataForm",    
     async(_, {rejectWithValue}) => {
-        try{
+        try{            
             await sleep(2000)
-
+            
             const res = await fetch(url)
             if(!res.ok) {
                 const text = await res.text()
@@ -47,6 +190,8 @@ export const fetchData = createAsyncThunk<Products, void, { rejectValue: string 
                 return rejectWithValue("資料連結失敗 ," + text)
             }
             return res.json()
+            
+            
         }catch(err){
             return rejectWithValue("資料連結失敗")
         }
@@ -58,7 +203,708 @@ export const fetchData = createAsyncThunk<Products, void, { rejectValue: string 
 const dataFormSlice = createSlice({
     name : "dataForm",
     initialState,
-    reducers:{},
+    reducers:{
+        // 將AJAX 獲得的資料轉入進 store.data
+        // "SET_DATA"
+        setData(state, action){
+
+            return {
+                ...state,
+                data: action.payload,
+                filtered: [],
+                selected: [],
+                del_data: [],
+                addPage: false,
+                delPage: false,
+            };
+        },
+        // "SEARCH_DATA"
+        searchFromKey(state, action){
+            // 時間篩選
+            const startDate = state.dateRange.start
+            ? new Date(state.dateRange.start)
+            : "";
+            const endDate = state.dateRange.end
+            ? new Date(state.dateRange.end)
+            : "";
+
+            const PassStatus = Object.values(state.conditions).some(
+            (item) => item === true
+            );
+            // 目前是否為cate-Codition篩選情況
+            const PassCategory = Object.values(state.cate_Condition).some(
+            (item) => item === true
+            );
+
+            const keyword = action.payload.toLowerCase();
+            const keyBoolean = keyword.length !== 0;
+            // 判定是否進入篩選狀態
+            const isFiltered =
+            Object.values(state.conditions).some((item) => item === true) ||
+            Object.values(state.cate_Condition).some((item) => item === true) ||
+            keyBoolean;
+
+            // 篩選出與目前資料裡包含 keyword 的資料
+            const filtered = state.data.filter((item) => {
+            // ----------------------------------------------------
+                const PassCodiitions =
+                    !PassStatus ||
+                    (state.conditions.On_Sale && item.status === "上架中") ||
+                    (state.conditions.Off_Sale && item.status === "下架") ||
+                    (state.conditions.Out_of_Stock && item.status === "缺貨中");
+                // ----------------------------------------------------
+                const PassCateCodition =
+                    !PassCategory ||
+                    (state.cate_Condition.house && item.category === "居家生活") ||
+                    (state.cate_Condition.stationery && item.category === "文具用品") ||
+                    (state.cate_Condition.electronics &&
+                    item.category === "電子產品") ||
+                    (state.cate_Condition.sporting_goods &&
+                    item.category === "運動用品") ||
+                    (state.cate_Condition.food_and_beverage &&
+                    item.category === "食品飲料");
+                // ----------------------------------------------------
+                // createdAt Sort
+                const itemDate = new Date(item.createdAt as string);
+                const afterStart = state.dateRange.start
+                    ? itemDate >= startDate 
+                    : true;
+                const beforeEnd = state.dateRange.end ? itemDate <= endDate : true;
+                // ------------------keyWordBoolean---------------------
+                const id = item.id?.toLowerCase() || "";
+                const name = item.name?.toLowerCase() || "";
+                const brand = item.brand?.toLowerCase() || "";
+                const category = item.category?.toLowerCase() || "";
+                const status = item.status?.toLowerCase() || "";
+                const tags = item.tags || "";
+
+                const keyWordBoolean =
+                    id.includes(keyword) ||
+                    name.includes(keyword) ||
+                    brand.includes(keyword) ||
+                    category.includes(keyword) ||
+                    status.includes(keyword) ||
+                    tags.includes(keyword);
+                return (
+                    keyWordBoolean &&
+                    PassCodiitions &&
+                    PassCateCodition &&
+                    afterStart &&
+                    beforeEnd
+                );
+            });
+            return {
+                ...state,
+                filter: isFiltered,
+                filtered: filtered,
+                keyword: keyword,
+            };
+            
+        },
+        searchFromDate(state,action){
+            // 取得目前開始及結束的日期
+            const { start, end } = action.payload;
+            // 目前是否為coditions篩選情況
+            const PassStatus = Object.values(state.conditions).some(
+            (item) => item === true
+            );
+            // 目前是否為cate-Codition篩選情況
+            const PassCategory = Object.values(state.cate_Condition).some(
+            (item) => item === true
+            );
+
+            // 目前是否為篩選
+            const isFiltered = PassStatus || PassCategory || Boolean(start || end);
+            // 將時間轉換為 Date物件比較
+            const startDate :Date | undefined  = start ? new Date(start) : undefined;
+            const endDate :Date | undefined   = end ? new Date(end) : undefined;
+            
+            const updateData = state.data.filter((item) => {
+                const itemDate = new Date(item.createdAt as string );
+                                
+               // 符合在兩個區間內的資料將其留下來
+                const afterStart = startDate ? itemDate >= startDate : true;
+                const beforeEnd = endDate ? itemDate <= endDate : true;
+                // -----------------------------------------------------------------------------------------
+                const PassCodition =
+                    !PassStatus ||
+                    (state.conditions.On_Sale && item.status === "上架中") ||
+                    (state.conditions.Off_Sale && item.status === "下架") ||
+                    (state.conditions.Out_of_Stock && item.status === "缺貨中");
+                // -----------------------------------------------------------------------------------------
+
+                const PassCate_Category =
+                    !PassCategory ||
+                    (state.cate_Condition.house && item.category === "居家生活") ||
+                    (state.cate_Condition.stationery && item.category === "文具用品") ||
+                    (state.cate_Condition.electronics &&
+                    item.category === "電子產品") ||
+                    (state.cate_Condition.sporting_goods &&
+                    item.category === "運動用品") ||
+                    (state.cate_Condition.food_and_beverage &&
+                    item.category === "食品飲料");
+
+                // ------------------keyWordBoolean---------------------
+                const id = item.id?.toLowerCase() || "";
+                const name = item.name?.toLowerCase() || "";
+                const brand = item.brand?.toLowerCase() || "";
+                const category = item.category?.toLowerCase() || "";
+                const status = item.status?.toLowerCase() || "";
+                const tags = item.tags || "";
+
+                const keyWordBoolean =
+                    id.includes(state.keyword) ||
+                    name.includes(state.keyword) ||
+                    brand.includes(state.keyword) ||
+                    category.includes(state.keyword) ||
+                    status.includes(state.keyword) ||
+                    tags.includes(state.keyword);
+
+                return (
+                    keyWordBoolean &&
+                    afterStart &&
+                    beforeEnd && PassCodition && PassCate_Category
+                );
+            });
+
+            return {
+            ...state,
+            filter: isFiltered,
+            filtered: updateData,
+            dateRange: { start, end },
+            };
+        },
+        //  "PRICE_RAISE_SORT"
+        priceSort(state,action){
+            const actionType = action.payload
+            const isFiltered = state.filter;
+            const currentData:Products = isFiltered ? state.filtered : state.data;
+            const sortData = currentData.sort((a, b) => {
+                if(actionType === "UpToDown"){
+                    //@ts-ignore
+                    return  b.price - a.price;
+                }else if (actionType === "DownToUp"){
+                     //@ts-ignore
+                    return a.price - b.price;
+                }
+                return 0
+            });
+            isFiltered ? state.filtered = sortData : state.data = sortData
+        },
+        // "PER_PROPS_SORT"
+        
+        perSort(state, action){
+            const { name, checked } = action.payload;
+            const ToggleChecked = !checked;
+
+            const PassStatus = Object.values(state.conditions).some(
+            (v) => v === true
+            );
+
+            const PassCategory = Object.values(state.cate_Condition).some(
+            (v) => v === true
+            );
+
+            // 需要判定目前是否有在篩選
+            // status 和 category 和  Date & keyword
+            const isFiltered =
+            PassStatus ||
+            PassCategory ||
+            Boolean(state.dateRange.start || state.dateRange.end) ||
+            state.keyword.length !== 0;
+            // 確定當前使用的資料
+            const currentData = isFiltered ? state.filtered : state.data;
+
+            let updateData;
+
+            if (ToggleChecked) {
+                updateData = currentData.sort((a, b) => {
+                    const id_a = a.id.slice(-5);
+                    const id_b = b.id.slice(-5);
+                    if (name === "ID") {
+                    // props_sort_condition : ID
+                    return id_b.localeCompare(id_a)
+                    } else if (name === "Name") {
+                    //  props_sort_condition : Name
+                    return b.name.localeCompare(a.name);
+                    } else if (name === "Brand") {
+                    //  props_sort_condition : Brand
+                    return b.brand.localeCompare(a.brand);
+                    } else if (name === "Category") {
+                    // props_sort_condition : Category
+                    return b.category.localeCompare(a.category);
+                    } else if (name === "Stock") {
+                    //  props_sort_condition : Stock
+                    return b.stock - a.stock;
+                    } else if (name === "Price") {
+                    return b.price - a.price;
+                    }
+                    // 都沒相符條件則順序不變
+                    return 0;
+                });
+            } else {
+                updateData = currentData.sort((a, b) => {
+                    const id_a = a.id.slice(-5);
+                    const id_b = b.id.slice(-5);
+                    if (name === "ID") {
+                    // props_sort_condition : ID
+                    return id_a.localeCompare(id_b)
+                    } else if (name === "Name") {
+                    //  props_sort_condition : Name
+                    return a.name.localeCompare(b.name);
+                    } else if (name === "Brand") {
+                    //  props_sort_condition : Brand
+                    return a.brand.localeCompare(b.brand);
+                    } else if (name === "Category") {
+                    // props_sort_condition : Category
+                    return a.category.localeCompare(b.category);
+                    } else if (name === "Stock") {
+                    //  props_sort_condition : Stock
+                    return a.stock - b.stock;
+                    } else if (name === "Price") {
+                    return a.price - b.price;
+                    }
+                    return 0;
+                });
+            }
+
+            isFiltered 
+                ? state.filtered= updateData 
+                : state.data= updateData
+            state.props_sort_condition ={
+                ...state.props_sort_condition,
+                [name]: ToggleChecked,
+            }
+            
+    
+        },
+        // Select All
+        selectAllData(state, action){
+            state.selectAll = action.payload
+            state.selected = state.selectAll ? state.data : []
+       
+        },
+        selectSingleData(state, action){
+            const { item , checked } = action.payload
+            let updateData
+            if(checked){
+                updateData = [...state.selected, item]
+            }else {
+                updateData = state.selected.filter( i => i.id !== item.id)
+            }
+            return {
+                ...state,
+                selected : updateData,
+                selectAll : updateData.length === state.data.length
+            }
+        },
+        deletSelect(state,action){
+            const selectedData = action.payload.item;
+        
+            const selectedIds = selectedData.map((item :any) => item.id);
+            // 保留刪除資料
+            const deletedData = state.data.filter((item) =>
+            selectedIds.includes(item.id)
+            );
+            // 選擇刪除資料為空的，直接返回 無動作
+            if(deletedData.length === 0) return
+            // 更新刪除過後的資料
+            const updatedData = state.data.filter(
+            (item) => !selectedIds.includes(item.id)
+            );
+            return {
+                ...state,
+                data: updatedData,
+                filtered: updatedData,
+                del_data: [...state.del_data, ...deletedData],
+                selected: [],
+                // 將所有篩選重製
+                keyword: "",
+                dateRange: {
+                    start : "",
+                    end : ""
+                },
+                conditions: {
+                    On_Sale: false, // 上架中
+                    Off_Sale: false, // 下架
+                    Out_of_Stock: false, // 缺貨
+                },
+                cate_Condition: {
+                    house: false,
+                    stationery: false,
+                    electronics: false,
+                    sporting_goods: false,
+                    food_and_beverage: false,
+                },
+
+            };
+        },
+        addItem(state,action){
+            const {name , value}= action.payload;
+            // tags 要轉變成 array
+            // name === "tags" ? value.split(",").map((i) => i.trim()) : value
+            state.newItem= {
+                ...state.newItem,
+                [name]:
+                name === "tags" ? value.split(",").map((i) => i.trim()) : value,
+            }
+
+        
+        },
+        addData(state,action){
+            const newData = state.newItem;
+            console.log(newData)
+            // 判定目前新增資料內容是否有空白的
+            const hasEmptyData = Object.values(state.newItem).some((v) => v === "" || v === 0 ) ;
+            if (hasEmptyData) {
+                alert("新增資料失敗....，您輸入資料內容有空值，請從新增資料。");
+                return
+            }
+            state.data = [...state.data, newData]
+            // 新增資料後，將新增頁面設為預設值
+            state.newItem= {
+                id: "",
+                name: "",
+                status: "",
+                category: "",
+                price: 0,
+                createdAt: "",
+                stock: 0,
+                brand: "",
+                tags: [],
+            },
+            // 關閉AddPage
+            state.addPage= false
+            
+        },
+        undo(state,action){
+            const deletedData = action.payload;
+            if (deletedData.length === 0) {
+            return { ...state };
+            } else {
+            console.log("目前在垃圾桶裡的資料有", deletedData);
+            const updateData = state.data.concat(deletedData);
+            return { ...state, data: updateData, del_data: [] };
+            }
+        },
+        confirmDeletData(state){
+            state.del_data = []
+            alert("垃圾桶以清空!!") 
+        },
+        // 修正頁面開闔
+        toggleRevisePage(state,action){
+            const data = action.payload
+            state.revisePage = {
+                isOpen : !state.revisePage.isOpen,
+                reviseItem : data || {}
+            }
+        },
+        setDetil(state,action){
+             // 之後修改時對應相應的 id 做修正
+            const original = state.revisePage?.reviseItem || {};
+            const payload = action.payload;
+
+            // 自動根據 payload 欄位，選擇要保留原本值或新值
+            const updatedFields = Object.fromEntries(
+                
+            Object.entries(payload).map(([key, value]) =>{
+                const strValue = value as string
+                return ([
+                key,
+                strValue.trim?.() === "" ? original[key] : strValue,
+              ])
+            } 
+          
+            ))
+
+            state.newDetil= {
+                ...state.newDetil,
+                id: original.id as string, // 保留原始 ID
+                ...updatedFields,
+            }
+            
+        },
+        // 確認修改
+        confirmRevision(state){
+            const newDetil = state.newDetil;
+
+            const targetIndex:number = state.data.findIndex(item => item.id === newDetil.id)
+
+           // 獲取總資料裡對應的 index
+            const originalData = state.data[targetIndex];
+            console.log(targetIndex)
+            // 更新資料， 如果newDetil裡有未填寫 空白等資料，則會用原本資料裡對應的值
+            const update = Object.fromEntries(
+                Object.entries(originalData).map(([key, value]) => [
+                    key,
+                    newDetil[key]?.toString().trim() !== "" || 0  ? newDetil[key] : value,
+                ])
+            )as Product;
+   
+            // 覆蓋資料，先拷貝一份總資料，將其對應的 index 用修改好的資料作覆蓋
+            const newData = [...state.data]
+
+            newData[targetIndex] = update 
+           
+            // -----------------------------------------
+            const reset_conditions = {
+                ...state.conditions,
+                On_Sale: false,
+                Off_Sale: false,
+                Out_of_Stock: false,
+            };
+            const reset_cate_Condition = {
+                ...state.cate_Condition,
+                house: false,
+                stationery: false,
+                electronics: false,
+                sporting_goods: false,
+                food_and_beverage: false,
+            };
+
+            alert("資料已更新....請重新查詢確認...");
+         
+
+            state.filter= false
+            state.data = newData
+            state.keyword = ""
+            state.dateRange = { start: "", end: "" }
+            state.conditions = reset_conditions
+            state.cate_Condition =  reset_cate_Condition
+
+            // 修改資料送出後，將頁面關閉及清空
+            state.newDetil= {
+                id : "",
+                name: "",
+                brand: "",
+                category: "",
+                price: 0,
+                createdAt: "",
+                status: "",
+                stock: 0,
+                tags: [],
+            },
+            state.revisePage= { isOpen: false, reviseItem: {} }
+            
+        },
+        // open AddPage
+        toggleAddPage(state){
+
+            state.addPage = !state.addPage
+        },
+        toggleTrash(state){
+            state.delPage = !state.delPage
+        },
+        toggleFilterStatus(state,action){
+            // 進入快速篩選 1
+            const { key, checked } = action.payload;
+            const newConditions = {
+            ...state.conditions,
+            [key]: checked,
+            };
+            // 把快速篩選 category 刪除
+            const unCheckCategory = {
+            ...state.cate_Condition,
+            house: false,
+            stationery: false,
+            electronics: false,
+            sporting_goods: false,
+            food_and_beverage: false,
+            };
+            // createdAt
+            const startDate = state.dateRange.start
+            ? new Date(state.dateRange.start)
+            : "";
+
+            const endDate = state.dateRange.end
+            ? new Date(state.dateRange.end)
+            : "";
+
+            const hasStatusFilter = Object.values(newConditions).some(
+            (item) => item === true
+            );
+            //  cate_Condition 重製篩選的 category
+            const hasCategoryFilter = false;
+
+            const isFiltered = hasStatusFilter || hasCategoryFilter;
+
+            const filtered = state.data.filter((item) => {
+            const PassCategory =
+                (!unCheckCategory.house &&
+                !unCheckCategory.stationery &&
+                !unCheckCategory.electronics &&
+                !unCheckCategory.sporting_goods &&
+                !unCheckCategory.food_and_beverage) ||
+                (unCheckCategory.house && item.category === "居家生活") ||
+                (unCheckCategory.stationery && item.category === "文具用品") ||
+                (unCheckCategory.electronics && item.category === "電子產品") ||
+                (unCheckCategory.sporting_goods && item.category === "運動用品") ||
+                (unCheckCategory.food_and_beverage && item.category === "食品飲料");
+
+            // ----------------------------------------------------------
+            const PassStatus =
+                (!newConditions.On_Sale &&
+                !newConditions.Off_Sale &&
+                !newConditions.Out_of_Stock) ||
+                (newConditions.On_Sale && item.status === "上架中") ||
+                (newConditions.Off_Sale && item.status === "下架") ||
+                (newConditions.Out_of_Stock && item.status === "缺貨中");
+            //  ---------------------------------------------------------
+            // createdAT Sort
+            const itemDate = new Date(item.createdAt as string);
+            const afterStart = state.dateRange.start
+                ? itemDate >= startDate
+                : true;
+            const beforeEnd = state.dateRange.end ? itemDate <= endDate : true;
+
+            // ------------------keyWordBoolean---------------------
+            const id = item.id?.toLowerCase() || "";
+            const name = item.name?.toLowerCase() || "";
+            const brand = item.brand?.toLowerCase() || "";
+            const category = item.category?.toLowerCase() || "";
+            const status = item.status?.toLowerCase() || "";
+            const tags = item.tags || "";
+
+            const keyWordBoolean =
+                id.includes(state.keyword) ||
+                name.includes(state.keyword) ||
+                brand.includes(state.keyword) ||
+                category.includes(state.keyword) ||
+                status.includes(state.keyword) ||
+                tags.includes(state.keyword);
+
+            return (
+                PassStatus &&
+                PassCategory &&
+                afterStart &&
+                beforeEnd &&
+                keyWordBoolean
+            );
+            });
+            return {
+            ...state,
+            // 判定目前抓取的資料是否為篩選的資料
+            filter: isFiltered,
+            filtered: filtered,
+            conditions: newConditions,
+            cate_Condition: unCheckCategory,
+            };
+        },
+        toggleFilterCategory(state,action){
+            // 進入快速篩選 2
+            const { key, checked } = action.payload;
+            const newCate_Condition = { ...state.cate_Condition, [key]: checked };
+
+            // 把快速篩選 condition 刪除
+            const unCheckStatus = {
+            ...state.conditions,
+            On_Sale: false, // 上架中
+            Off_Sale: false, // 下架
+            Out_of_Stock: false, // 缺貨
+            };
+
+            // createdAt
+            const startDate = state.dateRange.start
+            ? new Date(state.dateRange.start)
+            : "";
+
+            const endDate = state.dateRange.end
+            ? new Date(state.dateRange.end)
+            : "";
+
+            const hasCategoryFilter =
+            Object.values(newCate_Condition).some(Boolean);
+            const hasStatusFilter = false;
+
+            const isFilter = hasCategoryFilter || hasStatusFilter;
+
+            const filtered = state.data.filter((item) => {
+            // ---------------PassStatus--------------------------
+            const PassStatus =
+                (!unCheckStatus.On_Sale &&
+                !unCheckStatus.Off_Sale &&
+                !unCheckStatus.Out_of_Stock) ||
+                (unCheckStatus.On_Sale && item.status === "上架中") ||
+                (unCheckStatus.Off_Sale && item.status === "下架") ||
+                (unCheckStatus.Out_of_Stock && item.status === "缺貨中");
+            // ---------------PassCategory--------------------------
+            const PassCategory =
+                (!newCate_Condition.house &&
+                !newCate_Condition.stationery &&
+                !newCate_Condition.electronics &&
+                !newCate_Condition.sporting_goods &&
+                !newCate_Condition.food_and_beverage) ||
+                (newCate_Condition.house && item.category === "居家生活") ||
+                (newCate_Condition.stationery && item.category === "文具用品") ||
+                (newCate_Condition.electronics && item.category === "電子產品") ||
+                (newCate_Condition.sporting_goods &&
+                item.category === "運動用品") ||
+                (newCate_Condition.food_and_beverage &&
+                item.category === "食品飲料");
+            // -------------------DateBoolean--------------------
+            const itemDate = new Date(item.createdAt as string);
+            const afterStart = state.dateRange.start
+                ? itemDate >= startDate
+                : true;
+            const beforeEnd = state.dateRange.end ? itemDate <= endDate : true;
+            // ------------------keyWordBoolean---------------------
+            const id = item.id?.toLowerCase() || "";
+            const name = item.name?.toLowerCase() || "";
+            const brand = item.brand?.toLowerCase() || "";
+            const category = item.category?.toLowerCase() || "";
+            const status = item.status?.toLowerCase() || "";
+            const tags = item.tags || "";
+
+            const keyWordBoolean =
+                id.includes(state.keyword) ||
+                name.includes(state.keyword) ||
+                brand.includes(state.keyword) ||
+                category.includes(state.keyword) ||
+                status.includes(state.keyword) ||
+                tags.includes(state.keyword);
+
+            return (
+                PassStatus &&
+                PassCategory &&
+                afterStart &&
+                beforeEnd &&
+                keyWordBoolean
+            );
+            });
+
+            return {
+            ...state,
+            // 判定目前抓取的資料是否為篩選的資料
+            filter: isFilter,
+            filtered: filtered,
+            conditions: unCheckStatus,
+            cate_Condition: newCate_Condition,
+            };
+        },
+        toggleVisible(state,action){
+            // 先取得目前操作的欄位
+        const { key, checked } = action.payload;
+        return {
+          ...state,
+          // 對 對應的 isVisible的key 做boolean值得變換
+          isVisible: { ...state.isVisible, [key]: checked },
+        };
+        },
+        exporToJson(state){
+            const blob = new Blob([JSON.stringify(state.data , null ,2)],{type: "application/json"})
+            const url = URL.createObjectURL(blob)
+            const link = document.createElement("a")
+            link.href = url
+            link.download = "myData.json"
+            link.click()
+            URL.revokeObjectURL(url)
+        },
+        saveData(state){
+            localStorage.setItem("my_dataForm", JSON.stringify(state.data))
+            alert("資料已儲存至 LocalStorage !")
+        }
+        
+    },
     extraReducers: (builder) =>{
         builder
     // pending
@@ -81,5 +927,31 @@ const dataFormSlice = createSlice({
     }
 })
 
+export const { 
+    setData,
+    searchFromKey,
+    searchFromDate,
+    priceSort,
+    perSort,
+    selectAllData,
+    selectSingleData,
+    deletSelect,
+    addItem,
+    addData,
+    undo,
+    confirmDeletData,
+    toggleRevisePage,
+    setDetil,
+    confirmRevision,
+    toggleAddPage,
+    toggleTrash,
+    toggleFilterStatus,
+    toggleFilterCategory,
+    toggleVisible,
+    exporToJson,
+    saveData
 
+
+
+} = dataFormSlice.actions
 export default dataFormSlice.reducer

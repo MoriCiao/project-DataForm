@@ -1,20 +1,25 @@
-import React, { useContext } from 'react'
 import Button from '../Button/Button'
 import { DataContext } from '../../context/DataContext';
+import { priceSort } from '../../features/dataFormSlice';
+import { useDispatch } from 'react-redux';
+export default function PriceSort() {
 
-export default function PriceSort({children}) {
-  const { state, dispatch } = useContext(DataContext);
+  const dispath_redux = useDispatch();
   return (
     <>
       <Button
-          type="button"
-          label="Price🔼"
-          onClick={() => dispatch({ type: "PRICE_RAISE_SORT" })}
-        />
+        type="button"
+        label="Price🔼"
+        onClick={() => 
+          dispath_redux(priceSort("UpToDown"))
+        }
+      />
       <Button
         type="button"
         label="Price🔽"
-        onClick={() => dispatch({ type: "PRICE_DECREASE_SORT" })}
+        onClick={() => 
+          dispath_redux(priceSort("DownToUp"))
+        }
       />
     </>
   )

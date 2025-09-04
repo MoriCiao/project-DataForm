@@ -3,9 +3,17 @@ import { DataContext } from "../../context/DataContext";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import Select from "../Select/Select";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  toggleRevisePage,
+  setDetil,
+  confirmRevision,
+} from "../../features/dataFormSlice";
 
 const Reviseitem = ({ label, name, prevData, type }) => {
-  const { state, dispatch } = useContext(DataContext);
+  const { newDetil } = useSelector((state) => state.dataForm);
+  const dispath_redux = useDispatch();
+
   return (
     <div className="flex justify-end items-center  w-full">
       <span className="flex-1 w-[10rem] text-center">{label} :</span>
@@ -16,22 +24,19 @@ const Reviseitem = ({ label, name, prevData, type }) => {
       <div className=" flex-1 w-full ">
         <Input
           type={type}
-          value={state.newDetail?.[name] || ""}
+          value={newDetil?.[name] || ""}
           className={`text-black text-start flex justify-center`}
           placeholder={`請輸入要修改的 ${name}`}
-          onChange={(e) =>
-            dispatch({
-              type: "NEW_DETAIL",
-              payload: { [name]: e.target.value },
-            })
-          }
+          onChange={(e) => dispath_redux(setDetil({ [name]: e.target.value }))}
         />
       </div>
     </div>
   );
 };
 const ReviseNum = ({ label, name, prevData, type }) => {
-  const { state, dispatch } = useContext(DataContext);
+  const { newDetil } = useSelector((state) => state.dataForm);
+  const dispath_redux = useDispatch();
+
   return (
     <div className="flex justify-end items-center  w-full">
       <span className="col-start-1 w-[10rem] text-center">{label} :</span>
@@ -41,20 +46,19 @@ const ReviseNum = ({ label, name, prevData, type }) => {
       </div>
       <Input
         type={type}
-        value={state.newDetail?.[name] || ""}
+        value={newDetil?.[name] || ""}
         min={"0"}
         step={"1"}
         className={`text-black text-start`}
         placeholder={`請輸入要修改的 ${name}`}
-        onChange={(e) =>
-          dispatch({ type: "NEW_DETAIL", payload: { [name]: e.target.value } })
-        }
+        onChange={(e) => dispath_redux(setDetil({ [name]: e.target.value }))}
       />
     </div>
   );
 };
 const ReviseSelect = ({ label, name, prevData }) => {
-  const { state, dispatch } = useContext(DataContext);
+  const { newDetil } = useSelector((state) => state.dataForm);
+  const dispath_redux = useDispatch();
   return (
     <div className="flex justify-end items-center  w-full">
       <span className="col-start-1 w-[10rem] text-center">{label} :</span>
@@ -64,22 +68,18 @@ const ReviseSelect = ({ label, name, prevData }) => {
       </div>
       <Select
         name={"status"}
-        value={state.newDetail?.[name] || ""}
+        value={newDetil?.[name] || ""}
         className={"text-black text-center flex items-center"}
-        onChange={(e) =>
-          dispatch({
-            type: "NEW_DETAIL",
-            payload: { [name]: e.target.value || "" },
-          })
-        }
+        onChange={(e) => dispath_redux(setDetil({ [name]: e.target.value }))}
       />
     </div>
   );
 };
 
 const RevisePage = () => {
-  const { state, dispatch } = useContext(DataContext);
-  const reviseData = state.revisePage.reviseItem;
+  const { revisePage } = useSelector((state) => state.dataForm);
+  const dispath_redux = useDispatch();
+  const reviseData = revisePage.reviseItem;
 
   return (
     <div className="fixed z-[10] top-[50%] left-[50%] bg-black/60 w-auto h-auto -translate-x-[50%] -translate-y-[50%] p-4 px-8 backdrop-blur-sm  text-white flex flex-col gap-4 items-center">
@@ -88,7 +88,7 @@ const RevisePage = () => {
         <span
           className="select-none cursor-pointer"
           onClick={() => {
-            dispatch({ type: "TOGGLE_REVISE_PAGE" });
+            dispath_redux(toggleRevisePage());
           }}
         >
           ❌
@@ -171,7 +171,7 @@ const RevisePage = () => {
       <Button
         label={"Confirm"}
         type="button"
-        onClick={() => dispatch({ type: "CONFIRM_OF_REVISION" })}
+        onClick={() => dispath_redux(confirmRevision())}
       />
     </div>
   );

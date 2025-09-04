@@ -362,6 +362,7 @@ export function DataProvider({ children }) {
           },
         };
       }
+      // ------------------------------------------------------------------
       // 上架中、下架、缺貨
       case "TOGGLE_FILTER_CONDITION_STATUS": {
         // 進入快速篩選 1
@@ -552,7 +553,6 @@ export function DataProvider({ children }) {
       }
       // 開啟新增頁面
       case "TOGGLE_ADD_PAGE": {
-        console.log(123);
         return { ...state, addPage: !state.addPage, delPage: false };
       }
       // 開啟垃圾桶
