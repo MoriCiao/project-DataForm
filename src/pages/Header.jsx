@@ -2,11 +2,13 @@ import React from "react";
 
 const Header = () => {
   return (
-    <header className="header w-full flex items-center justify-center pr-24 xl:pt-8 xl:pb-2 md:pt-12 sm:pt-8 select-none pointer-events-none">
+    <header className="w-full flex items-center justify-center pr-24 xl:pt-8 xl:pb-2 md:pt-12 sm:pt-8 select-none">
       <img
-        className="xl:w-[50%] md:w-[80%]"
+        className="xl:w-[50%] md:w-[80%] object-cover"
         src="/project-DataForm/Title-DataForm_header.webp"
         alt="Title_DataForm"
+        loading="lazy"
+        draggable="false"
       />
     </header>
   );

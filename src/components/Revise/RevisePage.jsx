@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useState, useEffect } from "react";
 import { DataContext } from "../../context/DataContext";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
@@ -10,10 +10,12 @@ import {
   confirmRevision,
 } from "../../features/dataFormSlice";
 
-const Reviseitem = ({ label, name, prevData, type }) => {
+const Reviseitem = ({ label, name, prevData, type, setReviseData, value }) => {
   const { newDetil } = useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
-
+  const handleChange = (e) => {
+    setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
+  };
   return (
     <div className="flex justify-end items-center  w-full">
       <span className="flex-1 w-[10rem] text-center">{label} :</span>
@@ -24,18 +26,22 @@ const Reviseitem = ({ label, name, prevData, type }) => {
       <div className=" flex-1 w-full ">
         <Input
           type={type}
-          value={newDetil?.[name] || ""}
-          className={`text-black text-start flex justify-center`}
-          placeholder={`請輸入要修改的 ${name}`}
-          onChange={(e) => dispath_redux(setDetil({ [name]: e.target.value }))}
+          value={value}
+          className={`text-black text-center flex justify-center`}
+          placeholder={prevData}
+          onChange={handleChange}
+          required
         />
       </div>
     </div>
   );
 };
-const ReviseNum = ({ label, name, prevData, type }) => {
+const ReviseNum = ({ label, name, prevData, type, setReviseData, value }) => {
   const { newDetil } = useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
+  const handleChange = (e) => {
+    setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
+  };
 
   return (
     <div className="flex justify-end items-center  w-full">
@@ -46,19 +52,24 @@ const ReviseNum = ({ label, name, prevData, type }) => {
       </div>
       <Input
         type={type}
-        value={newDetil?.[name] || ""}
+        value={value}
         min={"0"}
         step={"1"}
-        className={`text-black text-start`}
-        placeholder={`請輸入要修改的 ${name}`}
-        onChange={(e) => dispath_redux(setDetil({ [name]: e.target.value }))}
+        className={`text-black text-center`}
+        placeholder={prevData}
+        onChange={handleChange}
+        required
       />
     </div>
   );
 };
-const ReviseSelect = ({ label, name, prevData }) => {
+const ReviseSelect = ({ label, name, prevData, setReviseData, value }) => {
   const { newDetil } = useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
+  const handleChange = (e) => {
+    setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
+  };
+
   return (
     <div className="flex justify-end items-center  w-full">
       <span className="col-start-1 w-[10rem] text-center">{label} :</span>
@@ -67,19 +78,38 @@ const ReviseSelect = ({ label, name, prevData }) => {
         <span>{`=>`}</span>
       </div>
       <Select
-        name={"status"}
-        value={newDetil?.[name] || ""}
+        name={name}
+        value={value}
         className={"text-black text-center flex items-center"}
-        onChange={(e) => dispath_redux(setDetil({ [name]: e.target.value }))}
+        onChange={handleChange}
+        required
       />
     </div>
   );
 };
 
 const RevisePage = () => {
-  const { revisePage } = useSelector((state) => state.dataForm);
+  const { revisePage, newDetil } = useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
-  const reviseData = revisePage.reviseItem;
+  const prevData = revisePage.reviseItem;
+  const [reviseData, setReviseData] = useState({
+    ...prevData,
+  });
+
+  const handleSubmit = () => {
+    dispath_redux(confirmRevision(reviseData));
+    setReviseData({
+      id: "",
+      name: "",
+      brand: "",
+      category: "",
+      price: 0,
+      createdAt: "",
+      status: "",
+      stock: 0,
+      tags: "",
+    });
+  };
 
   return (
     <div className="fixed z-[10] top-[50%] left-[50%] bg-black/60 w-auto h-auto -translate-x-[50%] -translate-y-[50%] p-4 px-8 backdrop-blur-sm  text-white flex flex-col gap-4 items-center">
@@ -100,14 +130,16 @@ const RevisePage = () => {
 
         <p className="border w-full text-center py-2 text-[1.5rem]">
           目前操作的商品 ID ：
-          <span className="text-red-500">{reviseData.id}</span>
+          <span className="text-red-500">{prevData.id}</span>
         </p>
         {/* Name */}
         <Reviseitem
           label={"Name"}
           name={"name"}
-          prevData={reviseData.name}
+          prevData={prevData.name}
           type={"text"}
+          value={reviseData.name}
+          setReviseData={setReviseData}
         />
 
         <hr className="border border-white/50 w-full" />
@@ -115,64 +147,81 @@ const RevisePage = () => {
         <Reviseitem
           label={"Brand"}
           name={"brand"}
-          prevData={reviseData.brand}
+          prevData={prevData.brand}
           type={"text"}
+          value={reviseData.brand}
+          setReviseData={setReviseData}
         />
         <hr className="border border-white/50 w-full" />
         {/* Category */}
-        <Reviseitem
+        <ReviseSelect
           label={"Category"}
           name={"category"}
-          prevData={reviseData.category}
-          type={"text"}
+          prevData={prevData.category}
+          value={reviseData.category}
+          setReviseData={setReviseData}
         />
+        {/* <Reviseitem
+          label={"Category"}
+          name={"category"}
+          prevData={prevData.category}
+          type={"text"}
+          value={reviseData.category}
+          setReviseData={setReviseData}
+        /> */}
         <hr className="border border-white/50 w-full" />
         {/* Price */}
-        <Reviseitem
+        <ReviseNum
           label={"Price"}
           name={"price"}
-          prevData={reviseData.price}
+          prevData={prevData.price}
           type={"number"}
+          value={reviseData.price}
+          setReviseData={setReviseData}
         />
         <hr className="border border-white/50 w-full" />
         {/* Date */}
         <Reviseitem
           label={"Date"}
           name={"createdAt"}
-          prevData={reviseData.createdAt}
+          prevData={prevData.createdAt}
           type={"date"}
+          value={reviseData.createdAt}
+          setReviseData={setReviseData}
         />
         <hr className="border border-white/50 w-full" />
         {/* Status */}
         <ReviseSelect
           label={"Status"}
           name={"status"}
-          prevData={reviseData.status}
+          prevData={prevData.status}
+          value={reviseData.status}
+          setReviseData={setReviseData}
         />
         <hr className="border border-white/50 w-full" />
         {/* Stock */}
         <ReviseNum
           label={"Stock"}
           name={"stock"}
-          prevData={reviseData.stock}
+          prevData={prevData.stock}
           type={"number"}
+          value={reviseData.stock}
+          setReviseData={setReviseData}
         />
         <hr className="border border-white/50 w-full" />
         {/* Tags */}
         <Reviseitem
           label={"Tags"}
           name={"tags"}
-          prevData={reviseData.tags.join(" ")}
+          prevData={prevData.tags}
           type={"text"}
+          value={reviseData.tags}
+          setReviseData={setReviseData}
         />
         <hr className="border border-white/50 w-full" />
       </div>
 
-      <Button
-        label={"Confirm"}
-        type="button"
-        onClick={() => dispath_redux(confirmRevision())}
-      />
+      <Button label={"Confirm"} type="button" onClick={handleSubmit} />
     </div>
   );
 };

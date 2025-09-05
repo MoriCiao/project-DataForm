@@ -15,7 +15,7 @@ type Product = {
     brand : string
     status: ""| "上架中" | '下架' | "缺貨中"
     createdAt: string | null
-    tags?: string[]
+    tags?: string
 }
 
 type ProductDraft = Partial<{
@@ -41,7 +41,6 @@ type DataFormState = {
     filtered : Products
     selected : Products
     del_data : Products
-    newDetil : Product
     newItem : Product
     keyword : string
     dateRange: {
@@ -56,7 +55,7 @@ type DataFormState = {
     revisePage: {
     // 是否開啟修改頁面
     isOpen: boolean,
-    reviseItem: ProductDraft,
+    reviseItem: Product,
     },
     // 依照資料表格名稱做排列
     props_sort_condition: {
@@ -100,17 +99,6 @@ const initialState :DataFormState = {
         filtered : [],
         selected : [],
         del_data : [],
-        newDetil : {
-            id: "",
-            name: "",
-            brand: "",
-            category: "",
-            price: 0,
-            createdAt: "",
-            status: "",
-            stock: 0,
-            tags: [],
-        },
         newItem : {
             id: "",
             name: "",
@@ -120,7 +108,7 @@ const initialState :DataFormState = {
             stock: 0,
             status: "",
             brand: "",
-            tags: [],
+            tags: "",
         },
         keyword : "",
         dateRange: {
@@ -137,7 +125,15 @@ const initialState :DataFormState = {
         // 是否開啟修改頁面
         isOpen: false,
         reviseItem: {
-
+            id: "",
+            name: "",
+            brand: "",
+            category: "",
+            price: 0,
+            createdAt: "",
+            status: "",
+            stock: 0,
+            tags: "",
         },
         },
         // 依照資料表格名稱做排列
@@ -571,7 +567,7 @@ const dataFormSlice = createSlice({
                 createdAt: "",
                 stock: 0,
                 brand: "",
-                tags: [],
+                tags: "",
             },
             // 關閉AddPage
             state.addPage= false
@@ -601,50 +597,45 @@ const dataFormSlice = createSlice({
         },
         setDetil(state,action){
              // 之後修改時對應相應的 id 做修正
-            const original = state.revisePage?.reviseItem || {};
+    
+            // const original = state.revisePage?.reviseItem || {};
+            // key ,value
             const payload = action.payload;
-
+            console.log(payload)
+            let curretValue: string | number
             // 自動根據 payload 欄位，選擇要保留原本值或新值
             const updatedFields = Object.fromEntries(
-                
-            Object.entries(payload).map(([key, value]) =>{
-                const strValue = value as string
-                return ([
-                key,
-                strValue.trim?.() === "" ? original[key] : strValue,
-              ])
-            } 
-          
+                Object.entries(state.revisePage.reviseItem).map(([key, value]) =>{
+                    // const strValue = value as string | number
+                    if(key ===  'tags'){
+                        console.log(value)
+                    }else if(typeof value === "string"){
+                        console.log("original is" , state.revisePage.reviseItem[key])
+                        curretValue = value.trim?.() === "" ? state.revisePage.reviseItem[key] : value
+                    }else if (typeof value === "number"){
+                        console.log("original is" , state.revisePage.reviseItem[key])
+                        curretValue = value === 0 ? state.revisePage.reviseItem[key] : value
+                    }
+                    return ([key,curretValue])
+                } 
             ))
-
-            state.newDetil= {
-                ...state.newDetil,
-                id: original.id as string, // 保留原始 ID
+            state.revisePage.reviseItem= {
+                ...state.revisePage.reviseItem,
+                id: state.revisePage.reviseItem.id as string, // 保留原始 ID
                 ...updatedFields,
             }
             
         },
         // 確認修改
-        confirmRevision(state){
-            const newDetil = state.newDetil;
+        confirmRevision(state,action){
+            const reviseData = action.payload
 
-            const targetIndex:number = state.data.findIndex(item => item.id === newDetil.id)
-
-           // 獲取總資料裡對應的 index
-            const originalData = state.data[targetIndex];
-            console.log(targetIndex)
-            // 更新資料， 如果newDetil裡有未填寫 空白等資料，則會用原本資料裡對應的值
-            const update = Object.fromEntries(
-                Object.entries(originalData).map(([key, value]) => [
-                    key,
-                    newDetil[key]?.toString().trim() !== "" || 0  ? newDetil[key] : value,
-                ])
-            )as Product;
-   
+            const targetIndex:number = state.data.findIndex(item => item.id === reviseData.id)
+            
             // 覆蓋資料，先拷貝一份總資料，將其對應的 index 用修改好的資料作覆蓋
             const newData = [...state.data]
-
-            newData[targetIndex] = update 
+            // 將修改後的資料傳回總 data
+            newData[targetIndex] = reviseData
            
             // -----------------------------------------
             const reset_conditions = {
@@ -672,19 +663,20 @@ const dataFormSlice = createSlice({
             state.conditions = reset_conditions
             state.cate_Condition =  reset_cate_Condition
 
-            // 修改資料送出後，將頁面關閉及清空
-            state.newDetil= {
-                id : "",
-                name: "",
-                brand: "",
-                category: "",
-                price: 0,
-                createdAt: "",
-                status: "",
-                stock: 0,
-                tags: [],
-            },
-            state.revisePage= { isOpen: false, reviseItem: {} }
+            state.revisePage= { 
+                isOpen: false, 
+                    reviseItem: {
+                    id : "",
+                    name: "",
+                    brand: "",
+                    category: "",
+                    price: 0,
+                    createdAt: "",
+                    status: "",
+                    stock: 0,
+                    tags: ""
+                }   
+            }
             
         },
         // open AddPage

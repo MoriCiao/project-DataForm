@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFilterStatus, toggleFilterCategory,toggleVisible } from "../features/dataFormSlice";
+import { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 
 type SelectProps = ({
   selcetReducer: string
@@ -10,19 +12,23 @@ type SelectProps = ({
 
 
 export const CheckBox = ({ value, name, condition_type, selcetReducer }) => {
+  const { setCurrentPage } = useContext(DataContext)
   const dispath_redux = useDispatch();
 
-  function SelectFn(
+  function SelectFn<SelectProps>(
     selcetReducer :string , 
     value :string , 
     e :any ){
     if(selcetReducer === "status") {
       dispath_redux(toggleFilterStatus({key : value, checked: e.target.checked})) 
+      setCurrentPage(1)
     }else if(selcetReducer === "category") {
       dispath_redux(toggleFilterCategory({key : value, checked: e.target.checked}))
+      setCurrentPage(1)
     }else if(selcetReducer === "isVisible"){
       dispath_redux(toggleVisible({key : value, checked: e.target.checked}))
     }
+    
   }
 
   return (

@@ -1,10 +1,15 @@
 import { scale, easeInOut } from "framer-motion";
 import { tr } from "framer-motion/client";
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useEffect, useReducer, useState } from "react";
 
 export const DataContext = createContext();
 
 export function DataProvider({ children }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const value = {
+    currentPage,
+    setCurrentPage,
+  };
   const initialData = {
     data: [], // 全部資料
     filtered: [], // 篩選結果
@@ -809,7 +814,6 @@ export function DataProvider({ children }) {
     }
   }
   // 多條件處理
-  const [state, dispatch] = useReducer(dataReduce, initialData);
 
   // 資料載入....
   const LoadingData = () => {
@@ -848,11 +852,7 @@ export function DataProvider({ children }) {
   //   LoadingData();
   // }, []);
 
-  return (
-    <DataContext.Provider value={{ state, dispatch }}>
-      {children}
-    </DataContext.Provider>
-  );
+  return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 }
 
 export default DataProvider;

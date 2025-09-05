@@ -2,12 +2,19 @@ import React from 'react'
 import { CheckBox } from '../CheckBox'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { Zoom } from 'react-awesome-reveal';
 
 
 export default function ProductStatus() {
   const { conditions } = useSelector((state :RootState) => state.dataForm);
   return (
-    <>
+    <Zoom
+      duration={800}
+      cascade
+      damping={0.5}
+      delay={200}
+  
+    >
         <CheckBox
             value="On_Sale"
             name="上架中"
@@ -27,6 +34,6 @@ export default function ProductStatus() {
             condition_type={conditions}
             selcetReducer="status"
         />
-    </>
+    </Zoom>
   )
 }

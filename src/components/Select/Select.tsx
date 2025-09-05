@@ -19,7 +19,7 @@ export default function Select({ label, name, value, onChange,className ,require
           className={`bg-white rounded md:w-[12rem] md:h-[2.5rem] sm:w-[20rem] sm:h-[2rem] ${className}`}
           value={value}
           onChange={onChange}
-          required
+          required={required}
         >
           {opt.map((op, index) => {
             return (

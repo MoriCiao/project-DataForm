@@ -2,11 +2,17 @@ import React from 'react'
 import { CheckBox } from '../CheckBox'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { Zoom } from 'react-awesome-reveal';
 
 export default function ProductCategory() {
     const { cate_Condition } = useSelector((state :RootState) => state.dataForm);
   return (
-    <>
+    <Zoom
+        duration={800}
+        cascade
+        damping={0.5}
+        delay={200}
+    >
         <CheckBox
             value="house"
             name="居家生活"
@@ -37,6 +43,6 @@ export default function ProductCategory() {
             condition_type={cate_Condition}
             selcetReducer="category"
         />
-    </>
+    </Zoom>
   )
 }

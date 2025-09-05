@@ -22,12 +22,13 @@ const DataTable = () => {
   const { data, filtered, status, error, selected, selectAll, isVisible } =
     useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
+  const { currentPage, setCurrentPage } = useContext(DataContext);
 
   const allProducts = filtered.length !== 0 ? filtered : data;
 
   // 分頁
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE);
+  // const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(allProducts.length / ITEMS_PER_PAGE);
 
   // 每頁分頁資料的 起始Index
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

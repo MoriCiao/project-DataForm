@@ -5,7 +5,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 }
 
-export default function Input({ref ,label,name, type, value, onChange, placeholder, className, min, step}): InputProps {
+export default function Input({ref ,label,name, type, value, onChange, placeholder, className, min, step, required = true}): InputProps {
 
   return (
     <>
@@ -22,6 +22,7 @@ export default function Input({ref ,label,name, type, value, onChange, placehold
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        required= {required}
     />
     </>
   )
