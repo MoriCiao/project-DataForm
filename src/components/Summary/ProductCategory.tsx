@@ -11,7 +11,7 @@ export default function ProductCategory() {
         duration={800}
         cascade
         damping={0.5}
-        delay={200}
+        triggerOnce={true}
     >
         <CheckBox
             value="house"

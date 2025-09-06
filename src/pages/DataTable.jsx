@@ -12,6 +12,7 @@ import {
   toggleRevisePage,
 } from "../features/dataFormSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Fade } from "react-awesome-reveal";
 
 const th_style = "px-12 h-full border  bg-[--theme-Secondary]";
 const td_style = "px-4 py-1 border border-white/50 whitespace-nowrap";
@@ -68,7 +69,7 @@ const DataTable = () => {
   if (status === "succeeded") {
     return (
       <>
-        <div className="dataTable overflow-x-auto mb-4 max-h-auto xl:max-w-full w-full">
+        <Fade className="dataTable overflow-x-auto mb-4 max-h-auto xl:max-w-full w-full">
           <table
             className={`table-auto border-collapse w-full h-full mix-w-[800px]`}
           >
@@ -279,16 +280,14 @@ const DataTable = () => {
                 })}
             </tbody>
           </table>
-        </div>
-
-        {/* 分頁按鈕 */}
-        <Pagination
-          goToPrevPage={goToPrevPage}
-          goToNextPage={goToNextPage}
-          currentPage={currentPage}
-          totalPages={totalPages}
-          setCurrentPage={setCurrentPage}
-        />
+          <Pagination
+            goToPrevPage={goToPrevPage}
+            goToNextPage={goToNextPage}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        </Fade>
       </>
     );
   }

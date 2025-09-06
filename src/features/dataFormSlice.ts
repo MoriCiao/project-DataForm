@@ -18,18 +18,6 @@ type Product = {
     tags?: string
 }
 
-type ProductDraft = Partial<{
-    id: string;
-    name: string;
-    category: Product["category"] | ""
-    price: number;
-    stock: number;
-    brand: string
-    status: Product["status"] | ""
-    createdAt: string | null
-    tags: string[] 
-}>
-
 type Products = Product[]
 
 type status = "idle" | "loading" | "succeeded" | "failed"

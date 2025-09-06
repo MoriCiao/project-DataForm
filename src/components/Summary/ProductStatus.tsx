@@ -9,11 +9,10 @@ export default function ProductStatus() {
   const { conditions } = useSelector((state :RootState) => state.dataForm);
   return (
     <Zoom
-      duration={800}
+      duration={500}
       cascade
       damping={0.5}
-      delay={200}
-  
+      triggerOnce={true}
     >
         <CheckBox
             value="On_Sale"
