@@ -107,6 +107,7 @@ const initialState :DataFormState = {
         // 判定目前抓取的資料是否為篩選的資料
         filter: false, // 判定目前是否正在過濾資料
         loading: false,
+
         addPage: false, // 是否開啟新增Item頁面
         delPage: false, // 是否開啟垃圾桶頁面
         revisePage: {

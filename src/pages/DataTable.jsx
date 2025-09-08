@@ -13,6 +13,8 @@ import {
 } from "../features/dataFormSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Fade } from "react-awesome-reveal";
+import LoadingModal from "../components/Loading/LoadingModal";
+import ErrorModal from "../components/Error/ErrorModal";
 
 const th_style = "px-12 h-full border  bg-[--theme-Secondary]";
 const td_style = "px-4 py-1 border border-white/50 whitespace-nowrap";
@@ -47,28 +49,14 @@ const DataTable = () => {
     dispath_redux(fetchData());
   }, [dispath_redux]);
 
-  if (status === "loading") {
-    return (
-      <div className="absolute top-0 left-0 w-[100vw] h-[100vh] bg-black/80 flex items-center justify-center ">
-        <p className=" border-2 border-white/50 w-50 h-50 rounded-full flex items-center justify-center text-xl bg-black/50 ">
-          Loading...
-        </p>
-      </div>
-    );
-  }
+  if (status === "loading") return <LoadingModal />;
 
-  if (status === "failed") {
-    return (
-      <div className="absolute top-0 left-0 w-[100vw] h-[100vh] bg-black/80 flex items-center justify-center ">
-        <p className=" border-2 border-red-500 w-[60%] h-[60%] flex items-center justify-center text-xl bg-black/50 text-red-500 px-8">
-          {error}
-        </p>
-      </div>
-    );
-  }
+  if (status === "failed") return <ErrorModal />;
+
   if (status === "succeeded") {
     return (
       <>
+        {/* <LoadingModal /> */}
         <Fade className="dataTable overflow-x-auto mb-4 max-h-auto xl:max-w-full w-full">
           <table
             className={`table-auto border-collapse w-full h-full mix-w-[800px]`}

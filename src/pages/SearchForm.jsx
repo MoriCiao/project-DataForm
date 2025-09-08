@@ -23,8 +23,6 @@ const SearchForm = () => {
     useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
 
-  const { state, dispatch } = useContext(DataContext);
-
   const handleReload = () => {
     dispath_redux(fetchData());
   };
