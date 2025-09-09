@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import Input from "../Input/Input";
 import Select from "../Select/Select";
 import Button from "../Button/Button";
@@ -6,13 +6,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleAddPage, addItem, addData } from "../../features/dataFormSlice";
 import { Zoom } from "react-awesome-reveal";
 import useLockedScroll from "../../hook/useLockedScroll";
+import { DataContext } from "../../context/DataContext";
 
 const AddPage = () => {
   const { newItem, addPage } = useSelector((state) => state.dataForm);
+  const { openModal, setOpenModal } = useContext(DataContext);
   const dispath_redux = useDispatch();
   const inputRef = useRef(null);
   useLockedScroll(addPage);
-
+  const handelSubmit = () => {
+    dispath_redux(addData());
+    setOpenModal({
+      isOpen: true,
+      title: "Add New Data",
+      text: "新資料以新增置主資料裡，請再次查詢確認。",
+    });
+  };
   useEffect(() => {
     inputRef.current.focus();
   }, []);
@@ -199,12 +208,10 @@ const AddPage = () => {
             <Button
               label="ADD"
               type="submit"
-              onClick={() => {
-                dispath_redux(addData());
-              }}
+              onClick={handelSubmit}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  dispath_redux(addData());
+                  handelSubmit;
                 }
               }}
             />

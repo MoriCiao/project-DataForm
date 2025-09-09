@@ -29,6 +29,7 @@ export default function PageInput({totalPages, changePage, setChangePage ,handle
             label='Go'
             className={`border-0`}
             onClick={handlePage}
+            disable={changePage === ""}
         />
     
     

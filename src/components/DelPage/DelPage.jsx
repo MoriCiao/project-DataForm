@@ -15,9 +15,30 @@ const td_style = "px-4 py-1 border border-white/50 bg-[--bg] whitespace-nowrap";
 
 const DelPage = () => {
   const { del_data, delPage } = useSelector((state) => state.dataForm);
+  const { setOpenModal } = useContext(DataContext);
   const dispath_redux = useDispatch();
   const focusRef = useRef(null);
   useLockedScroll(delPage);
+
+  const handleUndo = () => {
+    if (del_data.length === 0) return;
+    dispath_redux(undo(del_data));
+    setOpenModal({
+      isOpen: true,
+      title: "Undo Data",
+      text: `資料已還原至主檔。`,
+    });
+  };
+
+  const hanleConfirmDelete = () => {
+    if (del_data.length === 0) return;
+    dispath_redux(confirmDeletData());
+    setOpenModal({
+      isOpen: true,
+      title: "Delete Data",
+      text: `資料已移除。`,
+    });
+  };
 
   useEffect(() => {
     focusRef.current.focus();
@@ -91,14 +112,14 @@ const DelPage = () => {
             <Button
               type="button"
               label="Undo"
-              onClick={() => dispath_redux(undo(del_data))}
+              onClick={handleUndo}
+              disable={del_data.length === 0}
             />
             <Button
               type="button"
               label="Delete !"
-              onClick={() => {
-                dispath_redux(confirmDeletData());
-              }}
+              onClick={hanleConfirmDelete}
+              disable={del_data.length === 0}
             />
           </div>
         </div>

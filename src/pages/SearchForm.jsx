@@ -21,7 +21,28 @@ import {
 const SearchForm = () => {
   const { data, keyword, dateRange, revisePage, addPage, delPage, selected } =
     useSelector((state) => state.dataForm);
+  const { setOpenModal, setCurrentPage } = useContext(DataContext);
   const dispath_redux = useDispatch();
+
+  const handleSave = () => {
+    dispath_redux(saveData(data));
+    setOpenModal({
+      isOpen: true,
+      title: "Save To LocalStorage",
+      text: "已將目前資料存儲至 LocalStorage。",
+    });
+  };
+
+  const handleDel = () => {
+    if (selected.length === 0) return;
+    dispath_redux(deletSelect({ item: selected }));
+    setCurrentPage(1);
+    setOpenModal({
+      isOpen: true,
+      title: "Selected To Trash",
+      text: "已將選取資料轉移至垃圾桶，請至垃圾桶再次核對並刪除。",
+    });
+  };
 
   const handleReload = () => {
     dispath_redux(fetchData());
@@ -70,19 +91,15 @@ const SearchForm = () => {
           type="button"
           onClick={() => dispath_redux(toggleAddPage())}
         />
+
         <Button
           label="DEL"
           type="button"
-          onClick={() => dispath_redux(deletSelect({ item: selected }))}
+          onClick={handleDel}
+          disable={selected.length === 0}
         />
-        <Button
-          label="SAVE"
-          type="button"
-          onClick={
-            () => dispath_redux(saveData(data))
-            // dispatch({ type: "SAVE_DATA", payload: data })
-          }
-        />
+
+        <Button label="SAVE" type="button" onClick={handleSave} />
         <Button
           label="🗑️"
           type="button"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import Select from "../Select/Select";
@@ -9,6 +9,7 @@ import {
 } from "../../features/dataFormSlice";
 import useLockedScroll from "../../hook/useLockedScroll";
 import { Zoom } from "react-awesome-reveal";
+import { DataContext } from "../../context/DataContext";
 
 const Reviseitem = ({ label, name, prevData, type, setReviseData, value }) => {
   const handleChange = (e) => {
@@ -84,6 +85,7 @@ const ReviseSelect = ({ label, name, prevData, setReviseData, value }) => {
 
 const RevisePage = () => {
   const { revisePage } = useSelector((state) => state.dataForm);
+  const { setOpenModal } = useContext(DataContext);
   useLockedScroll(revisePage.isOpen);
   const dispath_redux = useDispatch();
   const prevData = revisePage.reviseItem;
@@ -104,7 +106,11 @@ const RevisePage = () => {
       stock: 0,
       tags: "",
     });
-    alert("資料已更新....請重新查詢確認...");
+    setOpenModal({
+      isOpen: true,
+      title: "Revise Confirm",
+      text: `資料已更新，請重新查詢確認。`,
+    });
   };
 
   return (

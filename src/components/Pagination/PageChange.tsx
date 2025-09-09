@@ -8,12 +8,12 @@ export default function PageChange({
     goToNextPage}) {
     return (
         <div className='flex gap-4 '>
-            <Button type="button" label="Prev" onClick={goToPrevPage} />
+            <Button type="button" label="Prev" onClick={goToPrevPage} disable={currentPage === 1}/>
             
             <span>
             {currentPage} page / {totalPages} pages
             </span>
-            <Button type="button" label="Next" onClick={goToNextPage} />
+            <Button type="button" label="Next" onClick={goToNextPage} disable={currentPage === totalPages}/>
         </div>
     )
 }
