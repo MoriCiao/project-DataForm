@@ -1,5 +1,5 @@
-import React from 'react'
-import {  motion } from "framer-motion";
+
+import { motion } from "framer-motion";
 import Button from '../Button/Button';
 export default function PageInput({totalPages, changePage, setChangePage ,handlePage}) {
   return (
