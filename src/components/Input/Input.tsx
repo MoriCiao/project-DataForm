@@ -1,9 +1,7 @@
 import { label } from 'framer-motion/client'
 import React from 'react'
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-
-}
+type InputProps = React.InputHTMLAttributes<HTMLInputElement>
 
 export default function Input({ref ,label,name, type, value, onChange, placeholder, className, min, step, required = true}): InputProps {
 
