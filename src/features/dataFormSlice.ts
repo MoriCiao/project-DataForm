@@ -538,15 +538,7 @@ const dataFormSlice = createSlice({
         
         },
         addData(state){
-            const newData = state.newItem;
- 
-            // 判定目前新增資料內容是否有空白的
-            const hasEmptyData = Object.values(state.newItem).some((v) => v === "" || v === 0 ) ;
-            if (hasEmptyData) {
-                alert("新增資料失敗....，您輸入資料內容有空值，請從新增資料。");
-                return
-            }
-            state.data = [...state.data, newData]
+            state.data = [...state.data, state.newItem]
             // 新增資料後，將新增頁面設為預設值
             state.newItem= {
                 id: "",

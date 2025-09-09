@@ -14,14 +14,27 @@ const AddPage = () => {
   const dispath_redux = useDispatch();
   const inputRef = useRef(null);
   useLockedScroll(addPage);
+
+  const hasEmptyData = Object.values(newItem).some((v) => v === "" || v === 0);
+
   const handelSubmit = () => {
+    // 判定目前新增資料內容是否有空白的
+    if (hasEmptyData) {
+      setOpenModal({
+        isOpen: true,
+        title: "Add Data Fail",
+        text: "新增資料失敗，請您確保每個欄位皆有填寫。",
+      });
+      return;
+    }
     dispath_redux(addData());
     setOpenModal({
       isOpen: true,
       title: "Add New Data",
-      text: "新資料以新增置主資料裡，請再次查詢確認。",
+      text: "新資料已新增置主資料裡，請再次查詢確認。",
     });
   };
+
   useEffect(() => {
     inputRef.current.focus();
   }, []);
