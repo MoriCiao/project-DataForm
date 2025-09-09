@@ -570,12 +570,13 @@ const dataFormSlice = createSlice({
             } else {
             console.log("目前在垃圾桶裡的資料有", deletedData);
             const updateData = state.data.concat(deletedData);
-            return { ...state, data: updateData, del_data: [] };
+            state.data = updateData 
+            state.del_data = [] ;
             }
         },
         confirmDeletData(state){
             state.del_data = []
-            alert("垃圾桶以清空!!") 
+
         },
         // 修正頁面開闔
         toggleRevisePage(state,action){
