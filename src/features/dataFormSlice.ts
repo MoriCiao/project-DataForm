@@ -536,9 +536,9 @@ const dataFormSlice = createSlice({
 
         
         },
-        addData(state,action){
+        addData(state){
             const newData = state.newItem;
-            console.log(newData)
+ 
             // 判定目前新增資料內容是否有空白的
             const hasEmptyData = Object.values(state.newItem).some((v) => v === "" || v === 0 ) ;
             if (hasEmptyData) {
@@ -583,37 +583,6 @@ const dataFormSlice = createSlice({
                 isOpen : !state.revisePage.isOpen,
                 reviseItem : data || {}
             }
-        },
-        setDetil(state,action){
-             // 之後修改時對應相應的 id 做修正
-    
-            // const original = state.revisePage?.reviseItem || {};
-            // key ,value
-            const payload = action.payload;
-            console.log(payload)
-            let curretValue: string | number
-            // 自動根據 payload 欄位，選擇要保留原本值或新值
-            const updatedFields = Object.fromEntries(
-                Object.entries(state.revisePage.reviseItem).map(([key, value]) =>{
-                    // const strValue = value as string | number
-                    if(key ===  'tags'){
-                        console.log(value)
-                    }else if(typeof value === "string"){
-                        console.log("original is" , state.revisePage.reviseItem[key])
-                        curretValue = value.trim?.() === "" ? state.revisePage.reviseItem[key] : value
-                    }else if (typeof value === "number"){
-                        console.log("original is" , state.revisePage.reviseItem[key])
-                        curretValue = value === 0 ? state.revisePage.reviseItem[key] : value
-                    }
-                    return ([key,curretValue])
-                } 
-            ))
-            state.revisePage.reviseItem= {
-                ...state.revisePage.reviseItem,
-                id: state.revisePage.reviseItem.id as string, // 保留原始 ID
-                ...updatedFields,
-            }
-            
         },
         // 確認修改
         confirmRevision(state,action){
@@ -922,7 +891,6 @@ export const {
     undo,
     confirmDeletData,
     toggleRevisePage,
-    setDetil,
     confirmRevision,
     toggleAddPage,
     toggleTrash,
@@ -931,8 +899,5 @@ export const {
     toggleVisible,
     exporToJson,
     saveData
-
-
-
 } = dataFormSlice.actions
 export default dataFormSlice.reducer

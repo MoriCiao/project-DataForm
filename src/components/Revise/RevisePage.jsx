@@ -1,12 +1,10 @@
-import React, { Fragment, useContext, useState, useEffect } from "react";
-import { DataContext } from "../../context/DataContext";
+import React, { useState } from "react";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import Select from "../Select/Select";
 import { useDispatch, useSelector } from "react-redux";
 import {
   toggleRevisePage,
-  setDetil,
   confirmRevision,
 } from "../../features/dataFormSlice";
 import useLockedScroll from "../../hook/useLockedScroll";
@@ -37,8 +35,6 @@ const Reviseitem = ({ label, name, prevData, type, setReviseData, value }) => {
   );
 };
 const ReviseNum = ({ label, name, prevData, type, setReviseData, value }) => {
-  const { newDetil } = useSelector((state) => state.dataForm);
-  const dispath_redux = useDispatch();
   const handleChange = (e) => {
     setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
   };
@@ -64,8 +60,6 @@ const ReviseNum = ({ label, name, prevData, type, setReviseData, value }) => {
   );
 };
 const ReviseSelect = ({ label, name, prevData, setReviseData, value }) => {
-  const { newDetil } = useSelector((state) => state.dataForm);
-  const dispath_redux = useDispatch();
   const handleChange = (e) => {
     setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
   };
@@ -164,14 +158,6 @@ const RevisePage = () => {
               value={reviseData.category}
               setReviseData={setReviseData}
             />
-            {/* <Reviseitem
-          label={"Category"}
-          name={"category"}
-          prevData={prevData.category}
-          type={"text"}
-          value={reviseData.category}
-          setReviseData={setReviseData}
-        /> */}
             <hr className="border border-white/50 w-full" />
             {/* Price */}
             <ReviseNum

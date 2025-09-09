@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import { easeInOut, motion } from "framer-motion";
 import { DataContext } from "../context/DataContext";
 import Pagination from "../components/Pagination";
@@ -6,7 +6,6 @@ import TableSortBtn from "../components/Button/TableSortBtn";
 import Button from "../components/Button/Button";
 import {
   fetchData,
-  setData,
   selectAllData,
   selectSingleData,
   toggleRevisePage,

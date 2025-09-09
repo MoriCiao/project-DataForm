@@ -4,18 +4,11 @@ import { toggleFilterStatus, toggleFilterCategory,toggleVisible } from "../featu
 import { useContext } from "react";
 import { DataContext } from "../context/DataContext";
 
-type SelectProps = ({
-  selcetReducer: string
-  value :string
-  e :any
-}) 
-
-
 export const CheckBox = ({ value, name, condition_type, selcetReducer }) => {
   const { setCurrentPage } = useContext(DataContext)
   const dispath_redux = useDispatch();
 
-  function SelectFn<SelectProps>(
+  function SelectFn(
     selcetReducer :string , 
     value :string , 
     e :any ){
@@ -30,7 +23,6 @@ export const CheckBox = ({ value, name, condition_type, selcetReducer }) => {
     }
     
   }
-
   return (
     <div className="check_id text-center">
       <motion.input
