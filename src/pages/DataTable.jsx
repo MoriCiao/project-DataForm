@@ -21,15 +21,21 @@ const td_style = "px-4 py-1 border border-white/50 whitespace-nowrap";
 const ITEMS_PER_PAGE = 20;
 
 const DataTable = () => {
-  const { data, filtered, status, error, selected, selectAll, isVisible } =
-    useSelector((state) => state.dataForm);
+  const {
+    data,
+    filtered,
+    filter,
+    status,
+    error,
+    selected,
+    selectAll,
+    isVisible,
+  } = useSelector((state) => state.dataForm);
   const dispath_redux = useDispatch();
   const { currentPage, setCurrentPage } = useContext(DataContext);
 
-  const allProducts = filtered.length !== 0 ? filtered : data;
+  const allProducts = filter ? filtered : data;
 
-  // 分頁
-  // const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(allProducts.length / ITEMS_PER_PAGE);
 
   // 每頁分頁資料的 起始Index

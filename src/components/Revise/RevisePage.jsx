@@ -104,6 +104,7 @@ const RevisePage = () => {
       stock: 0,
       tags: "",
     });
+    alert("資料已更新....請重新查詢確認...");
   };
 
   return (

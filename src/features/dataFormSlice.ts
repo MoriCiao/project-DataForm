@@ -363,8 +363,9 @@ const dataFormSlice = createSlice({
         priceSort(state,action){
             const actionType = action.payload
             const isFiltered = state.filter;
+
             const currentData:Products = isFiltered ? state.filtered : state.data;
-            const sortData = currentData.sort((a, b) => {
+            const sortData = [...currentData].sort((a, b) => {
                 if(actionType === "UpToDown"){
                     //@ts-ignore
                     return  b.price - a.price;
@@ -611,16 +612,12 @@ const dataFormSlice = createSlice({
                 food_and_beverage: false,
             };
 
-            alert("資料已更新....請重新查詢確認...");
-         
-
             state.filter= false
             state.data = newData
             state.keyword = ""
             state.dateRange = { start: "", end: "" }
             state.conditions = reset_conditions
             state.cate_Condition =  reset_cate_Condition
-
             state.revisePage= { 
                 isOpen: false, 
                     reviseItem: {
