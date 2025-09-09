@@ -841,7 +841,6 @@ const dataFormSlice = createSlice({
         },
         saveData(state){
             localStorage.setItem("my_dataForm", JSON.stringify(state.data))
-            alert("資料已儲存至 LocalStorage !")
         }
         
     },
