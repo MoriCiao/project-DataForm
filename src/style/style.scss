@@ -1,12 +1,11 @@
-:root{
+:root {
   --theme-Primary: rgb(14, 165, 233);
   --theme-Secondary: rgb(100, 116, 139);
-  --text :rgb(241, 245, 249);
+  --text: rgb(241, 245, 249);
   --bg: rgb(15, 23, 42);
 }
-body{
+body {
   background-color: var(--bg);
   width: auto;
   height: 100%;
-
 }

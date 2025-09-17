@@ -62,16 +62,16 @@ const DataTable = () => {
     return (
       <>
         {/* <LoadingModal /> */}
-        <Fade className="dataTable overflow-x-auto mb-4 max-h-auto xl:max-w-full w-full">
+        <Fade className="dataTable max-h-auto mb-4 w-full overflow-x-auto xl:max-w-full">
           <table
-            className={`table-auto border-collapse w-full h-full mix-w-[800px]`}
+            className={`mix-w-[800px] h-full w-full table-auto border-collapse`}
           >
             <thead className={`sticky top-0 h-10 items-center justify-center`}>
               <tr className="">
-                <th className={`${th_style} flex justify-center items-center`}>
+                <th className={`${th_style} flex items-center justify-center`}>
                   No.
                 </th>
-                <th className={`${th_style} sticky `}>
+                <th className={`${th_style} sticky`}>
                   <motion.input
                     animate={{
                       scale: selectAll ? 1.5 : 1.25,
@@ -88,7 +88,7 @@ const DataTable = () => {
                 <th
                   className={`${th_style} ${
                     isVisible.ID ? "" : "hidden"
-                  } sticky `}
+                  } sticky`}
                 >
                   <p className="flex">
                     ID
@@ -170,10 +170,10 @@ const DataTable = () => {
                           backgroundColor: "rgb(100, 116, 139)",
                         }}
                         transition={{ duration: 0.3, ease: easeInOut }}
-                        className="text-center h-[1.5rem]"
+                        className="h-[1.5rem] text-center"
                       >
                         <td className={`${td_style}`}>{index + 1}</td>
-                        <td className={`${td_style} sticky `}>
+                        <td className={`${td_style} sticky`}>
                           <motion.input
                             animate={{
                               scale: selected.some((i) => i.id === p.id)
@@ -190,7 +190,7 @@ const DataTable = () => {
                                 selectSingleData({
                                   item: p,
                                   checked: e.target.checked,
-                                })
+                                }),
                               );
                             }}
                           />
@@ -199,14 +199,14 @@ const DataTable = () => {
                         <td
                           className={`${td_style} ${
                             isVisible.ID ? "" : "hidden"
-                          } sticky  `}
+                          } sticky`}
                         >
                           {p.id}
                         </td>
                         <td
                           className={`${td_style} ${
                             isVisible.Name ? "" : "hidden"
-                          } sticky `}
+                          } sticky`}
                         >
                           {p.name}
                         </td>

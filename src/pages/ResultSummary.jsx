@@ -8,17 +8,17 @@ const ResultSummary = () => {
   return (
     <section className="resultSummary flex">
       <details className="w-full">
-        <summary className="cursor-pointer select-none pb-2 hover:text-sky-500">
+        <summary className="cursor-pointer pb-2 select-none hover:text-sky-500">
           快速篩選
         </summary>
 
-        <div className="md:grid md:grid-cols-8 sm:grid gap-4">
+        <div className="gap-4 sm:grid md:grid md:grid-cols-8">
           <Zoom
             duration={500}
             cascade
             damping={0.5}
             triggerOnce={true}
-            className="status-area border border-white/50 flex flex-wrap p-2 md:col-span-2 md:col-start-1 gap-2 justify-center items-center"
+            className="status-area flex flex-wrap items-center justify-center gap-2 border border-white/50 p-2 md:col-span-2 md:col-start-1"
           >
             <ProductStatus />
           </Zoom>
@@ -28,7 +28,7 @@ const ResultSummary = () => {
             cascade
             damping={0.5}
             triggerOnce={true}
-            className="category-area xl:flex xl:flex-wrap border border-white/50 p-2 md:col-span-4 md:col-start-3 xl:gap-4 md:grid md:grid-cols-3 md:gap-2 sm:grid sm:grid-cols-3 justify-center items-center"
+            className="category-area items-center justify-center border border-white/50 p-2 sm:grid sm:grid-cols-3 md:col-span-4 md:col-start-3 md:grid md:grid-cols-3 md:gap-2 xl:flex xl:flex-wrap xl:gap-4"
           >
             <ProductCategory />
           </Zoom>
@@ -38,7 +38,7 @@ const ResultSummary = () => {
             cascade
             damping={0.5}
             triggerOnce={true}
-            className="border border-white/50 p-2 xl:flex  xl:gap-2 md:flex md:gap-4 md:p-2 sm:gap-12 sm:grid sm:grid-cols-2 sm:p-6 md:col-span-5 md:col-start-7 gap-2 justify-center items-center"
+            className="items-center justify-center gap-2 border border-white/50 p-2 sm:grid sm:grid-cols-2 sm:gap-12 sm:p-6 md:col-span-5 md:col-start-7 md:flex md:gap-4 md:p-2 xl:flex xl:gap-2"
           >
             <PriceSort />
           </Zoom>

@@ -16,17 +16,17 @@ const Reviseitem = ({ label, name, prevData, type, setReviseData, value }) => {
     setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
   };
   return (
-    <div className="flex justify-end items-center  w-full">
-      <span className="flex-1 w-[10rem] text-center">{label} :</span>
-      <div className="flex-1 flex justify-center w-[10rem]">
+    <div className="flex w-full items-center justify-end">
+      <span className="w-[10rem] flex-1 text-center">{label} :</span>
+      <div className="flex w-[10rem] flex-1 justify-center">
         <p>{prevData}</p>
         <span>{`=>`}</span>
       </div>
-      <div className=" flex-1 w-full ">
+      <div className="w-full flex-1">
         <Input
           type={type}
           value={value}
-          className={`text-black text-center flex justify-center`}
+          className={`flex justify-center text-center text-black`}
           placeholder={prevData}
           onChange={handleChange}
           required
@@ -41,9 +41,9 @@ const ReviseNum = ({ label, name, prevData, type, setReviseData, value }) => {
   };
 
   return (
-    <div className="flex justify-end items-center  w-full">
+    <div className="flex w-full items-center justify-end">
       <span className="col-start-1 w-[10rem] text-center">{label} :</span>
-      <div className="col-start-2 col-span-2 flex justify-center w-[10rem]">
+      <div className="col-span-2 col-start-2 flex w-[10rem] justify-center">
         <p>{prevData}</p>
         <span>{`=>`}</span>
       </div>
@@ -52,7 +52,7 @@ const ReviseNum = ({ label, name, prevData, type, setReviseData, value }) => {
         value={value}
         min={"0"}
         step={"1"}
-        className={`text-black text-center`}
+        className={`text-center text-black`}
         placeholder={prevData}
         onChange={handleChange}
         required
@@ -66,16 +66,16 @@ const ReviseSelect = ({ label, name, prevData, setReviseData, value }) => {
   };
 
   return (
-    <div className="flex justify-end items-center  w-full">
+    <div className="flex w-full items-center justify-end">
       <span className="col-start-1 w-[10rem] text-center">{label} :</span>
-      <div className="col-start-2 col-span-2 flex justify-center w-[10rem]">
+      <div className="col-span-2 col-start-2 flex w-[10rem] justify-center">
         <p>{prevData}</p>
         <span>{`=>`}</span>
       </div>
       <Select
         name={name}
         value={value}
-        className={"text-black text-center flex items-center"}
+        className={"flex items-center text-center text-black"}
         onChange={handleChange}
         required
       />
@@ -114,13 +114,13 @@ const RevisePage = () => {
   };
 
   return (
-    <section className="revisePage fixed top-0 left-0 z-[10] w-[100vw] h-[100vh] backdrop-blur-sm flex items-center justify-center">
+    <section className="revisePage fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <Zoom duration={500}>
-        <div className="absolute z-[10] top-[50%] left-[50%] bg-black/90 w-auto h-auto -translate-x-[50%] -translate-y-[50%] p-4 px-8 backdrop-blur-sm  text-white flex flex-col gap-4 items-center">
-          <div className="revise-top w-full flex items-center justify-between">
+        <div className="absolute top-[50%] left-[50%] z-[10] flex h-auto w-auto -translate-x-[50%] -translate-y-[50%] flex-col items-center gap-4 bg-black/90 p-4 px-8 text-white backdrop-blur-sm">
+          <div className="revise-top flex w-full items-center justify-between">
             <p className="">Revise Page</p>
             <span
-              className="select-none cursor-pointer"
+              className="cursor-pointer select-none"
               onClick={() => {
                 dispath_redux(toggleRevisePage());
               }}
@@ -129,10 +129,10 @@ const RevisePage = () => {
             </span>
           </div>
 
-          <div className="flex flex-col gap-2 py-2 h-full justify-start items-center">
+          <div className="flex h-full flex-col items-center justify-start gap-2 py-2">
             {/* ID */}
 
-            <p className="border w-full text-center py-2 text-[1.5rem]">
+            <p className="w-full border py-2 text-center text-[1.5rem]">
               目前操作的商品 ID ：
               <span className="text-red-500">{prevData.id}</span>
             </p>
@@ -146,7 +146,7 @@ const RevisePage = () => {
               setReviseData={setReviseData}
             />
 
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
             {/* 修改 Brand */}
             <Reviseitem
               label={"Brand"}
@@ -156,7 +156,7 @@ const RevisePage = () => {
               value={reviseData.brand}
               setReviseData={setReviseData}
             />
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
             {/* Category */}
             <ReviseSelect
               label={"Category"}
@@ -165,7 +165,7 @@ const RevisePage = () => {
               value={reviseData.category}
               setReviseData={setReviseData}
             />
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
             {/* Price */}
             <ReviseNum
               label={"Price"}
@@ -175,7 +175,7 @@ const RevisePage = () => {
               value={reviseData.price}
               setReviseData={setReviseData}
             />
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
             {/* Date */}
             <Reviseitem
               label={"Date"}
@@ -185,7 +185,7 @@ const RevisePage = () => {
               value={reviseData.createdAt}
               setReviseData={setReviseData}
             />
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
             {/* Status */}
             <ReviseSelect
               label={"Status"}
@@ -194,7 +194,7 @@ const RevisePage = () => {
               value={reviseData.status}
               setReviseData={setReviseData}
             />
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
             {/* Stock */}
             <ReviseNum
               label={"Stock"}
@@ -204,7 +204,7 @@ const RevisePage = () => {
               value={reviseData.stock}
               setReviseData={setReviseData}
             />
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
             {/* Tags */}
             <Reviseitem
               label={"Tags"}
@@ -214,7 +214,7 @@ const RevisePage = () => {
               value={reviseData.tags}
               setReviseData={setReviseData}
             />
-            <hr className="border border-white/50 w-full" />
+            <hr className="w-full border border-white/50" />
           </div>
 
           <Button label={"Confirm"} type="button" onClick={handleSubmit} />

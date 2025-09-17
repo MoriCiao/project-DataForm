@@ -25,9 +25,9 @@ const Pagination = ({
   };
 
   return (
-    <div className="relative flex flex-row items-center justify-center gap-4 my-4">
+    <div className="relative my-4 flex flex-row items-center justify-center gap-4">
       <div
-        className={`absolute md:left-0 sm:left-[-3rem] rounded-md bg-white/50 text-white border `}
+        className={`absolute rounded-md border bg-white/50 text-white sm:left-[-3rem] md:left-0`}
       >
         <PageInput
           totalPages={totalPages}

@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Zoom } from "react-awesome-reveal";
 import useLockedScroll from "../../hook/useLockedScroll";
 
-const th_style = "px-4 border border-white/50 bg-[--theme-Secondary]";
-const td_style = "px-4 py-1 border border-white/50 bg-[--bg] whitespace-nowrap";
+const th_style = "border border-white/50 bg-[--theme-Secondary] px-4";
+const td_style = "border border-white/50 bg-[--bg] px-4 py-1 whitespace-nowrap";
 
 const DelPage = () => {
   const { del_data, delPage } = useSelector((state) => state.dataForm);
@@ -47,30 +47,30 @@ const DelPage = () => {
   return (
     <section
       ref={focusRef}
-      className="Del-page fixed top-0 left-0 z-[10] w-[100vw] h-[100vh] backdrop-blur-sm flex items-center justify-center"
+      className="Del-page fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm"
     >
       <Zoom duration={500}>
         <div
-          className={`bg-black/90 w-[80vw] h-[80vh] flex flex-col justify-around  rounded min-h-[50vh]  px-4 py-2 text-white`}
+          className={`flex h-[80vh] min-h-[50vh] w-[80vw] flex-col justify-around rounded bg-black/90 px-4 py-2 text-white`}
         >
-          <div className=" flex items-center justify-between mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <p className="">Del_Page</p>
             <span
-              className="select-none cursor-pointer"
+              className="cursor-pointer select-none"
               onClick={() => dispath_redux(toggleTrash())}
             >
               ❌
             </span>
           </div>
           {del_data.length === 0 ? (
-            <div className="text-center text-[1.5rem] h-[80%] flex items-center justify-center border border-white/50 rounded p-4">
+            <div className="flex h-[80%] items-center justify-center rounded border border-white/50 p-4 text-center text-[1.5rem]">
               目前垃圾桶沒有任何資料...
             </div>
           ) : (
-            <div className="dataTable overflow-x-auto min-h-[30vh] h-full w-full  rounded px-4">
-              <table className={`border-collapse w-fit min-w-[800px]`}>
+            <div className="dataTable h-full min-h-[30vh] w-full overflow-x-auto rounded px-4">
+              <table className={`w-fit min-w-[800px] border-collapse`}>
                 <thead className={``}>
-                  <tr className={`sticky top-0 bg-black border`}>
+                  <tr className={`sticky top-0 border bg-black`}>
                     <th className={`${th_style}`}>No.</th>
                     <th className={`${th_style}`}>ID</th>
                     <th className={`${th_style}`}>Name</th>
@@ -87,7 +87,7 @@ const DelPage = () => {
                   {del_data.map((del_d) => {
                     return (
                       <Fragment key={del_d.id}>
-                        <tr className="text-center h-[1.5rem]">
+                        <tr className="h-[1.5rem] text-center">
                           <td className={`${td_style}`}>
                             {del_d.id.slice(-5)}
                           </td>
@@ -108,7 +108,7 @@ const DelPage = () => {
               </table>
             </div>
           )}
-          <div className="flex items-center justify-center gap-8 mt-2">
+          <div className="mt-2 flex items-center justify-center gap-8">
             <Button
               type="button"
               label="Undo"

@@ -49,8 +49,8 @@ const SearchForm = () => {
   };
 
   return (
-    <section className="searchForm-area flex flex-wrap items-center justify-center sm:gap-8 text-black w-full">
-      <div className="w-full md:flex md:gap-4 md:flex-row sm:items-center sm:justify-center  sm:grid sm:gap-4 ">
+    <section className="searchForm-area flex w-full flex-wrap items-center justify-center text-black sm:gap-8">
+      <div className="w-full sm:grid sm:items-center sm:justify-center sm:gap-4 md:flex md:flex-row md:gap-4">
         <Input
           type="text"
           placeholder="Keyword ..."
@@ -67,7 +67,7 @@ const SearchForm = () => {
               searchFromDate({
                 start: e.target.value,
                 end: dateRange.end || "",
-              })
+              }),
             )
           }
         />
@@ -80,12 +80,12 @@ const SearchForm = () => {
               searchFromDate({
                 start: dateRange.start,
                 end: e.target.value || "",
-              })
+              }),
             )
           }
         />
       </div>
-      <div className="md:grid-cols-6 md:gap-4 sm:grid sm:grid-cols-3 sm:gap-8 sm:items-center sm:justify-between sm:w-auto">
+      <div className="sm:grid sm:w-auto sm:grid-cols-3 sm:items-center sm:justify-between sm:gap-8 md:grid-cols-6 md:gap-4">
         <Button
           label="ADD"
           type="button"

@@ -40,15 +40,15 @@ const AddPage = () => {
   }, []);
 
   return (
-    <section className="Add-page fixed top-0 left-0 z-[10] w-[100vw] h-[100vh] backdrop-blur-sm flex items-center justify-center">
+    <section className="Add-page fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
       <Zoom duration={500}>
         <div
-          className={`bg-black/90 border border-white/50 w-auto h-auto  px-4 py-2 rounded`}
+          className={`h-auto w-auto rounded border border-white/50 bg-black/90 px-4 py-2`}
         >
-          <div className=" flex items-center justify-between ">
+          <div className="flex items-center justify-between">
             <p className="text-white">AddPage</p>
             <span
-              className="select-none cursor-pointer"
+              className="cursor-pointer select-none"
               onClick={() => {
                 dispath_redux(toggleAddPage());
               }}
@@ -59,10 +59,10 @@ const AddPage = () => {
 
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="Add-container flex flex-col gap-4 items-center p-4 "
+            className="Add-container flex flex-col items-center gap-4 p-4"
           >
             {/* ADD ID */}
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Input
                 ref={inputRef}
                 label="ID"
@@ -73,14 +73,14 @@ const AddPage = () => {
                 value={newItem.id}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
             </div>
 
             {/* ADD Name */}
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Input
                 label="Name"
                 name="name"
@@ -90,7 +90,7 @@ const AddPage = () => {
                 value={newItem.name}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
@@ -98,7 +98,7 @@ const AddPage = () => {
 
             {/* ADD Brand */}
 
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Input
                 label="Brand"
                 name="brand"
@@ -108,30 +108,30 @@ const AddPage = () => {
                 value={newItem.brand}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
             </div>
 
             {/* ADD Category */}
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Select
                 label="Category"
                 name="category"
                 value={newItem.category}
-                className={"w-full border border-white text-black text-center"}
+                className={"w-full border border-white text-center text-black"}
                 placeholder={`請輸入商品 Category 資訊 `}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
             </div>
 
             {/* ADD Price */}
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Input
                 label="Price"
                 name="price"
@@ -141,7 +141,7 @@ const AddPage = () => {
                 value={newItem.price}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
@@ -149,42 +149,42 @@ const AddPage = () => {
 
             {/* ADD Date */}
 
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Input
                 label="Date"
                 name="createdAt"
                 type="date"
                 className={
-                  "w-full border border-white text-black flex justify-end"
+                  "flex w-full justify-end border border-white text-black"
                 }
                 placeholder={`請輸入商品 Date 資訊 `}
                 value={newItem.createdAt || ""}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
             </div>
 
             {/* ADD Status */}
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Select
                 label="Status"
                 name="status"
                 value={newItem.status || ""}
-                className={"w-full border border-white text-black text-center"}
+                className={"w-full border border-white text-center text-black"}
                 placeholder={`請輸入商品 Status 資訊 `}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
             </div>
 
             {/* ADD Stock */}
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Input
                 label="Stock"
                 name="stock"
@@ -194,7 +194,7 @@ const AddPage = () => {
                 value={newItem.stock}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />
@@ -202,7 +202,7 @@ const AddPage = () => {
 
             {/* ADD tags */}
 
-            <div className="w-full flex gap-12 items-center justify-end text-white">
+            <div className="flex w-full items-center justify-end gap-12 text-white">
               <Input
                 label="Tags"
                 name="tags"
@@ -212,7 +212,7 @@ const AddPage = () => {
                 value={newItem.tags}
                 onChange={(e) =>
                   dispath_redux(
-                    addItem({ name: e.target.name, value: e.target.value })
+                    addItem({ name: e.target.name, value: e.target.value }),
                   )
                 }
               />

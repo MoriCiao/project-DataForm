@@ -12,7 +12,7 @@ function App() {
     <Provider store={store}>
       <DataProvider>
         <div
-          className={`APP-area relative text-white flex flex-col  w-full items-center`}
+          className={`APP-area relative flex w-full flex-col items-center text-white`}
         >
           <BgImage />
           <motion.section
@@ -25,7 +25,7 @@ function App() {
             <Header />
           </motion.section>
           <section
-            className={`MainArea  flex flex-col items-center px-8 pt-4 mb-4 mx-8 h-auto w-auto max-w-[90vw]  overflow-overlay`}
+            className={`MainArea overflow-overlay mx-8 mb-4 flex h-auto w-auto max-w-[90vw] flex-col items-center px-8 pt-4`}
           >
             <MainArea />
           </section>
