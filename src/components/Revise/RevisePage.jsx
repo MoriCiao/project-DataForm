@@ -7,82 +7,17 @@ import {
   confirmRevision,
 } from "../../features/dataFormSlice";
 import useLockedScroll from "../../hook/useLockedScroll";
-import Input from "../Input/Input";
 import Button from "../Button/Button";
-import Select from "../Select/Select";
+import ReviseItem from "./ReviseItem";
+import ReviseSelect from "./ReviseSelect";
+import ReviseNum from "./ReviseNum";
 
-const Reviseitem = ({ label, name, prevData, type, setReviseData, value }) => {
-  const handleChange = (e) => {
-    setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
-  };
-  return (
-    <div className="flex w-full items-center justify-end">
-      <span className="w-[10rem] flex-1 text-center">{label} :</span>
-      <div className="flex w-[10rem] flex-1 justify-center">
-        <p>{prevData}</p>
-        <span>{`=>`}</span>
-      </div>
-      <div className="w-full flex-1">
-        <Input
-          type={type}
-          value={value}
-          className={`flex justify-center text-center text-black`}
-          placeholder={prevData}
-          onChange={handleChange}
-          required
-        />
-      </div>
-    </div>
-  );
+const STYLE = {
+  revisePage_modal:
+    "revisePage_modal fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm",
+  revisePage_container:
+    "revisePage_container absolute top-[50%] left-[50%] z-[10] flex h-auto w-auto -translate-x-[50%] -translate-y-[50%] flex-col items-center gap-4 bg-black/90 p-4 px-8 text-white backdrop-blur-sm",
 };
-const ReviseNum = ({ label, name, prevData, type, setReviseData, value }) => {
-  const handleChange = (e) => {
-    setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
-  };
-
-  return (
-    <div className="flex w-full items-center justify-end">
-      <span className="col-start-1 w-[10rem] text-center">{label} :</span>
-      <div className="col-span-2 col-start-2 flex w-[10rem] justify-center">
-        <p>{prevData}</p>
-        <span>{`=>`}</span>
-      </div>
-      <Input
-        type={type}
-        value={value}
-        min={"0"}
-        step={"1"}
-        className={`text-center text-black`}
-        placeholder={prevData}
-        onChange={handleChange}
-        required
-      />
-    </div>
-  );
-};
-const ReviseSelect = ({ label, name, prevData, setReviseData, value }) => {
-  const handleChange = (e) => {
-    setReviseData((prev) => ({ ...prev, [name]: e.target.value }));
-  };
-
-  return (
-    <div className="flex w-full items-center justify-end">
-      <span className="col-start-1 w-[10rem] text-center">{label} :</span>
-      <div className="col-span-2 col-start-2 flex w-[10rem] justify-center">
-        <p>{prevData}</p>
-        <span>{`=>`}</span>
-      </div>
-      <Select
-        name={name}
-        value={value}
-        className={"flex items-center text-center text-black"}
-        onChange={handleChange}
-        required
-      />
-    </div>
-  );
-};
-
 const RevisePage = () => {
   const { revisePage } = useSelector((state) => state.dataForm);
   const { setOpenModal } = useContext(DataContext);
@@ -114,9 +49,9 @@ const RevisePage = () => {
   };
 
   return (
-    <section className="revisePage fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
+    <section className={STYLE.revisePage_modal}>
       <Zoom duration={500}>
-        <div className="absolute top-[50%] left-[50%] z-[10] flex h-auto w-auto -translate-x-[50%] -translate-y-[50%] flex-col items-center gap-4 bg-black/90 p-4 px-8 text-white backdrop-blur-sm">
+        <div className={STYLE.revisePage_container}>
           <div className="revise-top flex w-full items-center justify-between">
             <p className="">Revise Page</p>
             <span
@@ -137,7 +72,7 @@ const RevisePage = () => {
               <span className="text-red-500">{prevData.id}</span>
             </p>
             {/* Name */}
-            <Reviseitem
+            <ReviseItem
               label={"Name"}
               name={"name"}
               prevData={prevData.name}
@@ -148,7 +83,7 @@ const RevisePage = () => {
 
             <hr className="w-full border border-white/50" />
             {/* 修改 Brand */}
-            <Reviseitem
+            <ReviseItem
               label={"Brand"}
               name={"brand"}
               prevData={prevData.brand}
@@ -177,7 +112,7 @@ const RevisePage = () => {
             />
             <hr className="w-full border border-white/50" />
             {/* Date */}
-            <Reviseitem
+            <ReviseItem
               label={"Date"}
               name={"createdAt"}
               prevData={prevData.createdAt}
@@ -206,7 +141,7 @@ const RevisePage = () => {
             />
             <hr className="w-full border border-white/50" />
             {/* Tags */}
-            <Reviseitem
+            <ReviseItem
               label={"Tags"}
               name={"tags"}
               prevData={prevData.tags}
