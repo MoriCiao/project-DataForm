@@ -6,12 +6,12 @@ export type RevisePageProp= {
     type: string;
     name: string;
     value : string | number ;
-    prevData:  string | number ;
-    setReviseData : React.Dispatch<React.SetStateAction<Rocord<string , any>>>
+    prevData:  string ;
+    setReviseData : React.Dispatch<React.SetStateAction<Record<string , any>>>
 }
 
 const ReviseItem = ({ label, name, type, value ,prevData, setReviseData }:RevisePageProp) => {
-  const handleChange = (e) => {
+  const handleChange = (e :React.ChangeEvent<HTMLInputElement>) => {
     setReviseData((prev :any) => ({ ...prev, [name]: e.target.value }));
   };
   return (
