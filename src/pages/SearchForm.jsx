@@ -1,10 +1,5 @@
-import React, { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { DataContext } from "../context/DataContext";
-import AddPage from "../components/AddPage/AddPage";
-import DelPage from "../components/DelPage/DelPage";
-import RevisePage from "../components/Revise/RevisePage";
-import Button from "../components/Button/Button";
-import Input from "../components/Input/Input";
 import { useDispatch, useSelector } from "react-redux";
 import {
   searchFromKey,
@@ -16,6 +11,11 @@ import {
   exporToJson,
   saveData,
 } from "../features/dataFormSlice";
+import AddPage from "../components/AddPage/AddPage";
+import DelPage from "../components/DelPage/DelPage";
+import RevisePage from "../components/Revise/RevisePage";
+import Button from "../components/Button/Button";
+import Input from "../components/Input/Input";
 
 // 主要搜尋 id, name , category
 const SearchForm = () => {

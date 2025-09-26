@@ -169,7 +169,7 @@ export const fetchData = createAsyncThunk<
     const res = await fetch(url);
     if (!res.ok) {
       const text = await res.text();
-      console.log(text);
+
       return rejectWithValue("資料連結失敗 ," + text);
     }
     return res.json();
@@ -538,7 +538,6 @@ const dataFormSlice = createSlice({
       if (deletedData.length === 0) {
         return { ...state };
       } else {
-        console.log("目前在垃圾桶裡的資料有", deletedData);
         const updateData = state.data.concat(deletedData);
         state.data = updateData;
         state.del_data = [];

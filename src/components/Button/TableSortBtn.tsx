@@ -1,7 +1,5 @@
-import React, { useContext } from "react";
-import { DataContext } from "../../context/DataContext";
-import { perSort } from "../../features/dataFormSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { perSort } from "../../features/dataFormSlice";
 import { RootState } from "../../redux/store";
 type TableProps = {
   name: string;

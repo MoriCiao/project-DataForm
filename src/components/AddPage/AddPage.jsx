@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Zoom } from "react-awesome-reveal";
+import { toggleAddPage, addItem, addData } from "../../features/dataFormSlice";
+import { DataContext } from "../../context/DataContext";
+import useLockedScroll from "../../hook/useLockedScroll";
 import Input from "../Input/Input";
 import Select from "../Select/Select";
 import Button from "../Button/Button";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleAddPage, addItem, addData } from "../../features/dataFormSlice";
-import { Zoom } from "react-awesome-reveal";
-import useLockedScroll from "../../hook/useLockedScroll";
-import { DataContext } from "../../context/DataContext";
 
 const AddPage = () => {
   const { newItem, addPage } = useSelector((state) => state.dataForm);

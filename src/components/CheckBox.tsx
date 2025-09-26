@@ -1,12 +1,12 @@
 import { motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, } from "react-redux";
+import { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 import {
   toggleFilterStatus,
   toggleFilterCategory,
   toggleVisible,
 } from "../features/dataFormSlice";
-import { useContext } from "react";
-import { DataContext } from "../context/DataContext";
 
 export const CheckBox = ({ value, name, condition_type, selcetReducer }) => {
   const { setCurrentPage } = useContext(DataContext);

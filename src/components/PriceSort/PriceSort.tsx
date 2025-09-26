@@ -1,8 +1,7 @@
-import Button from "../Button/Button";
-import { DataContext } from "../../context/DataContext";
-import { priceSort } from "../../features/dataFormSlice";
-import { useDispatch } from "react-redux";
 import { Zoom } from "react-awesome-reveal";
+import { useDispatch } from "react-redux";
+import { priceSort } from "../../features/dataFormSlice";
+import Button from "../Button/Button";
 export default function PriceSort() {
   const dispath_redux = useDispatch();
   return (

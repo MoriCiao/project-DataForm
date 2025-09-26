@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import { DataContext } from "../context/DataContext";
+import { useState } from "react";
 import PageInput from "./Pagination/PageInput";
 import PageChange from "./Pagination/PageChange";
 const Pagination = ({

@@ -1,5 +1,3 @@
-import React from "react";
-
 const Header = () => {
   return (
     <header className="flex h-[25vh] w-full items-center justify-center overflow-hidden pr-24 select-none sm:pt-8 md:pt-12 lg:h-[30vh] xl:pt-8 xl:pb-2">

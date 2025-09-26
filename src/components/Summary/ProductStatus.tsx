@@ -1,8 +1,7 @@
-import React from "react";
-import { CheckBox } from "../CheckBox";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/store";
 import { Zoom } from "react-awesome-reveal";
+import { useSelector } from "react-redux";
+import { CheckBox } from "../CheckBox";
+import { RootState } from "../../redux/store";
 
 export default function ProductStatus() {
   const { conditions } = useSelector((state: RootState) => state.dataForm);
