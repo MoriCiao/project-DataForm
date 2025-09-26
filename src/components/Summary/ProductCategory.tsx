@@ -1,8 +1,8 @@
-import React from "react";
-import { CheckBox } from "../CheckBox";
+import { Zoom } from "react-awesome-reveal";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { Zoom } from "react-awesome-reveal";
+import { CheckBox } from "../CheckBox";
+
 
 export default function ProductCategory() {
   const { cate_Condition } = useSelector((state: RootState) => state.dataForm);

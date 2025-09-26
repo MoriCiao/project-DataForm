@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
-import Input from "../Input/Input";
-import Button from "../Button/Button";
-import Select from "../Select/Select";
+import { Zoom } from "react-awesome-reveal";
+import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { DataContext } from "../../context/DataContext";
 import {
   toggleRevisePage,
   confirmRevision,
 } from "../../features/dataFormSlice";
 import useLockedScroll from "../../hook/useLockedScroll";
-import { Zoom } from "react-awesome-reveal";
-import { DataContext } from "../../context/DataContext";
+import Input from "../Input/Input";
+import Button from "../Button/Button";
+import Select from "../Select/Select";
 
 const Reviseitem = ({ label, name, prevData, type, setReviseData, value }) => {
   const handleChange = (e) => {

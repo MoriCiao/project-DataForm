@@ -1,4 +1,0 @@
-const x = {
-  a: false,
-  b: true,
-};

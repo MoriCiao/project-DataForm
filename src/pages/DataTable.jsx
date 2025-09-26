@@ -1,17 +1,17 @@
-import React, { Fragment, useContext, useEffect } from "react";
+import { Fragment, useContext, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { easeInOut, motion } from "framer-motion";
-import { DataContext } from "../context/DataContext";
-import Pagination from "../components/Pagination";
-import TableSortBtn from "../components/Button/TableSortBtn";
-import Button from "../components/Button/Button";
+import { Fade } from "react-awesome-reveal";
 import {
   fetchData,
   selectAllData,
   selectSingleData,
   toggleRevisePage,
 } from "../features/dataFormSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { Fade } from "react-awesome-reveal";
+import { DataContext } from "../context/DataContext";
+import Pagination from "../components/Pagination";
+import TableSortBtn from "../components/Button/TableSortBtn";
+import Button from "../components/Button/Button";
 import LoadingModal from "../components/Loading/LoadingModal";
 import ErrorModal from "../components/Error/ErrorModal";
 

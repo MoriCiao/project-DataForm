@@ -34,7 +34,6 @@
 | ------------ | ---------------------------------- |
 | React        | 使用 `useReducer` 處理表單資料邏輯 |
 | Context API  | 全域狀態管理（資料與操作共用）     |
-| localStorage | 儲存使用者填寫的資料內容           |
 | JSON 處理    | `JSON.stringify()` 輸出匯出格式    |
 | Tailwind CSS | UI 排版與互動優化                  |
 

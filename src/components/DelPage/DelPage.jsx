@@ -1,14 +1,14 @@
-import React, { Fragment, useContext, useEffect, useRef } from "react";
+import { Fragment, useContext, useEffect, useRef } from "react";
+import { Zoom } from "react-awesome-reveal";
 import { DataContext } from "../../context/DataContext";
-import Button from "../Button/Button";
+import { useDispatch, useSelector } from "react-redux";
 import {
   toggleTrash,
   undo,
   confirmDeletData,
 } from "../../features/dataFormSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { Zoom } from "react-awesome-reveal";
 import useLockedScroll from "../../hook/useLockedScroll";
+import Button from "../Button/Button";
 
 const th_style = "border border-white/50 bg-[--theme-Secondary] px-4";
 const td_style = "border border-white/50 bg-[--bg] px-4 py-1 whitespace-nowrap";

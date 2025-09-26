@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import  { useContext, useEffect, useRef } from "react";
 import useLockedScroll from "../../hook/useLockedScroll";
 import Button from "../Button/Button";
 import { DataContext } from "../../context/DataContext";

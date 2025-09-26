@@ -1,8 +1,8 @@
+import { Zoom } from "react-awesome-reveal";
 import PriceSort from "../components/PriceSort/PriceSort";
 import ProductStatus from "../components/Summary/ProductStatus";
 import ProductCategory from "../components/Summary/ProductCategory";
 import Visible from "../components/Summary/Visible";
-import { Bounce, Zoom } from "react-awesome-reveal";
 
 const ResultSummary = () => {
   return (

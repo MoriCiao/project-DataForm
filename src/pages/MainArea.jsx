@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import { useContext } from "react";
+import { DataContext } from "../context/DataContext";
 import SearchForm from "./SearchForm";
 import ResultSummary from "./ResultSummary";
 import DataTable from "./DataTable";
-import { DataContext } from "../context/DataContext";
 import NoticeModal from "../components/Notice/NoticeModal";
 
 const MainArea = () => {
