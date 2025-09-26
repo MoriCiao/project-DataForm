@@ -1,6 +1,12 @@
 import { useState } from "react";
 import PageInput from "./Pagination/PageInput";
 import PageChange from "./Pagination/PageChange";
+const STYLE = {
+  pagination_container: `pagination_container relative my-4 flex flex-row items-center justify-center gap-4`,
+
+  pagination_content: `absolute rounded-md border bg-white/50 text-white sm:left-[-3rem] md:left-0`,
+};
+
 const Pagination = ({
   goToPrevPage,
   goToNextPage,
@@ -24,10 +30,8 @@ const Pagination = ({
   };
 
   return (
-    <div className="relative my-4 flex flex-row items-center justify-center gap-4">
-      <div
-        className={`absolute rounded-md border bg-white/50 text-white sm:left-[-3rem] md:left-0`}
-      >
+    <div className={STYLE.pagination_container}>
+      <div className={STYLE.pagination_content}>
         <PageInput
           totalPages={totalPages}
           changePage={changePage}

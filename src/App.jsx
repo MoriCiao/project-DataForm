@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import { DataProvider } from "./context/DataContext";
-import BgImage from "./assets/BgImage";
+import BgImage from "./components/BgImage";
 import Header from "./pages/Header";
 import MainArea from "./pages/MainArea";
 import "./style/style.css";

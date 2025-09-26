@@ -1,11 +1,18 @@
 import Button from "../Button/Button";
 
+type PageChangeProps = {
+  currentPage: number;
+  totalPages: number ;
+  goToPrevPage: () => void;
+  goToNextPage:() => void; 
+}
+
 export default function PageChange({
-  goToPrevPage,
   currentPage,
   totalPages,
+  goToPrevPage,
   goToNextPage,
-}) {
+}:PageChangeProps) {
   return (
     <div className="flex gap-4">
       <Button
