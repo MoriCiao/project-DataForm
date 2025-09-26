@@ -8,6 +8,18 @@ import Input from "../Input/Input";
 import Select from "../Select/Select";
 import Button from "../Button/Button";
 
+const STYLE = {
+  addPage_container: `addPage_container fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm`,
+
+  addPage_content: `h-auto w-auto rounded border border-white/50 bg-black/90 px-4 py-2`,
+
+  addPage_form: `addPage_form flex flex-col items-center gap-4 p-4`,
+
+  addPage_input_container: `addPage_input_container flex w-full items-center justify-end gap-12 text-white`,
+
+  otherClass: `w-full border border-white text-black`,
+};
+
 const AddPage = () => {
   const { newItem, addPage } = useSelector((state) => state.dataForm);
   const { openModal, setOpenModal } = useContext(DataContext);
@@ -40,13 +52,11 @@ const AddPage = () => {
   }, []);
 
   return (
-    <section className="Add-page fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm">
+    <section className={STYLE.addPage_container}>
       <Zoom duration={500}>
-        <div
-          className={`h-auto w-auto rounded border border-white/50 bg-black/90 px-4 py-2`}
-        >
+        <div className={STYLE.addPage_content}>
           <div className="flex items-center justify-between">
-            <p className="text-white">AddPage</p>
+            <p className="text-white">新增商品</p>
             <span
               className="cursor-pointer select-none"
               onClick={() => {
@@ -59,16 +69,16 @@ const AddPage = () => {
 
           <form
             onSubmit={(e) => e.preventDefault()}
-            className="Add-container flex flex-col items-center gap-4 p-4"
+            className={STYLE.addPage_form}
           >
             {/* ADD ID */}
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Input
                 ref={inputRef}
                 label="ID"
                 name="id"
                 type="text"
-                className={"w-full border border-white text-black"}
+                className={STYLE.otherClass}
                 placeholder={`請輸入商品 ID 資訊 `}
                 value={newItem.id}
                 onChange={(e) =>
@@ -80,12 +90,12 @@ const AddPage = () => {
             </div>
 
             {/* ADD Name */}
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Input
                 label="Name"
                 name="name"
                 type="text"
-                className={"w-full border border-white text-black"}
+                className={STYLE.otherClass}
                 placeholder={`請輸入商品 Name 資訊 `}
                 value={newItem.name}
                 onChange={(e) =>
@@ -98,12 +108,12 @@ const AddPage = () => {
 
             {/* ADD Brand */}
 
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Input
                 label="Brand"
                 name="brand"
                 type="text"
-                className={"w-full border border-white text-black"}
+                className={STYLE.otherClass}
                 placeholder={`請輸入商品 Brand 資訊 `}
                 value={newItem.brand}
                 onChange={(e) =>
@@ -115,12 +125,12 @@ const AddPage = () => {
             </div>
 
             {/* ADD Category */}
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Select
                 label="Category"
                 name="category"
                 value={newItem.category}
-                className={"w-full border border-white text-center text-black"}
+                className={"w-full border border-white text-black"}
                 placeholder={`請輸入商品 Category 資訊 `}
                 onChange={(e) =>
                   dispath_redux(
@@ -131,12 +141,12 @@ const AddPage = () => {
             </div>
 
             {/* ADD Price */}
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Input
                 label="Price"
                 name="price"
                 type="number"
-                className={"w-full border border-white text-black"}
+                className={STYLE.otherClass}
                 placeholder={`請輸入商品 Price 資訊 `}
                 value={newItem.price}
                 onChange={(e) =>
@@ -149,7 +159,7 @@ const AddPage = () => {
 
             {/* ADD Date */}
 
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Input
                 label="Date"
                 name="createdAt"
@@ -168,7 +178,7 @@ const AddPage = () => {
             </div>
 
             {/* ADD Status */}
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Select
                 label="Status"
                 name="status"
@@ -184,12 +194,12 @@ const AddPage = () => {
             </div>
 
             {/* ADD Stock */}
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Input
                 label="Stock"
                 name="stock"
                 type="number"
-                className={"w-full border border-white text-black"}
+                className={STYLE.otherClass}
                 placeholder={`請輸入商品 Stock 資訊 `}
                 value={newItem.stock}
                 onChange={(e) =>
@@ -202,12 +212,12 @@ const AddPage = () => {
 
             {/* ADD tags */}
 
-            <div className="flex w-full items-center justify-end gap-12 text-white">
+            <div className={STYLE.addPage_input_container}>
               <Input
                 label="Tags"
                 name="tags"
                 type="text"
-                className={"w-full border border-white text-black"}
+                className={STYLE.otherClass}
                 placeholder={`逗號( , )區隔, 請輸入商品 Tags 資訊`}
                 value={newItem.tags}
                 onChange={(e) =>

@@ -10,8 +10,19 @@ import {
 import useLockedScroll from "../../hook/useLockedScroll";
 import Button from "../Button/Button";
 
-const th_style = "border border-white/50 bg-[--theme-Secondary] px-4";
-const td_style = "border border-white/50 bg-[--bg] px-4 py-1 whitespace-nowrap";
+const STYLE = {
+  delPage_mask: `delPage_mask fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm`,
+
+  delPage_container: `delPage_container flex h-[80vh] min-h-[50vh] w-[80vw] flex-col justify-around rounded bg-black/90 px-4 py-2 text-white`,
+
+  delPage_empty: `delPage_empty flex h-[80%] items-center justify-center rounded border border-white/50 p-4 text-center text-[1.5rem]`,
+
+  delPage_content: `delPage_content h-full min-h-[30vh] w-full overflow-x-auto rounded px-4`,
+
+  delPage_th: "border border-white/50 bg-[--theme-Secondary] px-4",
+
+  delPage_td: "border border-white/50 bg-[--bg] px-4 py-1 whitespace-nowrap",
+};
 
 const DelPage = () => {
   const { del_data, delPage } = useSelector((state) => state.dataForm);
@@ -45,16 +56,11 @@ const DelPage = () => {
   }, []);
 
   return (
-    <section
-      ref={focusRef}
-      className="Del-page fixed top-0 left-0 z-[10] flex h-[100vh] w-[100vw] items-center justify-center backdrop-blur-sm"
-    >
+    <section ref={focusRef} className={STYLE.delPage_mask}>
       <Zoom duration={500}>
-        <div
-          className={`flex h-[80vh] min-h-[50vh] w-[80vw] flex-col justify-around rounded bg-black/90 px-4 py-2 text-white`}
-        >
+        <div className={STYLE.delPage_container}>
           <div className="mb-4 flex items-center justify-between">
-            <p className="">Del_Page</p>
+            <p className="">移除商品</p>
             <span
               className="cursor-pointer select-none"
               onClick={() => dispath_redux(toggleTrash())}
@@ -63,24 +69,22 @@ const DelPage = () => {
             </span>
           </div>
           {del_data.length === 0 ? (
-            <div className="flex h-[80%] items-center justify-center rounded border border-white/50 p-4 text-center text-[1.5rem]">
-              目前垃圾桶沒有任何資料...
-            </div>
+            <div className={STYLE.delPage_empty}>目前垃圾桶沒有任何資料...</div>
           ) : (
-            <div className="dataTable h-full min-h-[30vh] w-full overflow-x-auto rounded px-4">
+            <div className={STYLE.delPage_content}>
               <table className={`w-fit min-w-[800px] border-collapse`}>
                 <thead className={``}>
                   <tr className={`sticky top-0 border bg-black`}>
-                    <th className={`${th_style}`}>No.</th>
-                    <th className={`${th_style}`}>ID</th>
-                    <th className={`${th_style}`}>Name</th>
-                    <th className={`${th_style}`}>Brand</th>
-                    <th className={`${th_style}`}>Category</th>
-                    <th className={`${th_style}`}>Price</th>
-                    <th className={`${th_style}`}>Date</th>
-                    <th className={`${th_style}`}>Status</th>
-                    <th className={`${th_style}`}>Stock</th>
-                    <th className={`${th_style} w-[20rem]`}>tags</th>
+                    <th className={STYLE.delPage_th}>No.</th>
+                    <th className={STYLE.delPage_th}>ID</th>
+                    <th className={STYLE.delPage_th}>Name</th>
+                    <th className={STYLE.delPage_th}>Brand</th>
+                    <th className={STYLE.delPage_th}>Category</th>
+                    <th className={STYLE.delPage_th}>Price</th>
+                    <th className={STYLE.delPage_th}>Date</th>
+                    <th className={STYLE.delPage_th}>Status</th>
+                    <th className={STYLE.delPage_th}>Stock</th>
+                    <th className={`${STYLE.delPage_th} w-[20rem]`}>tags</th>
                   </tr>
                 </thead>
                 <tbody className={``}>
@@ -88,18 +92,20 @@ const DelPage = () => {
                     return (
                       <Fragment key={del_d.id}>
                         <tr className="h-[1.5rem] text-center">
-                          <td className={`${td_style}`}>
+                          <td className={STYLE.delPage_td}>
                             {del_d.id.slice(-5)}
                           </td>
-                          <td className={`${td_style}`}>{del_d.id}</td>
-                          <td className={`${td_style} `}>{del_d.name}</td>
-                          <td className={`${td_style} `}>{del_d.brand}</td>
-                          <td className={`${td_style}`}>{del_d.category}</td>
-                          <td className={`${td_style}`}>${del_d.price}</td>
-                          <td className={`${td_style}`}>{del_d.createdAt}</td>
-                          <td className={`${td_style}`}>{del_d.status}</td>
-                          <td className={`${td_style}`}>{del_d.stock}</td>
-                          <td className={`${td_style}`}>{del_d.tags}</td>
+                          <td className={STYLE.delPage_td}>{del_d.id}</td>
+                          <td className={STYLE.delPage_td}>{del_d.name}</td>
+                          <td className={STYLE.delPage_td}>{del_d.brand}</td>
+                          <td className={STYLE.delPage_td}>{del_d.category}</td>
+                          <td className={STYLE.delPage_td}>${del_d.price}</td>
+                          <td className={STYLE.delPage_td}>
+                            {del_d.createdAt}
+                          </td>
+                          <td className={STYLE.delPage_td}>{del_d.status}</td>
+                          <td className={STYLE.delPage_td}>{del_d.stock}</td>
+                          <td className={STYLE.delPage_td}>{del_d.tags}</td>
                         </tr>
                       </Fragment>
                     );
