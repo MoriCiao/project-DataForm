@@ -1,83 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-
+import {Product, Products, status, DataFormState} from "./dataFormSliceType" 
 // 延遲載入
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const url = "/project-DataForm/product_data_2000.json";
-// API 資料仔入
-
-type Product = {
-  id: string;
-  name: string;
-  category: "" | "居家生活" | "文具用品" | "電子產品" | "運動用品" | "食品飲料";
-  price: number;
-  stock: number;
-  brand: string;
-  status: "" | "上架中" | "下架" | "缺貨中";
-  createdAt: string | null;
-  tags?: string;
-};
-
-type Products = Product[];
-
-type status = "idle" | "loading" | "succeeded" | "failed";
-
-type DataFormState = {
-  data: Products;
-  status: status;
-  error: string | null;
-  filtered: Products;
-  selected: Products;
-  del_data: Products;
-  newItem: Product;
-  keyword: string;
-  dateRange: {
-    start: string;
-    end: string;
-  };
-  selectAll: boolean;
-  filter: boolean; // 判定目前是否正在過濾資料
-  loading: boolean;
-  addPage: boolean; // 是否開啟新增Item頁面
-  delPage: boolean; // 是否開啟垃圾桶頁面
-  revisePage: {
-    // 是否開啟修改頁面
-    isOpen: boolean;
-    reviseItem: Product;
-  };
-  // 依照資料表格名稱做排列
-  props_sort_condition: {
-    No: boolean;
-    ID: boolean;
-    Name: boolean;
-    Brand: boolean;
-    Category: boolean;
-    Stock: boolean;
-  };
-  conditions: {
-    On_Sale: boolean; // 上架中
-    Off_Sale: boolean; // 下架
-    Out_of_Stock: boolean; // 缺貨
-  };
-  cate_Condition: {
-    house: boolean;
-    stationery: boolean;
-    electronics: boolean;
-    sporting_goods: boolean;
-    food_and_beverage: boolean;
-  };
-  isVisible: {
-    ID: boolean;
-    Name: boolean;
-    Brand: boolean;
-    Category: boolean;
-    Price: boolean;
-    Date: boolean;
-    Status: boolean;
-    Stock: boolean;
-    Tags: boolean;
-  };
-};
 
 const initialState: DataFormState = {
   data: [],
@@ -165,11 +91,9 @@ export const fetchData = createAsyncThunk<
 >("dataForm/fetchDataForm", async (_, { rejectWithValue }) => {
   try {
     await sleep(2000);
-
     const res = await fetch(url);
     if (!res.ok) {
       const text = await res.text();
-
       return rejectWithValue("資料連結失敗 ," + text);
     }
     return res.json();
@@ -177,7 +101,6 @@ export const fetchData = createAsyncThunk<
     return rejectWithValue("資料連結失敗");
   }
 });
-
 // Slice
 const dataFormSlice = createSlice({
   name: "dataForm",
@@ -203,7 +126,6 @@ const dataFormSlice = createSlice({
         ? new Date(state.dateRange.start)
         : "";
       const endDate = state.dateRange.end ? new Date(state.dateRange.end) : "";
-
       const PassStatus = Object.values(state.conditions).some(
         (item) => item === true,
       );
@@ -211,7 +133,6 @@ const dataFormSlice = createSlice({
       const PassCategory = Object.values(state.cate_Condition).some(
         (item) => item === true,
       );
-
       const keyword = action.payload.toLowerCase();
       const keyBoolean = keyword.length !== 0;
       // 判定是否進入篩選狀態
@@ -224,7 +145,7 @@ const dataFormSlice = createSlice({
       const filtered = state.data.filter((item) => {
         // ----------------------------------------------------
         const PassCodiitions =
-          !PassStatus ||
+          !PassStatus || 
           (state.conditions.On_Sale && item.status === "上架中") ||
           (state.conditions.Off_Sale && item.status === "下架") ||
           (state.conditions.Out_of_Stock && item.status === "缺貨中");
@@ -284,13 +205,11 @@ const dataFormSlice = createSlice({
       const PassCategory = Object.values(state.cate_Condition).some(
         (item) => item === true,
       );
-
       // 目前是否為篩選
       const isFiltered = PassStatus || PassCategory || Boolean(start || end);
       // 將時間轉換為 Date物件比較
       const startDate: Date | undefined = start ? new Date(start) : undefined;
       const endDate: Date | undefined = end ? new Date(end) : undefined;
-
       const updateData = state.data.filter((item) => {
         const itemDate = new Date(item.createdAt as string);
 
@@ -298,6 +217,11 @@ const dataFormSlice = createSlice({
         const afterStart = startDate ? itemDate >= startDate : true;
         const beforeEnd = endDate ? itemDate <= endDate : true;
         // -----------------------------------------------------------------------------------------
+        const STATUS_MAPPING = {
+          "上架中": "On_Sale",
+          "下架": "Off_Sale", 
+          "缺貨中": "Out_of_Stock"
+        } as const;
         const PassCodition =
           !PassStatus ||
           (state.conditions.On_Sale && item.status === "上架中") ||
@@ -351,14 +275,11 @@ const dataFormSlice = createSlice({
     priceSort(state, action) {
       const actionType = action.payload;
       const isFiltered = state.filter;
-
       const currentData: Products = isFiltered ? state.filtered : state.data;
       const sortData = [...currentData].sort((a, b) => {
         if (actionType === "UpToDown") {
-          //@ts-ignore
           return b.price - a.price;
         } else if (actionType === "DownToUp") {
-          //@ts-ignore
           return a.price - b.price;
         }
         return 0;
@@ -370,16 +291,12 @@ const dataFormSlice = createSlice({
     perSort(state, action) {
       const { name, checked } = action.payload;
       const ToggleChecked = !checked;
-
       const PassStatus = Object.values(state.conditions).some(
         (v) => v === true,
       );
-
       const PassCategory = Object.values(state.cate_Condition).some(
         (v) => v === true,
       );
-
-      // 需要判定目前是否有在篩選
       // status 和 category 和  Date & keyword
       const isFiltered =
         PassStatus ||
@@ -390,58 +307,35 @@ const dataFormSlice = createSlice({
       const currentData = isFiltered ? state.filtered : state.data;
 
       let updateData;
-
       if (ToggleChecked) {
         updateData = currentData.sort((a, b) => {
-          const id_a = a.id.slice(-5);
-          const id_b = b.id.slice(-5);
-          if (name === "ID") {
-            // props_sort_condition : ID
-            return id_b.localeCompare(id_a);
-          } else if (name === "Name") {
-            //  props_sort_condition : Name
-            return b.name.localeCompare(a.name);
-          } else if (name === "Brand") {
-            //  props_sort_condition : Brand
-            return b.brand.localeCompare(a.brand);
-          } else if (name === "Category") {
-            // props_sort_condition : Category
-            return b.category.localeCompare(a.category);
-          } else if (name === "Stock") {
-            //  props_sort_condition : Stock
-            return b.stock - a.stock;
-          } else if (name === "Price") {
-            return b.price - a.price;
+              const id_a = a.id.slice(-5);
+              const id_b = b.id.slice(-5);
+             switch(name){
+               case "ID": return id_b.localeCompare(id_a);
+               case "Name": return b.name.localeCompare(a.name);
+               case "Brand": return b.brand.localeCompare(a.brand);
+               case "Category": return b.category.localeCompare(a.category);
+               case "Stock": return b.stock - a.stock;
+               case "Price": return b.price - a.price;
+               default : return 0
           }
-          // 都沒相符條件則順序不變
-          return 0;
         });
       } else {
         updateData = currentData.sort((a, b) => {
-          const id_a = a.id.slice(-5);
-          const id_b = b.id.slice(-5);
-          if (name === "ID") {
-            // props_sort_condition : ID
-            return id_a.localeCompare(id_b);
-          } else if (name === "Name") {
-            //  props_sort_condition : Name
-            return a.name.localeCompare(b.name);
-          } else if (name === "Brand") {
-            //  props_sort_condition : Brand
-            return a.brand.localeCompare(b.brand);
-          } else if (name === "Category") {
-            // props_sort_condition : Category
-            return a.category.localeCompare(b.category);
-          } else if (name === "Stock") {
-            //  props_sort_condition : Stock
-            return a.stock - b.stock;
-          } else if (name === "Price") {
-            return a.price - b.price;
-          }
-          return 0;
-        });
+            const id_a = a.id.slice(-5);
+            const id_b = b.id.slice(-5);
+            switch(name){
+              case "ID": return id_a.localeCompare(id_b)
+              case "Name": return a.name.localeCompare(b.name);
+              case "Brand": return a.brand.localeCompare(b.brand);
+              case "Category": return a.category.localeCompare(b.category);
+              case "Stock": return a.stock - b.stock;
+              case "Price": return a.price - b.price;
+              default : return 0
+            }
+        })
       }
-
       isFiltered ? (state.filtered = updateData) : (state.data = updateData);
       state.props_sort_condition = {
         ...state.props_sort_condition,
@@ -510,16 +404,15 @@ const dataFormSlice = createSlice({
     addItem(state, action) {
       const { name, value } = action.payload;
       // tags 要轉變成 array
-      // name === "tags" ? value.split(",").map((i) => i.trim()) : value
       state.newItem = {
         ...state.newItem,
-        [name]: name === "tags" ? value.split(",").map((i) => i.trim()) : value,
+        [name]: name === "tags" ? value.split(",").map((i :string) => i.trim()) : value,
       };
     },
     addData(state) {
       state.data = [...state.data, state.newItem];
       // 新增資料後，將新增頁面設為預設值
-      ((state.newItem = {
+      state.newItem = {
         id: "",
         name: "",
         status: "",
@@ -529,9 +422,9 @@ const dataFormSlice = createSlice({
         stock: 0,
         brand: "",
         tags: "",
-      }),
-        // 關閉AddPage
-        (state.addPage = false));
+      },
+      // 關閉AddPage
+      state.addPage = false;
     },
     undo(state, action) {
       const deletedData = action.payload;
@@ -561,21 +454,17 @@ const dataFormSlice = createSlice({
       const targetIndex: number = state.data.findIndex(
         (item) => item.id === reviseData.id,
       );
-
       // 覆蓋資料，先拷貝一份總資料，將其對應的 index 用修改好的資料作覆蓋
       const newData = [...state.data];
       // 將修改後的資料傳回總 data
       newData[targetIndex] = reviseData;
-
       // -----------------------------------------
       const reset_conditions = {
-        ...state.conditions,
         On_Sale: false,
         Off_Sale: false,
         Out_of_Stock: false,
       };
       const reset_cate_Condition = {
-        ...state.cate_Condition,
         house: false,
         stationery: false,
         electronics: false,
@@ -620,7 +509,6 @@ const dataFormSlice = createSlice({
       };
       // 把快速篩選 category 刪除
       const unCheckCategory = {
-        ...state.cate_Condition,
         house: false,
         stationery: false,
         electronics: false,
@@ -709,7 +597,6 @@ const dataFormSlice = createSlice({
 
       // 把快速篩選 condition 刪除
       const unCheckStatus = {
-        ...state.conditions,
         On_Sale: false, // 上架中
         Off_Sale: false, // 下架
         Out_of_Stock: false, // 缺貨
@@ -776,7 +663,6 @@ const dataFormSlice = createSlice({
           keyWordBoolean
         );
       });
-
       return {
         ...state,
         // 判定目前抓取的資料是否為篩選的資料
@@ -791,7 +677,6 @@ const dataFormSlice = createSlice({
       const { key, checked } = action.payload;
       return {
         ...state,
-        // 對 對應的 isVisible的key 做boolean值得變換
         isVisible: { ...state.isVisible, [key]: checked },
       };
     },

@@ -1,7 +1,33 @@
-import { Zoom } from "react-awesome-reveal";
-import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { Zoom } from "react-awesome-reveal";
 import { CheckBox } from "../CheckBox";
+
+type SwitchVisible= "ID"|
+  "Name"|
+  "Brand" |
+  "Category" |
+  "Price" |
+  "Date" |
+  "Status" |
+  "Stock"|
+  "Tags"
+
+const VisibleList = [
+  "ID", 
+  "Name",
+  "Brand",
+  "Category",
+  "Price",
+  "Date",
+  "Status",
+  "Stock",
+  "Tags"]
+
+function isVaildValue(value:string): value is SwitchVisible{
+  return VisibleList.includes(value as SwitchVisible)
+}
+
 export default function Visible() {
   const { isVisible } = useSelector((state: RootState) => state.dataForm);
   return (
@@ -13,60 +39,15 @@ export default function Visible() {
       className="flex w-full flex-wrap items-center justify-center p-2 sm:gap-4 md:gap-2"
     >
       <p>Visible :</p>
-      <CheckBox
-        value="ID"
-        name="ID"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Name"
-        name="Name"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Brand"
-        name="Brand"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Category"
-        name="Category"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Price"
-        name="Price"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Date"
-        name="Date"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Status"
-        name="Status"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Stock"
-        name="Stock"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
-      <CheckBox
-        value="Tags"
-        name="Tags"
-        condition_type={isVisible}
-        selcetReducer="isVisible"
-      />
+      {VisibleList && VisibleList.filter(isVaildValue).map(v=>(
+        <CheckBox
+          key={v}
+          value={v}
+          name={v}
+          condition_type={isVisible}
+          selcetReducer="isVisible"
+        />
+      ))}
     </Zoom>
   );
 }

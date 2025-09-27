@@ -8,23 +8,59 @@ import {
   toggleVisible,
 } from "../features/dataFormSlice";
 
-export const CheckBox = ({ value, name, condition_type, selcetReducer }) => {
-  const { setCurrentPage } = useContext(DataContext);
-  const dispath_redux = useDispatch();
+type conditions = {
+    On_Sale: boolean, // 上架中
+    Off_Sale: boolean, // 下架
+    Out_of_Stock: boolean, // 缺貨
+  }
+type cate_Condition = {
+    house: boolean,
+    stationery: boolean,
+    electronics: boolean,
+    sporting_goods: boolean,
+    food_and_beverage: boolean,
+  }
+type isVisible = {
+    ID: boolean,
+    Name: boolean,
+    Brand: boolean,
+    Category: boolean,
+    Price: boolean,
+    Date: boolean,
+    Status: boolean,
+    Stock: boolean,
+    Tags: boolean,
+  }
+type AllConditionKeys = 
+  | keyof conditions
+  | keyof cate_Condition
+  | keyof isVisible
 
-  function SelectFn(selcetReducer: string, value: string, e: any) {
+type CheckBoxProps<T extends conditions | cate_Condition | isVisible> = {
+  value: keyof T;
+  name: string;
+  condition_type: T
+  selcetReducer:  "status" | "category" |"isVisible"
+}
+
+
+export const CheckBox = <T extends conditions | cate_Condition | isVisible>({ value, name, condition_type, selcetReducer}:CheckBoxProps<T>): React.ReactNode => {
+  const { setCurrentPage } = useContext(DataContext);
+  const dispatch_redux = useDispatch();
+
+  function SelectFn(selcetReducer: string, value: keyof T, e: React.ChangeEvent<HTMLInputElement>) {
     if (selcetReducer === "status") {
-      dispath_redux(
+      dispatch_redux(
         toggleFilterStatus({ key: value, checked: e.target.checked }),
       );
       setCurrentPage(1);
     } else if (selcetReducer === "category") {
-      dispath_redux(
+      dispatch_redux(
         toggleFilterCategory({ key: value, checked: e.target.checked }),
       );
       setCurrentPage(1);
     } else if (selcetReducer === "isVisible") {
-      dispath_redux(toggleVisible({ key: value, checked: e.target.checked }));
+      dispatch_redux(toggleVisible({ key: value, checked: e.target.checked }));
     }
   }
   return (
@@ -32,14 +68,14 @@ export const CheckBox = ({ value, name, condition_type, selcetReducer }) => {
       <motion.input
         animate={{ scale: condition_type[value] ? 1.5 : 1.25 }}
         transition={{ duration: 0.3 }}
-        id={value}
-        value={value}
+        id={value as string}
+        value={value as string}
         type="checkbox"
-        checked={condition_type[value]}
+        checked={condition_type[value] as boolean}
         className="mr-2 scale-125"
         onChange={(e) => SelectFn(selcetReducer, value, e)}
       />
-      <label className="" htmlFor={value}>
+      <label>
         {name}
       </label>
     </div>

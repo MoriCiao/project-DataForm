@@ -6,7 +6,7 @@ import DataTable from "./DataTable";
 import NoticeModal from "../components/Notice/NoticeModal";
 
 const MainArea = () => {
-  const { openModal, setOpenModal } = useContext(DataContext);
+  const { openModal } = useContext(DataContext);
   return (
     <>
       <div className={`flex w-full flex-col gap-4`}>

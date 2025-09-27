@@ -4,6 +4,16 @@ import ProductStatus from "../components/Summary/ProductStatus";
 import ProductCategory from "../components/Summary/ProductCategory";
 import Visible from "../components/Summary/Visible";
 
+const STYLE = {
+  status: `status-area flex flex-wrap items-center justify-center gap-2 border border-white/50 p-2 md:col-span-2 md:col-start-1`,
+
+  category: `category-area items-center justify-center border border-white/50 p-2 sm:grid sm:grid-cols-3 md:col-span-4 md:col-start-3 md:grid md:grid-cols-3 md:gap-2 xl:flex xl:flex-wrap xl:gap-4`,
+
+  price: `items-center justify-center gap-2 border border-white/50 p-2 sm:grid sm:grid-cols-2 sm:gap-12 sm:p-6 md:col-span-5 md:col-start-7 md:flex md:gap-4 md:p-2 xl:flex xl:gap-2`,
+
+  visible: `flex items-center border border-white/50 py-2`,
+};
+
 const ResultSummary = () => {
   return (
     <section className="resultSummary flex">
@@ -18,7 +28,7 @@ const ResultSummary = () => {
             cascade
             damping={0.5}
             triggerOnce={true}
-            className="status-area flex flex-wrap items-center justify-center gap-2 border border-white/50 p-2 md:col-span-2 md:col-start-1"
+            className={STYLE.status}
           >
             <ProductStatus />
           </Zoom>
@@ -28,7 +38,7 @@ const ResultSummary = () => {
             cascade
             damping={0.5}
             triggerOnce={true}
-            className="category-area items-center justify-center border border-white/50 p-2 sm:grid sm:grid-cols-3 md:col-span-4 md:col-start-3 md:grid md:grid-cols-3 md:gap-2 xl:flex xl:flex-wrap xl:gap-4"
+            className={STYLE.category}
           >
             <ProductCategory />
           </Zoom>
@@ -38,7 +48,7 @@ const ResultSummary = () => {
             cascade
             damping={0.5}
             triggerOnce={true}
-            className="items-center justify-center gap-2 border border-white/50 p-2 sm:grid sm:grid-cols-2 sm:gap-12 sm:p-6 md:col-span-5 md:col-start-7 md:flex md:gap-4 md:p-2 xl:flex xl:gap-2"
+            className={STYLE.price}
           >
             <PriceSort />
           </Zoom>
@@ -49,7 +59,7 @@ const ResultSummary = () => {
           cascade
           damping={0.5}
           triggerOnce={true}
-          className="flex items-center border border-white/50 py-2"
+          className={STYLE.visible}
         >
           <Visible />
         </Zoom>
