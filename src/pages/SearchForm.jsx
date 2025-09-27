@@ -37,7 +37,7 @@ const SearchForm = () => {
       title: "Save To LocalStorage",
       text: "已將目前資料存儲至 LocalStorage。",
     });
-  }, [dispatch_redux]);
+  }, [data, dispatch_redux]);
 
   const handleDel = useCallback(() => {
     if (selected.length === 0) return;
@@ -48,7 +48,7 @@ const SearchForm = () => {
       title: "Selected To Trash",
       text: "已將選取資料轉移至垃圾桶，請至垃圾桶再次核對並刪除。",
     });
-  }, [dispatch_redux]);
+  }, [selected, dispatch_redux]);
 
   const handleReload = useCallback(() => {
     dispatch_redux(fetchData());
