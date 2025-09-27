@@ -1,30 +1,35 @@
-import { Zoom } from "react-awesome-reveal";
-import { useSelector } from "react-redux";
-import { CheckBox } from "../CheckBox";
 import { RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
+import { Zoom } from "react-awesome-reveal";
+import { CheckBox } from "../CheckBox";
 
-export default function ProductStatus() {
+type SwitchValue = "On_Sale" |  "Off_Sale" |  "Out_of_Stock"
+
+const ProductStatusList = [ "On_Sale", "Off_Sale", "Out_of_Stock"]
+
+function ProductStatusMap(value :SwitchValue){
+  switch(value){
+    case "On_Sale": return "上架中"
+    case "Off_Sale": return  "下架中"
+    case "Out_of_Stock": return  "缺貨中"
+}}
+
+function isSwitchValue(value :string):value is SwitchValue{
+  return ProductStatusList.includes(value as SwitchValue)
+}
+
+export default function ProductStatus(){
   const { conditions } = useSelector((state: RootState) => state.dataForm);
   return (
     <Zoom duration={500} cascade damping={0.5} triggerOnce={true}>
-      <CheckBox
-        value="On_Sale"
-        name="上架中"
+      {ProductStatusList && ProductStatusList.filter(isSwitchValue).map(status=>(
+        <CheckBox
+        value={status}
+        name={ProductStatusMap(status)}
         condition_type={conditions}
         selcetReducer="status"
       />
-      <CheckBox
-        value="Off_Sale"
-        name="下架中"
-        condition_type={conditions}
-        selcetReducer="status"
-      />
-      <CheckBox
-        value="Out_of_Stock"
-        name="缺貨中"
-        condition_type={conditions}
-        selcetReducer="status"
-      />
+      ))}
     </Zoom>
-  );
+  )
 }
