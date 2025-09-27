@@ -96,44 +96,6 @@ const SearchForm = () => {
     dispatch_redux(fetchData());
   }, [dispatch_redux]);
 
-  // const RenderInputs = () => (
-  //   <div className={STYLE.searchForm_input}>
-  //     <Input
-  //       type="text"
-  //       placeholder="Keyword ..."
-  //       value={keyword}
-  //       onChange={(e) => dispatch_redux(searchFromKey(e.target.value))}
-  //     />
-  //     <Input
-  //       type="date"
-  //       placeholder="Keyword ..."
-  //       value={dateRange.start || ""}
-  //       className={"flex justify-center"}
-  //       onChange={(e) =>
-  //         dispatch_redux(
-  //           searchFromDate({
-  //             start: e.target.value,
-  //             end: dateRange.end || "",
-  //           }),
-  //         )
-  //       }
-  //     />
-  //     <Input
-  //       type="date"
-  //       value={dateRange.end || ""}
-  //       className={"flex justify-center"}
-  //       onChange={(e) =>
-  //         dispatch_redux(
-  //           searchFromDate({
-  //             start: dateRange.start,
-  //             end: e.target.value || "",
-  //           }),
-  //         )
-  //       }
-  //     />
-  //   </div>
-  // );
-
   const RenderOperate = () => (
     <div className={STYLE.searchForm_operate}>
       <Button
