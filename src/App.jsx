@@ -7,13 +7,17 @@ import Header from "./pages/Header";
 import MainArea from "./pages/MainArea";
 import "./style/style.css";
 
+const STYLE = {
+  app: `APP-area relative flex w-full flex-col items-center text-white`,
+
+  main: `MainArea overflow-overlay mx-8 mb-4 flex h-auto w-auto max-w-[90vw] flex-col items-center px-8 pt-4`,
+};
+
 function App() {
   return (
     <Provider store={store}>
       <DataProvider>
-        <div
-          className={`APP-area relative flex w-full flex-col items-center text-white`}
-        >
+        <div className={STYLE.app}>
           <BgImage />
           <motion.section
             initial={{ opacity: 0, y: -100 }}
@@ -24,9 +28,7 @@ function App() {
           >
             <Header />
           </motion.section>
-          <section
-            className={`MainArea overflow-overlay mx-8 mb-4 flex h-auto w-auto max-w-[90vw] flex-col items-center px-8 pt-4`}
-          >
+          <section className={STYLE.main}>
             <MainArea />
           </section>
         </div>
