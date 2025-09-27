@@ -24,6 +24,7 @@ export default function ProductStatus(){
     <Zoom duration={500} cascade damping={0.5} triggerOnce={true}>
       {ProductStatusList && ProductStatusList.filter(isSwitchValue).map(status=>(
         <CheckBox
+        key={status}
         value={status}
         name={ProductStatusMap(status)}
         condition_type={conditions}

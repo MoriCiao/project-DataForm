@@ -40,7 +40,8 @@ export default function Visible() {
     >
       <p>Visible :</p>
       {VisibleList && VisibleList.filter(isVaildValue).map(v=>(
-          <CheckBox
+        <CheckBox
+          key={v}
           value={v}
           name={v}
           condition_type={isVisible}
