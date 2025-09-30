@@ -8,7 +8,7 @@ import {
   toggleAddPage,
   toggleTrash,
   deletSelect,
-  exporToJson,
+  exportToJson,
   saveData,
 } from "../features/dataFormSlice";
 import AddPage from "../components/AddPage/AddPage";
@@ -121,7 +121,7 @@ const SearchForm = () => {
       <Button
         label="Export"
         type="button"
-        onClick={() => dispatch_redux(exporToJson())}
+        onClick={() => dispatch_redux(exportToJson())}
       />
     </div>
   );

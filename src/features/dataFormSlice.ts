@@ -648,15 +648,24 @@ const dataFormSlice = createSlice({
         isVisible: { ...state.isVisible, [key]: checked },
       };
     },
-    exporToJson(state) {
+    exportToJson(state) {
       const blob = new Blob([JSON.stringify(state.data, null, 2)], {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "myData.json";
-      link.click();
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      console.log("navigator.userAgent is",navigator.userAgent)
+      console.log("isIOS is" , isIOS)
+
+      if(isIOS){
+        window.open(url, "_blank")
+      }else{
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "myData.json";
+        link.click();
+      }
       URL.revokeObjectURL(url);
     },
     saveData(state) {
@@ -706,7 +715,7 @@ export const {
   toggleFilterStatus,
   toggleFilterCategory,
   toggleVisible,
-  exporToJson,
+  exportToJson,
   saveData,
 } = dataFormSlice.actions;
 export default dataFormSlice.reducer;
