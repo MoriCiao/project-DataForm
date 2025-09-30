@@ -1,17 +1,18 @@
-import{ Fragment } from "react";
+import { Fragment } from "react";
 
-type SelectProps ={
-  label? :string;
-  name? :string;
-  value? : string | number;
-  onChange : (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  className? : string
-  required : boolean
-}
+type SelectProps = {
+  label?: string;
+  name?: string;
+  value?: string | number;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  className?: string;
+  required: boolean;
+};
 
 const STYLE = {
-  select: "select rounded bg-white sm:h-[2rem] sm:w-[20rem] md:h-[2.5rem] md:w-[12rem]"
-}
+  select:
+    "select rounded bg-white sm:h-[2rem] sm:w-[20rem] md:h-[2.5rem] md:w-[12rem]",
+};
 
 export default function Select({
   label,
@@ -20,7 +21,7 @@ export default function Select({
   onChange,
   className,
   required = true,
-}:SelectProps) {
+}: SelectProps) {
   let opt: string[] = [];
   if (name === "status") {
     opt = ["", "上架中", "下架", "缺貨中"];

@@ -1,9 +1,15 @@
 import Select from "../Select/Select";
 import { RevisePageProp } from "./ReviseItem";
 
-const ReviseSelect = ({ label, name, value ,prevData, setReviseData}: RevisePageProp) => {
-  const handleChange = (e :React.ChangeEvent<HTMLSelectElement>) => {
-    setReviseData((prev :any) => ({ ...prev, [name]: e.target.value }));
+const ReviseSelect = ({
+  label,
+  name,
+  value,
+  prevData,
+  setReviseData,
+}: RevisePageProp) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setReviseData((prev: any) => ({ ...prev, [name]: e.target.value }));
   };
 
   return (
@@ -24,4 +30,4 @@ const ReviseSelect = ({ label, name, value ,prevData, setReviseData}: RevisePage
   );
 };
 
-export default ReviseSelect
+export default ReviseSelect;

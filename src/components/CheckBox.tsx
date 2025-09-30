@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useDispatch, } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useContext } from "react";
 import { DataContext } from "../context/DataContext";
 import {
@@ -9,46 +9,54 @@ import {
 } from "../features/dataFormSlice";
 
 type conditions = {
-    On_Sale: boolean, // 上架中
-    Off_Sale: boolean, // 下架
-    Out_of_Stock: boolean, // 缺貨
-  }
+  On_Sale: boolean; // 上架中
+  Off_Sale: boolean; // 下架
+  Out_of_Stock: boolean; // 缺貨
+};
 type cate_Condition = {
-    house: boolean,
-    stationery: boolean,
-    electronics: boolean,
-    sporting_goods: boolean,
-    food_and_beverage: boolean,
-  }
+  house: boolean;
+  stationery: boolean;
+  electronics: boolean;
+  sporting_goods: boolean;
+  food_and_beverage: boolean;
+};
 type isVisible = {
-    ID: boolean,
-    Name: boolean,
-    Brand: boolean,
-    Category: boolean,
-    Price: boolean,
-    Date: boolean,
-    Status: boolean,
-    Stock: boolean,
-    Tags: boolean,
-  }
-type AllConditionKeys = 
+  ID: boolean;
+  Name: boolean;
+  Brand: boolean;
+  Category: boolean;
+  Price: boolean;
+  Date: boolean;
+  Status: boolean;
+  Stock: boolean;
+  Tags: boolean;
+};
+type AllConditionKeys =
   | keyof conditions
   | keyof cate_Condition
-  | keyof isVisible
+  | keyof isVisible;
 
 type CheckBoxProps<T extends conditions | cate_Condition | isVisible> = {
   value: keyof T;
   name: string;
-  condition_type: T
-  selcetReducer:  "status" | "category" |"isVisible"
-}
+  condition_type: T;
+  selcetReducer: "status" | "category" | "isVisible";
+};
 
-
-export const CheckBox = <T extends conditions | cate_Condition | isVisible>({ value, name, condition_type, selcetReducer}:CheckBoxProps<T>): React.ReactNode => {
+export const CheckBox = <T extends conditions | cate_Condition | isVisible>({
+  value,
+  name,
+  condition_type,
+  selcetReducer,
+}: CheckBoxProps<T>): React.ReactNode => {
   const { setCurrentPage } = useContext(DataContext);
   const dispatch_redux = useDispatch();
 
-  function SelectFn(selcetReducer: string, value: keyof T, e: React.ChangeEvent<HTMLInputElement>) {
+  function SelectFn(
+    selcetReducer: string,
+    value: keyof T,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
     if (selcetReducer === "status") {
       dispatch_redux(
         toggleFilterStatus({ key: value, checked: e.target.checked }),
@@ -75,9 +83,7 @@ export const CheckBox = <T extends conditions | cate_Condition | isVisible>({ va
         className="mr-2 scale-125"
         onChange={(e) => SelectFn(selcetReducer, value, e)}
       />
-      <label>
-        {name}
-      </label>
+      <label>{name}</label>
     </div>
   );
 };

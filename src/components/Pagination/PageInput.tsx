@@ -1,18 +1,18 @@
 import { motion } from "framer-motion";
 import Button from "../Button/Button";
 type PageInputProps = {
-  totalPages:number;
-  changePage:string;
+  totalPages: number;
+  changePage: string;
   setChangePage: React.Dispatch<React.SetStateAction<string>>;
   handlePage: () => void;
-}
+};
 
 export default function PageInput({
   totalPages,
   changePage,
   setChangePage,
   handlePage,
-}:PageInputProps) {
+}: PageInputProps) {
   return (
     <>
       <motion.input
@@ -40,7 +40,7 @@ export default function PageInput({
         label="Go"
         className={`border-0`}
         onClick={handlePage}
-        disable={changePage.trim() === "" }
+        disable={changePage.trim() === ""}
       />
     </>
   );

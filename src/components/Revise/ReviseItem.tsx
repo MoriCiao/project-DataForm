@@ -1,18 +1,25 @@
-import React from 'react'
-import Input from '../Input/Input'
+import React from "react";
+import Input from "../Input/Input";
 
-export type RevisePageProp= {
-    label:  string;
-    type: string;
-    name: string;
-    value : string | number ;
-    prevData:  string ;
-    setReviseData : React.Dispatch<React.SetStateAction<Record<string , any>>>
-}
+export type RevisePageProp = {
+  label: string;
+  type: string;
+  name: string;
+  value: string | number;
+  prevData: string;
+  setReviseData: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+};
 
-const ReviseItem = ({ label, name, type, value ,prevData, setReviseData }:RevisePageProp) => {
-  const handleChange = (e :React.ChangeEvent<HTMLInputElement>) => {
-    setReviseData((prev :any) => ({ ...prev, [name]: e.target.value }));
+const ReviseItem = ({
+  label,
+  name,
+  type,
+  value,
+  prevData,
+  setReviseData,
+}: RevisePageProp) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReviseData((prev: any) => ({ ...prev, [name]: e.target.value }));
   };
   return (
     <div className="flex w-full items-center justify-end">
@@ -35,4 +42,4 @@ const ReviseItem = ({ label, name, type, value ,prevData, setReviseData }:Revise
   );
 };
 
-export default ReviseItem 
+export default ReviseItem;
