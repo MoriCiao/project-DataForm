@@ -4,7 +4,6 @@ import { easeInOut, motion } from "framer-motion";
 import { Fade } from "react-awesome-reveal";
 import {
   fetchData,
-  perSort,
   selectAllData,
   selectSingleData,
   toggleRevisePage,
@@ -77,7 +76,6 @@ const DataTable = () => {
   if (status === "succeeded") {
     return (
       <>
-        {/* <LoadingModal /> */}
         <Fade className="dataTable max-h-auto mb-4 w-full overflow-x-auto xl:max-w-full">
           <table
             className={`mix-w-[800px] h-full w-full table-auto border-collapse`}
@@ -122,7 +120,7 @@ const DataTable = () => {
                   })}
               </tr>
             </thead>
-            <tbody className={``}>
+            <tbody>
               {currentItems &&
                 currentItems.map((p, index) => {
                   return (
@@ -161,7 +159,6 @@ const DataTable = () => {
                       </td>
                       {thMap &&
                         thMap.map((td) => {
-                          // const tdTosmall = td.toLowerCase()
                           if (td === "Revise")
                             return (
                               <td key={td} className={`${td_style}`}>
