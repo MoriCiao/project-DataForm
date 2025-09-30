@@ -5,6 +5,21 @@ export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const url = "/project-DataForm/product_data_2000.json";
 
+const STATUS_MAP = {
+  On_Sale: "上架中",
+  Off_Sale: "下架", 
+  Out_of_Stock: "缺貨中"
+} as const;
+
+const CATEGORY_MAP = {
+  house: "居家生活",
+  stationery: "文具用品", 
+  electronics: "電子產品",
+  sporting_goods: "運動用品",
+  food_and_beverage: "食品飲料"
+} as const;
+
+
 const initialState: DataFormState = {
   data: [],
   status: "idle",
@@ -145,20 +160,12 @@ const dataFormSlice = createSlice({
       const filtered = state.data.filter((item) => {
         // ----------------------------------------------------
         const PassCodiitions =
-          !PassStatus ||
-          (state.conditions.On_Sale && item.status === "上架中") ||
-          (state.conditions.Off_Sale && item.status === "下架") ||
-          (state.conditions.Out_of_Stock && item.status === "缺貨中");
+          !PassStatus 
+          || Object.entries(state.conditions).some(([key , enabled]) => enabled && item.status === STATUS_MAP[key as keyof typeof STATUS_MAP])
         // ----------------------------------------------------
         const PassCateCodition =
-          !PassCategory ||
-          (state.cate_Condition.house && item.category === "居家生活") ||
-          (state.cate_Condition.stationery && item.category === "文具用品") ||
-          (state.cate_Condition.electronics && item.category === "電子產品") ||
-          (state.cate_Condition.sporting_goods &&
-            item.category === "運動用品") ||
-          (state.cate_Condition.food_and_beverage &&
-            item.category === "食品飲料");
+          !PassCategory 
+          || Object.entries(state.cate_Condition).some(([key , enabled])=> enabled && item.category === CATEGORY_MAP[key as keyof typeof CATEGORY_MAP] )
         // ----------------------------------------------------
         // createdAt Sort
         const itemDate = new Date(item.createdAt as string);
@@ -217,28 +224,13 @@ const dataFormSlice = createSlice({
         const afterStart = startDate ? itemDate >= startDate : true;
         const beforeEnd = endDate ? itemDate <= endDate : true;
         // -----------------------------------------------------------------------------------------
-        const STATUS_MAPPING = {
-          上架中: "On_Sale",
-          下架: "Off_Sale",
-          缺貨中: "Out_of_Stock",
-        } as const;
         const PassCodition =
-          !PassStatus ||
-          (state.conditions.On_Sale && item.status === "上架中") ||
-          (state.conditions.Off_Sale && item.status === "下架") ||
-          (state.conditions.Out_of_Stock && item.status === "缺貨中");
+          !PassStatus 
+          || Object.entries(state.conditions).some(([key, enabled]) => enabled && item.status === STATUS_MAP[key as keyof typeof STATUS_MAP]) 
         // -----------------------------------------------------------------------------------------
-
         const PassCate_Category =
-          !PassCategory ||
-          (state.cate_Condition.house && item.category === "居家生活") ||
-          (state.cate_Condition.stationery && item.category === "文具用品") ||
-          (state.cate_Condition.electronics && item.category === "電子產品") ||
-          (state.cate_Condition.sporting_goods &&
-            item.category === "運動用品") ||
-          (state.cate_Condition.food_and_beverage &&
-            item.category === "食品飲料");
-
+          !PassCategory 
+          || Object.entries(state.cate_Condition).some(([key, enabled]) => enabled && item.category === CATEGORY_MAP[key as keyof typeof CATEGORY_MAP])
         // ------------------keyWordBoolean---------------------
         const id = item.id?.toLowerCase() || "";
         const name = item.name?.toLowerCase() || "";
@@ -548,32 +540,19 @@ const dataFormSlice = createSlice({
       const isFiltered = hasStatusFilter || hasCategoryFilter;
 
       const filtered = state.data.filter((item) => {
+        // ----------------------------------------------------------
         const PassCategory =
-          (!unCheckCategory.house &&
-            !unCheckCategory.stationery &&
-            !unCheckCategory.electronics &&
-            !unCheckCategory.sporting_goods &&
-            !unCheckCategory.food_and_beverage) ||
-          (unCheckCategory.house && item.category === "居家生活") ||
-          (unCheckCategory.stationery && item.category === "文具用品") ||
-          (unCheckCategory.electronics && item.category === "電子產品") ||
-          (unCheckCategory.sporting_goods && item.category === "運動用品") ||
-          (unCheckCategory.food_and_beverage && item.category === "食品飲料");
-
+        Object.values(unCheckCategory).every(value => value === true) // fasle
+        || Object.entries(unCheckCategory).some(([key ,enabled]) => !enabled && item.category === CATEGORY_MAP[key as keyof typeof CATEGORY_MAP])
         // ----------------------------------------------------------
         const PassStatus =
-          (!newConditions.On_Sale &&
-            !newConditions.Off_Sale &&
-            !newConditions.Out_of_Stock) ||
-          (newConditions.On_Sale && item.status === "上架中") ||
-          (newConditions.Off_Sale && item.status === "下架") ||
-          (newConditions.Out_of_Stock && item.status === "缺貨中");
+        Object.values(newConditions).every(value => value === true) 
+        || Object.entries(newConditions).some(([key ,enabled]) => enabled && item.status === STATUS_MAP[key as keyof typeof STATUS_MAP])
         //  ---------------------------------------------------------
         // createdAT Sort
         const itemDate = new Date(item.createdAt as string);
         const afterStart = state.dateRange.start ? itemDate >= startDate : true;
         const beforeEnd = state.dateRange.end ? itemDate <= endDate : true;
-
         // ------------------keyWordBoolean---------------------
         const id = item.id?.toLowerCase() || "";
         const name = item.name?.toLowerCase() || "";
@@ -634,24 +613,13 @@ const dataFormSlice = createSlice({
       const filtered = state.data.filter((item) => {
         // ---------------PassStatus--------------------------
         const PassStatus =
-          (!unCheckStatus.On_Sale &&
-            !unCheckStatus.Off_Sale &&
-            !unCheckStatus.Out_of_Stock) ||
-          (unCheckStatus.On_Sale && item.status === "上架中") ||
-          (unCheckStatus.Off_Sale && item.status === "下架") ||
-          (unCheckStatus.Out_of_Stock && item.status === "缺貨中");
+          Object.values(unCheckStatus).every(value => value === true) 
+          || Object.entries(unCheckStatus).some(([key, enabled]) => (
+            !enabled && item.status === STATUS_MAP[key as keyof typeof STATUS_MAP]))
         // ---------------PassCategory--------------------------
         const PassCategory =
-          (!newCate_Condition.house &&
-            !newCate_Condition.stationery &&
-            !newCate_Condition.electronics &&
-            !newCate_Condition.sporting_goods &&
-            !newCate_Condition.food_and_beverage) ||
-          (newCate_Condition.house && item.category === "居家生活") ||
-          (newCate_Condition.stationery && item.category === "文具用品") ||
-          (newCate_Condition.electronics && item.category === "電子產品") ||
-          (newCate_Condition.sporting_goods && item.category === "運動用品") ||
-          (newCate_Condition.food_and_beverage && item.category === "食品飲料");
+            Object.values(newCate_Condition).every(value => value === true) 
+            || Object.entries(newCate_Condition).some(([key ,enabled]) => enabled && item.category === CATEGORY_MAP[key as keyof typeof CATEGORY_MAP])
         // -------------------DateBoolean--------------------
         const itemDate = new Date(item.createdAt as string);
         const afterStart = state.dateRange.start ? itemDate >= startDate : true;
@@ -697,15 +665,24 @@ const dataFormSlice = createSlice({
         isVisible: { ...state.isVisible, [key]: checked },
       };
     },
-    exporToJson(state) {
+    exportToJson(state) {
       const blob = new Blob([JSON.stringify(state.data, null, 2)], {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "myData.json";
-      link.click();
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      console.log("navigator.userAgent is",navigator.userAgent)
+      console.log("isIOS is" , isIOS)
+
+      if(isIOS){
+        window.open(url, "_blank")
+      }else{
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "myData.json";
+        link.click();
+      }
       URL.revokeObjectURL(url);
     },
     saveData(state) {
@@ -755,7 +732,7 @@ export const {
   toggleFilterStatus,
   toggleFilterCategory,
   toggleVisible,
-  exporToJson,
+  exportToJson,
   saveData,
 } = dataFormSlice.actions;
 export default dataFormSlice.reducer;
