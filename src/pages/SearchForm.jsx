@@ -10,6 +10,7 @@ import {
   deletSelect,
   exportToJson,
   saveData,
+  cleanDate,
 } from "../features/dataFormSlice";
 import AddPage from "../components/AddPage/AddPage";
 import DelPage from "../components/DelPage/DelPage";
@@ -36,7 +37,6 @@ const RenderInputs = () => {
       />
       <Input
         type="date"
-        placeholder="Keyword ..."
         value={dateRange.start || ""}
         className={"flex justify-center"}
         onChange={(e) =>
@@ -57,6 +57,18 @@ const RenderInputs = () => {
             searchFromDate({
               start: dateRange.start,
               end: e.target.value || "",
+            }),
+          )
+        }
+      />
+      <Button
+        label="清除日期"
+        type="button"
+        onClick={() =>
+          dispatch_redux(
+            searchFromDate({
+              start: "",
+              end: "",
             }),
           )
         }
