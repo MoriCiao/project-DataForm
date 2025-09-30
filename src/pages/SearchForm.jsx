@@ -10,7 +10,6 @@ import {
   deletSelect,
   exportToJson,
   saveData,
-  cleanDate,
 } from "../features/dataFormSlice";
 import AddPage from "../components/AddPage/AddPage";
 import DelPage from "../components/DelPage/DelPage";
@@ -79,8 +78,9 @@ const RenderInputs = () => {
 
 // 主要搜尋 id, name , category
 const SearchForm = () => {
-  const { data, keyword, dateRange, revisePage, addPage, delPage, selected } =
-    useSelector((state) => state.dataForm);
+  const { data, revisePage, addPage, delPage, selected } = useSelector(
+    (state) => state.dataForm,
+  );
   const { setOpenModal, setCurrentPage } = useContext(DataContext);
   const dispatch_redux = useDispatch();
 
