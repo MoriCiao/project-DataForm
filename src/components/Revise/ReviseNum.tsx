@@ -1,9 +1,16 @@
 import Input from "../Input/Input";
 import { RevisePageProp } from "./ReviseItem";
 
-const ReviseNum = ({ label, name, value, type, prevData, setReviseData}: RevisePageProp) => {
-  const handleChange = (e :React.ChangeEvent<HTMLInputElement>) => {
-    setReviseData((prev:any) => ({ ...prev, [name]: e.target.value }));
+const ReviseNum = ({
+  label,
+  name,
+  value,
+  type,
+  prevData,
+  setReviseData,
+}: RevisePageProp) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReviseData((prev: any) => ({ ...prev, [name]: e.target.value }));
   };
 
   return (
@@ -26,4 +33,4 @@ const ReviseNum = ({ label, name, value, type, prevData, setReviseData}: ReviseP
     </div>
   );
 };
-export default ReviseNum
+export default ReviseNum;

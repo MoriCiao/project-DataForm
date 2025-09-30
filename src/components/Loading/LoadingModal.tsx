@@ -1,9 +1,10 @@
 const STYLE = {
-  loading_modal: "loading_modal absolute top-0 left-0 z-50 flex h-[100vh] w-[100vw] items-center justify-center bg-black/50 backdrop-blur-sm",
+  loading_modal:
+    "loading_modal absolute top-0 left-0 z-50 flex h-[100vh] w-[100vw] items-center justify-center bg-black/50 backdrop-blur-sm",
 
-  loading_content : "loading_content flex h-[200px] w-[200px] items-center justify-center rounded-full bg-black/80 text-xl"
-}
-
+  loading_content:
+    "loading_content flex h-[200px] w-[200px] items-center justify-center rounded-full bg-black/80 text-xl",
+};
 
 export default function LoadingModal() {
   return (

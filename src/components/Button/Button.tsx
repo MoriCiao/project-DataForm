@@ -1,8 +1,6 @@
 const STYLE = {
-  button : `relative rounded-md border px-4 text-white transition-all duration-500 hover:z-10 hover:bg-black/50 hover:text-sky-500 `
-}
-
-
+  button: `relative rounded-md border px-4 text-white transition-all duration-500 hover:z-10 hover:bg-black/50 hover:text-sky-500 `,
+};
 
 type ButtoProps = {
   label: string;

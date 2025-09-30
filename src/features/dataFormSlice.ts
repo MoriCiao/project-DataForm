@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import {Product, Products, status, DataFormState} from "./dataFormSliceType" 
+import { Product, Products, status, DataFormState } from "./dataFormSliceType";
 // 延遲載入
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -145,7 +145,7 @@ const dataFormSlice = createSlice({
       const filtered = state.data.filter((item) => {
         // ----------------------------------------------------
         const PassCodiitions =
-          !PassStatus || 
+          !PassStatus ||
           (state.conditions.On_Sale && item.status === "上架中") ||
           (state.conditions.Off_Sale && item.status === "下架") ||
           (state.conditions.Out_of_Stock && item.status === "缺貨中");
@@ -218,9 +218,9 @@ const dataFormSlice = createSlice({
         const beforeEnd = endDate ? itemDate <= endDate : true;
         // -----------------------------------------------------------------------------------------
         const STATUS_MAPPING = {
-          "上架中": "On_Sale",
-          "下架": "Off_Sale", 
-          "缺貨中": "Out_of_Stock"
+          上架中: "On_Sale",
+          下架: "Off_Sale",
+          缺貨中: "Out_of_Stock",
         } as const;
         const PassCodition =
           !PassStatus ||
@@ -309,32 +309,46 @@ const dataFormSlice = createSlice({
       let updateData;
       if (ToggleChecked) {
         updateData = currentData.sort((a, b) => {
-              const id_a = a.id.slice(-5);
-              const id_b = b.id.slice(-5);
-             switch(name){
-               case "ID": return id_b.localeCompare(id_a);
-               case "Name": return b.name.localeCompare(a.name);
-               case "Brand": return b.brand.localeCompare(a.brand);
-               case "Category": return b.category.localeCompare(a.category);
-               case "Stock": return b.stock - a.stock;
-               case "Price": return b.price - a.price;
-               default : return 0
+          const id_a = a.id.slice(-5);
+          const id_b = b.id.slice(-5);
+          switch (name) {
+            case "ID":
+              return id_b.localeCompare(id_a);
+            case "Name":
+              return b.name.localeCompare(a.name);
+            case "Brand":
+              return b.brand.localeCompare(a.brand);
+            case "Category":
+              return b.category.localeCompare(a.category);
+            case "Stock":
+              return b.stock - a.stock;
+            case "Price":
+              return b.price - a.price;
+            default:
+              return 0;
           }
         });
       } else {
         updateData = currentData.sort((a, b) => {
-            const id_a = a.id.slice(-5);
-            const id_b = b.id.slice(-5);
-            switch(name){
-              case "ID": return id_a.localeCompare(id_b)
-              case "Name": return a.name.localeCompare(b.name);
-              case "Brand": return a.brand.localeCompare(b.brand);
-              case "Category": return a.category.localeCompare(b.category);
-              case "Stock": return a.stock - b.stock;
-              case "Price": return a.price - b.price;
-              default : return 0
-            }
-        })
+          const id_a = a.id.slice(-5);
+          const id_b = b.id.slice(-5);
+          switch (name) {
+            case "ID":
+              return id_a.localeCompare(id_b);
+            case "Name":
+              return a.name.localeCompare(b.name);
+            case "Brand":
+              return a.brand.localeCompare(b.brand);
+            case "Category":
+              return a.category.localeCompare(b.category);
+            case "Stock":
+              return a.stock - b.stock;
+            case "Price":
+              return a.price - b.price;
+            default:
+              return 0;
+          }
+        });
       }
       isFiltered ? (state.filtered = updateData) : (state.data = updateData);
       state.props_sort_condition = {
@@ -406,13 +420,16 @@ const dataFormSlice = createSlice({
       // tags 要轉變成 array
       state.newItem = {
         ...state.newItem,
-        [name]: name === "tags" ? value.split(",").map((i :string) => i.trim()) : value,
+        [name]:
+          name === "tags"
+            ? value.split(",").map((i: string) => i.trim())
+            : value,
       };
     },
     addData(state) {
       state.data = [...state.data, state.newItem];
       // 新增資料後，將新增頁面設為預設值
-      state.newItem = {
+      ((state.newItem = {
         id: "",
         name: "",
         status: "",
@@ -422,9 +439,9 @@ const dataFormSlice = createSlice({
         stock: 0,
         brand: "",
         tags: "",
-      },
-      // 關閉AddPage
-      state.addPage = false;
+      }),
+        // 關閉AddPage
+        (state.addPage = false));
     },
     undo(state, action) {
       const deletedData = action.payload;

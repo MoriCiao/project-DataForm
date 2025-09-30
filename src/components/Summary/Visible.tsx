@@ -3,18 +3,19 @@ import { useSelector } from "react-redux";
 import { Zoom } from "react-awesome-reveal";
 import { CheckBox } from "../CheckBox";
 
-type SwitchVisible= "ID"|
-  "Name"|
-  "Brand" |
-  "Category" |
-  "Price" |
-  "Date" |
-  "Status" |
-  "Stock"|
-  "Tags"
+type SwitchVisible =
+  | "ID"
+  | "Name"
+  | "Brand"
+  | "Category"
+  | "Price"
+  | "Date"
+  | "Status"
+  | "Stock"
+  | "Tags";
 
 const VisibleList = [
-  "ID", 
+  "ID",
   "Name",
   "Brand",
   "Category",
@@ -22,10 +23,11 @@ const VisibleList = [
   "Date",
   "Status",
   "Stock",
-  "Tags"]
+  "Tags",
+];
 
-function isVaildValue(value:string): value is SwitchVisible{
-  return VisibleList.includes(value as SwitchVisible)
+function isVaildValue(value: string): value is SwitchVisible {
+  return VisibleList.includes(value as SwitchVisible);
 }
 
 export default function Visible() {
@@ -39,15 +41,16 @@ export default function Visible() {
       className="flex w-full flex-wrap items-center justify-center p-2 sm:gap-4 md:gap-2"
     >
       <p>Visible :</p>
-      {VisibleList && VisibleList.filter(isVaildValue).map(v=>(
-        <CheckBox
-          key={v}
-          value={v}
-          name={v}
-          condition_type={isVisible}
-          selcetReducer="isVisible"
-        />
-      ))}
+      {VisibleList &&
+        VisibleList.filter(isVaildValue).map((v) => (
+          <CheckBox
+            key={v}
+            value={v}
+            name={v}
+            condition_type={isVisible}
+            selcetReducer="isVisible"
+          />
+        ))}
     </Zoom>
   );
 }
